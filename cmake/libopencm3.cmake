@@ -18,7 +18,7 @@ endif ()
 find_program(AWK awk)
 if (NOT AWK)
     message(FATAL_ERROR "awk is required to generate the linker script, please install it.")
-endif()
+endif ()
 
 set(GENLINK_SCRIPT "${CMAKE_SOURCE_DIR}/libopencm3/scripts/genlink.awk")
 set(DEVICES_DATA "${CMAKE_SOURCE_DIR}/libopencm3/ld/devices.data")
@@ -113,14 +113,20 @@ message("-------------------------------------")
 
 
 # Replace `add_executable` with custom macro with same name that adds libopencm3 as a linking target
-macro (add_executable _name)
+macro(add_executable _name)
     # invoke built-in add_executable
     _add_executable(${ARGV})
     if (TARGET ${_name})
-        set_target_properties(${PROJECT_NAME}.elf PROPERTIES LINK_FLAGS ${LINKER_FLAGS})
+        set_target_properties(${ARGV0} PROPERTIES LINK_FLAGS ${LINKER_FLAGS})
         target_link_libraries(${_name} "opencm3_${GENLINK_FAMILY}")
-    endif()
+        string(REGEX MATCH "^(.*)\\.[^.]*$" dummy "${ARGV0}")
+        set(bin ${CMAKE_MATCH_1}.bin)
+        set(elf ${ARGV0})
+        add_custom_target(
+                ${bin} ALL
+                COMMAND ${ARM_OBJCOPY} -Obinary ${elf} ${bin}
+                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+                DEPENDS ${elf}
+        )
+    endif ()
 endmacro()
-
-
-
