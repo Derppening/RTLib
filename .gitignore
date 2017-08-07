@@ -201,5 +201,6 @@ tags
 
 
 cmake-build-debug/
+generated.*.ld
 Would skip repository libopencm3/
 
