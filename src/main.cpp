@@ -1,15 +1,21 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
-int main() {
+static void gpio_setup() {
+    rcc_clock_setup_in_hse_8mhz_out_72mhz();
     rcc_periph_clock_enable(RCC_GPIOB);
-    gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ,
-                  GPIO_CNF_OUTPUT_PUSHPULL,  GPIO12 | GPIO13 | GPIO14);
+    gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ,
+                  GPIO_CNF_OUTPUT_PUSHPULL,  GPIO14);
+}
+
+int main() {
     int i;
+    gpio_setup();
     for(;;) {
-        gpio_toggle(GPIOB, GPIO12 | GPIO13 | GPIO14);
+        gpio_toggle(GPIOB, GPIO14);
         for (i = 0; i < 800000; i++)	/* Wait a bit. */
                 __asm__("nop");
     }
     return 0;
 }
+

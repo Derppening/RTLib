@@ -1,3 +1,13 @@
+# Utility
+
+function(JOIN VALUES GLUE OUTPUT)
+    string (REGEX REPLACE "([^\\]|^);" "\\1${GLUE}" _TMP_STR "${VALUES}")
+    string (REGEX REPLACE "[\\](.)" "\\1" _TMP_STR "${_TMP_STR}") #fixes escaping
+    set (${OUTPUT} "${_TMP_STR}" PARENT_SCOPE)
+endfunction()
+
+# -----------
+
 # LibOpenCM3 Stuff
 set(LIBOPENCM3_DIR ${CMAKE_SOURCE_DIR}/libopencm3)
 add_custom_target(
@@ -61,7 +71,6 @@ message("-------------------------------------")
 
 # Generate flags
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GENLINK_CPPFLAGS}")
 set(ARCH_FLAGS "-mcpu=${GENLINK_CPU}")
 
 # Check CPU
@@ -101,16 +110,29 @@ else ()
     endif ()
 endif ()
 
+# ARCH_FLAGS and GENLINK_DEFS has to be passed as a list here
 string(REPLACE " " ";" GENLINK_DEFS ${GENLINK_DEFS})
 execute_process(
         COMMAND ${ARM_CXX} ${ARCH_FLAGS} ${GENLINK_DEFS} "-P" "-E" "${LIBOPENCM3_DIR}/ld/linker.ld.S"
         OUTPUT_FILE "${CMAKE_SOURCE_DIR}/${LINKER_SCRIPT}"
 )
 message(STATUS "Generated linker file: ${LINKER_SCRIPT}")
-set(LINKER_FLAGS "${LINKER_FLAGS} -T ${CMAKE_SOURCE_DIR}/${LINKER_SCRIPT} ${LDLIBS}")
-message(STATUS "Current linker flags: ${LINKER_FLAGS}")
-message("-------------------------------------")
 
+
+# ARCH_FLAGS has to be passed as a string here
+JOIN("${ARCH_FLAGS}" " " ARCH_FLAGS)
+# Set linker flags
+set(LINKER_FLAGS "${LINKER_FLAGS} ${LDLIBS} -T${CMAKE_SOURCE_DIR}/${LINKER_SCRIPT} ${ARCH_FLAGS}")
+message(STATUS "Current linker flags: ${LINKER_FLAGS}")
+
+# Compiler flags
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GENLINK_CPPFLAGS} ${ARCH_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GENLINK_CPPFLAGS} ${ARCH_FLAGS}")
+
+message(STATUS "Current C flags: ${CMAKE_C_FLAGS}")
+message(STATUS "Current CXX flags: ${CMAKE_CXX_FLAGS}")
+message("-------------------------------------")
 
 # Replace `add_executable` with custom macro with same name that adds libopencm3 as a linking target
 macro(add_executable _name)
@@ -130,3 +152,5 @@ macro(add_executable _name)
         )
     endif ()
 endmacro()
+
+
