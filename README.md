@@ -1,6 +1,14 @@
 # RTLib
 You will love it :)
 
+# Prerequisites
+You will be needing the following to compile
+
+1. arm-none-eabi-gcc toolchain (Or your preferred compiler, in that case provide your own toolchain file)
+2. CMake
+3. Make
+4. GNU awk
+
 # Usage
 
 1. Add the library files to your project by adding it as a submodule to your project:
@@ -22,7 +30,11 @@ cd RTLib/libopencm3
 make
 ```
 
-4. Building your program
+4. Modify your `CMakeLists.txt`
+
+You need let your compiler know about `libopencm3` and `RTLib`, checkout the `CMakeLists.txt` for an example on how to your write yours!
+
+5. Building your program
 
 ```bash
 cd RTLib                        # Switch to the RTLib root directory first if you aren't already
