@@ -2,12 +2,12 @@
 You will love it :)
 
 # Prerequisites
-You will be needing the following to compile
+You will be needing the following to compile:
 
-1. arm-none-eabi-gcc toolchain (Or your preferred compiler, in that case provide your own toolchain file)
-2. CMake
-3. Make
-4. GNU awk
+- arm-none-eabi-gcc toolchain (Or your preferred compiler, in that case provide your own toolchain file)
+- CMake
+- Make
+- GNU awk
 
 # Usage
 
