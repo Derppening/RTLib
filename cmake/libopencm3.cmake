@@ -1,9 +1,11 @@
+# Also painfully written by waicool20 :)
+
 # Utility
 
 function(JOIN VALUES GLUE OUTPUT)
-    string (REGEX REPLACE "([^\\]|^);" "\\1${GLUE}" _TMP_STR "${VALUES}")
-    string (REGEX REPLACE "[\\](.)" "\\1" _TMP_STR "${_TMP_STR}") #fixes escaping
-    set (${OUTPUT} "${_TMP_STR}" PARENT_SCOPE)
+    string(REGEX REPLACE "([^\\]|^);" "\\1${GLUE}" _TMP_STR "${VALUES}")
+    string(REGEX REPLACE "[\\](.)" "\\1" _TMP_STR "${_TMP_STR}") #fixes escaping
+    set(${OUTPUT} "${_TMP_STR}" PARENT_SCOPE)
 endfunction()
 
 # -----------
