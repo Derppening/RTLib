@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.8)
+project(TestProject)
+
+if (NOT CMAKE_TOOLCHAIN_FILE)
+    message(FATAL_ERROR "Cross compiling only. Please use -DCMAKE_TOOLCHAIN_FILE=rtlib/cmake/arm-toolchain.cmake or use your own toolchain file")
+endif ()
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
+
+set(DEVICE STM32F103VCT6)
+include(rtlib/cmake/libopencm3.cmake)
+include(rtlib/cmake/rtlib.cmake)
+
+file(GLOB_RECURSE SOURCE_FILES "src/*.c" "src/*.cpp")
+include_directories(inc)
+
+add_executable(TestProject.elf ${SOURCE_FILES} ${RTLIB_SOURCE_FILES})

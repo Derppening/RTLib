@@ -11,7 +11,11 @@ endfunction()
 # -----------
 
 # LibOpenCM3 Stuff
-set(LIBOPENCM3_DIR ${CMAKE_SOURCE_DIR}/libopencm3)
+find_file(LIBOPENCM3_DIR "libopencm3" "${CMAKE_CURRENT_SOURCE_DIR}" PATH_SUFFXIES "rtlib")
+if (LIBOPENCM3_DIR STREQUAL "LIBOPENCM3_DIR-NOTFOUND")
+    message(FATAL_ERROR "Could not locate libopencm3 directory")
+endif ()
+
 add_custom_target(
         libopencm3 make
         WORKING_DIRECTORY ${LIBOPENCM3_DIR}
@@ -32,8 +36,8 @@ if (NOT AWK)
     message(FATAL_ERROR "awk is required to generate the linker script, please install it.")
 endif ()
 
-set(GENLINK_SCRIPT "${CMAKE_SOURCE_DIR}/libopencm3/scripts/genlink.awk")
-set(DEVICES_DATA "${CMAKE_SOURCE_DIR}/libopencm3/ld/devices.data")
+set(GENLINK_SCRIPT "${LIBOPENCM3_DIR}/scripts/genlink.awk")
+set(DEVICES_DATA "${LIBOPENCM3_DIR}/ld/devices.data")
 execute_process(
         COMMAND awk "-v" "PAT=${DEVICE}" "-v" "MODE=FAMILY" "-f" "${GENLINK_SCRIPT}" "${DEVICES_DATA}"
         OUTPUT_VARIABLE GENLINK_FAMILY
@@ -116,7 +120,7 @@ endif ()
 string(REPLACE " " ";" GENLINK_DEFS ${GENLINK_DEFS})
 execute_process(
         COMMAND ${ARM_CXX} ${ARCH_FLAGS} ${GENLINK_DEFS} "-P" "-E" "${LIBOPENCM3_DIR}/ld/linker.ld.S"
-        OUTPUT_FILE "${CMAKE_SOURCE_DIR}/${LINKER_SCRIPT}"
+        OUTPUT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${LINKER_SCRIPT}"
 )
 message(STATUS "Generated linker file: ${LINKER_SCRIPT}")
 
@@ -124,7 +128,7 @@ message(STATUS "Generated linker file: ${LINKER_SCRIPT}")
 # ARCH_FLAGS has to be passed as a string here
 JOIN("${ARCH_FLAGS}" " " ARCH_FLAGS)
 # Set linker flags
-set(LINKER_FLAGS "${LINKER_FLAGS} ${LDLIBS} -T${CMAKE_SOURCE_DIR}/${LINKER_SCRIPT} ${ARCH_FLAGS}")
+set(LINKER_FLAGS "${LINKER_FLAGS} ${LDLIBS} -T${CMAKE_CURRENT_SOURCE_DIR}/${LINKER_SCRIPT} ${ARCH_FLAGS}")
 message(STATUS "Current linker flags: ${LINKER_FLAGS}")
 
 # Compiler flags

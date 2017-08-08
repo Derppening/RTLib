@@ -4,18 +4,17 @@
 static void gpio_setup() {
     rcc_clock_setup_in_hse_8mhz_out_72mhz();
     rcc_periph_clock_enable(RCC_GPIOB);
-    gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ,
-                  GPIO_CNF_OUTPUT_PUSHPULL,  GPIO14);
+    gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO14);
 }
 
-int main() {
+void example_start() {
     int i;
     gpio_setup();
-    for(;;) {
+    for (;;) {
         gpio_toggle(GPIOB, GPIO14);
-        for (i = 0; i < 800000; i++)	/* Wait a bit. */
-                __asm__("nop");
+        for (i = 0; i < 800000; i++) {
+            __asm__("nop");
+        }
     }
-    return 0;
 }
 
