@@ -17,8 +17,9 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall ${TARGET_FLAGS} -Os -ffunction-section
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 ${TARGET_FLAGS}")
 set(LINKER_FLAGS "${LINKER_FLAGS} -nostartfiles -lc -lnosys --specs=rdimon.specs -Wl,--gc-sections")
 
-# Collect sources
+# Collect sources and includes
 file(GLOB_RECURSE SOURCE_FILES src/*.c src/*.cpp)
+include_directories(${CMAKE_SOURCE_DIR}/inc)
 
 # Specify output file
 add_executable(${PROJECT_NAME}.elf ${SOURCE_FILES})
