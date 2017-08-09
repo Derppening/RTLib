@@ -41,7 +41,7 @@ cd RTLib                        # Switch to the RTLib root directory first if yo
 mkdir build && cd build         # Then create a build directory where all the generate build files will be output
 
 # Change the -G option according to your build system, might be different for example if you were using MINGW
-cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=cmake/arm-toolchain.cmake -G "CodeBlocks - Unix Makefiles" ../
+cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../cmake/arm-toolchain.cmake -G "CodeBlocks - Unix Makefiles" ../
 
 # Finally run the make command to initate the build process
 make
