@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/rtlib.iml" filepath="$PROJECT_DIR$/.idea/rtlib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../libopencm3-stm32/.idea/untitled.iml" filepath="$PROJECT_DIR$/../libopencm3-stm32/.idea/untitled.iml" />
     </modules>
   </component>
 </project>
