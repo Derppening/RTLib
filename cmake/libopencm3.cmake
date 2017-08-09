@@ -147,6 +147,9 @@ message("-------------------------------------")
 # Replace `add_executable` with custom macro with same name that adds libopencm3 as a linking target
 macro(add_executable _name)
     # invoke built-in add_executable
+    if ("${ARGV1}" STREQUAL "")
+        message(FATAL_ERROR "No source files added to executable")
+    endif ()
     _add_executable(${ARGV})
     if (TARGET ${_name})
         set_target_properties(${ARGV0} PROPERTIES LINK_FLAGS ${LINKER_FLAGS})
