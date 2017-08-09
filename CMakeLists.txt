@@ -30,4 +30,4 @@ file(GLOB_RECURSE SOURCE_FILES "src/*.c" "src/*.cpp")
 include_directories(inc)
 
 # Specify output executable
-add_executable(${PROJECT_NAME}.elf ${RTLIB_SOURCE_FILES})
+add_executable(${PROJECT_NAME}.elf main.cpp ${RTLIB_SOURCE_FILES})
