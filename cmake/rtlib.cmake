@@ -5,8 +5,8 @@ set(LINKER_FLAGS "${LINKER_FLAGS} -nostartfiles -lc -lnosys --specs=rdimon.specs
 
 # Collect sources and includes
 
-find_file(RTLIB_SRC "src" "${CMAKE_CURRENT_SOURCE_DIR}/rtlib" "${CMAKE_CURRENT_SOURCE_DIR}")
-find_file(RTLIB_INC "inc" "${CMAKE_CURRENT_SOURCE_DIR}/rtlib" "${CMAKE_CURRENT_SOURCE_DIR}")
+find_file(RTLIB_SRC "src" "${CMAKE_CURRENT_SOURCE_DIR}/RTLib" "${CMAKE_CURRENT_SOURCE_DIR}")
+find_file(RTLIB_INC "inc" "${CMAKE_CURRENT_SOURCE_DIR}/RTLib" "${CMAKE_CURRENT_SOURCE_DIR}")
 
 if (RTLIB_SRC STREQUAL "RTLIB_SRC-NOTFOUND")
     message(FATAL_ERROR "Could not find RTLib sources")
