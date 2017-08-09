@@ -118,6 +118,10 @@ endif ()
 
 # ARCH_FLAGS and GENLINK_DEFS has to be passed as a list here
 string(REPLACE " " ";" GENLINK_DEFS ${GENLINK_DEFS})
+# Get rid of any spaces and turn the thing into a list
+JOIN("${ARCH_FLAGS}" " " ARCH_FLAGS)
+string(REPLACE " " ";" ARCH_FLAGS ${ARCH_FLAGS})
+# ------------------
 execute_process(
         COMMAND ${ARM_CXX} ${ARCH_FLAGS} ${GENLINK_DEFS} "-P" "-E" "${LIBOPENCM3_DIR}/ld/linker.ld.S"
         OUTPUT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${LINKER_SCRIPT}"
