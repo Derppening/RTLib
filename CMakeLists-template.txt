@@ -13,6 +13,7 @@ include(RTLib/cmake/libopencm3.cmake)
 include(RTLib/cmake/rtlib.cmake)
 
 file(GLOB_RECURSE SOURCE_FILES "src/*.c" "src/*.cpp")
+file(GLOB_RECURSE INC_FILES "inc/*.h" "src/*.tpp")
 include_directories(inc)
 
-add_executable(${PROJECT_NAME}.elf ${SOURCE_FILES} ${RTLIB_SOURCE_FILES})
+add_executable(${PROJECT_NAME}.elf ${SOURCE_FILES} ${INC_FILES} ${RTLIB_SOURCE_FILES})

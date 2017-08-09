@@ -27,7 +27,8 @@ include(cmake/rtlib.cmake)
 
 # Collect sources into SOURCE_FILES variable and include your headers directory
 file(GLOB_RECURSE SOURCE_FILES "src/*.c" "src/*.cpp")
+file(GLOB_RECURSE INC_FILES "inc/*.h" "src/*.tpp")
 include_directories(inc)
 
 # Specify output executable
-add_executable(${PROJECT_NAME}.elf ${RTLIB_SOURCE_FILES})
+add_executable(${PROJECT_NAME}.elf ${INC_FILES} ${RTLIB_SOURCE_FILES})
