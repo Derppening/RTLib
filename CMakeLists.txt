@@ -32,3 +32,10 @@ include_directories(inc)
 
 # Specify output executable
 add_executable(${PROJECT_NAME}.elf main.cpp ${INC_FILES} ${RTLIB_SOURCE_FILES})
+
+add_custom_command(
+        TARGET ${PROJECT_NAME}.elf
+        POST_BUILD
+        COMMAND ${ARM_SIZE} ${PROJECT_NAME}.elf
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+)
