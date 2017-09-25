@@ -13,6 +13,8 @@ if (NOT CMAKE_TOOLCHAIN_FILE)
     message(FATAL_ERROR "Cross compiling only. Please use -DCMAKE_TOOLCHAIN_FILE=rtlib/cmake/arm-toolchain.cmake or use your own toolchain file")
 endif ()
 
+# Set the C/C++ standards
+set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
 
@@ -24,6 +26,9 @@ include(cmake/libopencm3.cmake)
 
 # Include rtlib
 include(cmake/rtlib.cmake)
+
+# Include additional compilation flags
+include(cmake/compile_flags.cmake)
 
 # Collect sources into SOURCE_FILES variable and include your headers directory
 file(GLOB_RECURSE SOURCE_FILES "src/*.c" "src/*.cpp")
