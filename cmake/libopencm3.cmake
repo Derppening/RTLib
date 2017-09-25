@@ -31,7 +31,7 @@ endif ()
 
 
 # Check if `awk` program is available
-find_program(AWK awk)
+find_program(AWK gawk)
 if (NOT AWK)
     message(FATAL_ERROR "awk is required to generate the linker script, please install it.")
 endif ()
