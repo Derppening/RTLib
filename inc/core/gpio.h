@@ -60,6 +60,23 @@ class GPIO {
   explicit GPIO(const Config& config);
 
   /**
+   * Protected constructor for GPIO.
+   *
+   * This constructor is equivalent to @code GPIO::GPIO(const Config&) @endcode. However, it is suggested to use that
+   * constructor instead.
+   *
+   * @param pin MCU pinout
+   * @param mode GPIO Mode
+   * @param speed GPIO Speed
+   */
+  GPIO(const Pinout& pin, Mode mode, Speed speed);
+
+  /**
+   * Default trivial destructor.
+   */
+  ~GPIO() = default;
+
+  /**
    * @brief Move constructor for GPIO.
    *
    * @param other GPIO object to move from
@@ -112,17 +129,6 @@ class GPIO {
   void Reset() const;
 
  protected:
-  /**
-   * Protected constructor for GPIO.
-   *
-   * This constructor is used for initialization of GPIO ports for subclasses.
-   *
-   * @param pin MCU pinout
-   * @param mode GPIO Mode
-   * @param speed GPIO Speed
-   */
-  GPIO(const Pinout& pin, Mode mode, Speed speed);
-
   /**
    * @brief Initializes this GPIO to the given configuration.
    *
