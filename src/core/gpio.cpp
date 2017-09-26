@@ -4,14 +4,17 @@
 
 #include <libopencm3/stm32/rcc.h>
 
-GPIO::GPIO(const Config& config):
-    pin_(config.pin) {
+GPIO::GPIO(const Config& config) :
+    GPIO(config.pin, config.mode, config.speed) {}
+
+GPIO::GPIO(const Pinout& pin, Mode mode, Speed speed) :
+    pin_(pin) {
   // Use external oscillator for RCC
   rcc_clock_setup_in_hse_8mhz_out_72mhz();
 
   // Initialize the RCC and enable the GPIO
   InitRcc(pin_.first);
-  Init(config.mode, config.speed);
+  Init(mode, speed);
 }
 
 void GPIO::Init(const Mode mode, const Speed speed) const {

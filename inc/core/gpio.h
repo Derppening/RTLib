@@ -1,10 +1,12 @@
-#ifndef RTLIB_GPIO_H_
-#define RTLIB_GPIO_H_
+#ifndef RTLIB_CORE_GPIO_H_
+#define RTLIB_CORE_GPIO_H_
 
 #include <cstdint>
 #include <utility>
 
 #include <libopencm3/stm32/gpio.h>
+
+#include "util.h"
 
 /**
  * @brief HAL implementation for GPIO pins.
@@ -15,14 +17,6 @@
 class GPIO {
  public:
   /**
-   * @brief Type definition for GPIO Port.
-   */
-  using Port = unsigned;
-  /**
-   * @brief Type definition for GPIO Pin.
-   */
-  using Pin = uint16_t;
-  /**
    * @brief Type definition for GPIO Mode.
    */
   using Mode = uint8_t;
@@ -30,30 +24,32 @@ class GPIO {
    * @brief Type definition for GPIO Output Speed.
    */
   using Speed = uint8_t;
-  /**
-   * @brief Type definition for MCU Pinout.
-   */
-  using Pinout = std::pair<Port, Pin>;
 
   struct Config {
     /**
      * @brief GPIO Pin to enable and initialize.
+     *
+     * Defaults to {GPIOA, GPIO0}
      */
-    Pinout pin;
+    Pinout pin = {};
     /**
      * @brief GPIO Mode.
      *
-     * See http://libopencm3.org/docs/latest/stm32f1/html/group__gpio__cnf.html#gafdb5d21e4c813c645906c8b7e9472daf for
+     * Defaults to Floating input.
+     *
+     * See http://libopencm3.org/docs/latest/stm32f1/html/group__gpio__cnf.html for
      * a list of available configurations.
      */
-    Mode mode;
+    Mode mode = GPIO_CNF_INPUT_FLOAT;
     /**
      * @brief GPIO Output Speed.
      *
-     * See http://libopencm3.org/docs/latest/stm32f1/html/group__gpio__mode.html#gaf40bec3146810028a84b628d37d3b391 for
+     * Defaults to Input.
+     *
+     * See http://libopencm3.org/docs/latest/stm32f1/html/group__gpio__mode.html for
      * a list of available pin modes.
      */
-    Speed speed = GPIO_MODE_OUTPUT_50_MHZ;
+    Speed speed = GPIO_MODE_INPUT;
   };
 
   /**
@@ -117,6 +113,17 @@ class GPIO {
 
  protected:
   /**
+   * Protected constructor for GPIO.
+   *
+   * This constructor is used for initialization of GPIO ports for subclasses.
+   *
+   * @param pin MCU pinout
+   * @param mode GPIO Mode
+   * @param speed GPIO Speed
+   */
+  GPIO(const Pinout& pin, Mode mode, Speed speed);
+
+  /**
    * @brief Initializes this GPIO to the given configuration.
    *
    * See GPIO#Config for what @p mode and @p speed means.
@@ -150,4 +157,4 @@ class GPIO {
   Pinout pin_;
 };
 
-#endif  // RTLIB_GPIO_H_
+#endif  // RTLIB_CORE_GPIO_H_
