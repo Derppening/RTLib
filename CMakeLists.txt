@@ -39,11 +39,11 @@ file(GLOB_RECURSE INC_FILES "inc/*.h" "src/*.tpp")
 include_directories(inc)
 
 # Specify output executable
-add_executable(${PROJECT_NAME}.elf main.cpp ${INC_FILES} ${RTLIB_SOURCE_FILES})
+add_executable(${PROJECT_NAME}_${CMAKE_BUILD_TYPE}.elf main.cpp ${INC_FILES} ${RTLIB_SOURCE_FILES})
 
 add_custom_command(
-        TARGET ${PROJECT_NAME}.elf
+        TARGET ${PROJECT_NAME}_${CMAKE_BUILD_TYPE}.elf
         POST_BUILD
-        COMMAND ${ARM_SIZE} ${PROJECT_NAME}.elf
+        COMMAND ${ARM_SIZE} ${PROJECT_NAME}_${CMAKE_BUILD_TYPE}.elf
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 )

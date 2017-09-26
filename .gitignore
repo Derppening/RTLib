@@ -201,5 +201,5 @@ Session.vim
 tags
 
 
-cmake-build-debug/
+cmake-build-debug/cmake-build-release/
 generated.*.ld

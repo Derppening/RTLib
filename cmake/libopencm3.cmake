@@ -140,6 +140,9 @@ message(STATUS "Current linker flags: ${LINKER_FLAGS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GENLINK_CPPFLAGS} ${ARCH_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GENLINK_CPPFLAGS} ${ARCH_FLAGS}")
 
+set(CMAKE_C_FLAGS_RELEASE "-Os")
+set(CMAKE_CXX_FLAGS_RELEASE "-Os")
+
 message(STATUS "Current C flags: ${CMAKE_C_FLAGS}")
 message(STATUS "Current CXX flags: ${CMAKE_CXX_FLAGS}")
 message("-------------------------------------")
