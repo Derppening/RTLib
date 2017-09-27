@@ -100,12 +100,11 @@ class GPIO {
    * std::unique_ptr.
    */
   GPIO(const GPIO&) = delete;
-
   /**
    * @brief Copy assignment operator for GPIO.
    *
    * This constructor is deleted because there should only be one object managing each GPIO pin, similar to @c
-   * std::unique_ptr
+   * std::unique_ptr.
    */
   GPIO& operator=(const GPIO&) = delete;
 

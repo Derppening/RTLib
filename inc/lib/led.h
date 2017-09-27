@@ -43,6 +43,40 @@ class Led {
   explicit Led(const Config& config);
 
   /**
+   * Default trivial destructor.
+   */
+  ~Led() = default;
+
+  /**
+   * @brief Move constructor for LED.
+   *
+   * @param other LED object to move from
+   */
+  Led(Led&& other) noexcept = default;
+  /**
+   * @brief Move assignment operator for LED.
+   *
+   * @param other LED object to move from
+   * @return Reference to the moved LED.
+   */
+  Led& operator=(Led&& other) noexcept = default;
+
+  /**
+   * @brief Copy constructor for LED.
+   *
+   * This constructor is deleted because there should only be one object managing each LED, similar to @c
+   * std::unique_ptr.
+   */
+  Led(const Led&) = delete;
+  /**
+   * @brief Copy assignment operator for LED.
+   *
+   * This constructor is deleted because there should only be one object managing each LED, similar to @c
+   * std::unique_ptr.
+   */
+  Led& operator=(const Led&) = delete;
+
+  /**
    * @brief Sets the state of the LED.
    *
    * @param flag True if the LED should be on
@@ -52,6 +86,12 @@ class Led {
    * @brief Toggles the state of the LED, i.e. On -> Off, vice versa.
    */
   void Switch();
+
+ protected:
+  /**
+   * @return GPIO object which manages the pin of the button
+   */
+  GPIO* GetGpio() { return &gpio_; }
 
  private:
   GPIO gpio_;
