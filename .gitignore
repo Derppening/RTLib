@@ -202,5 +202,6 @@ tags
 
 
 build/
-cmake-build-debug/cmake-build-release/
+cmake-build-debug/
+cmake-build-release/
 generated.*.ld
