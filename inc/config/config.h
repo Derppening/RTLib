@@ -4,8 +4,10 @@
 #define EMPTY_MACRO_HELPER(VAL) VAL ## 1
 #define EMPTY_MACRO(VAL) EMPTY_MACRO_HELPER(VAL)
 
-#if defined(STM32F103_DEV)
-#include "stm32f103_dev.h"
+#if defined(EXAMPLE_CONFIG)
+#include "example_config.h"
+#elif defined(STM32F103_DEV)
+#include "config/stm32f103_dev.h"
 #else
 #error "No configuration is specified. Please specify a target mainboard in CMakeLists.txt"
 #endif
