@@ -25,6 +25,9 @@ class GPIO {
    */
   using Speed = uint8_t;
 
+  /**
+   * @brief Configuration for GPIO.
+   */
   struct Config {
     /**
      * @brief GPIO Pin to enable and initialize.
