@@ -38,7 +38,7 @@ make
 
 4. Modify your `CMakeLists.txt`
 
-You need let your compiler know about `libopencm3` and `RTLib`, checkout the `CMakeLists.txt` for an example on how to your write yours!
+You need to let your compiler know about `libopencm3` and `RTLib`, checkout the `CMakeLists.txt` for an example on how to your write yours!
 
 5. Building your program
 
@@ -50,7 +50,7 @@ mkdir build && cd build         # Then create a build directory where all the ge
 cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../cmake/arm-toolchain.cmake -G "CodeBlocks - Unix Makefiles" ../
 
 # Finally run the make command to initate the build process
-make
+cmake --build .
 ```
 
 A `.bin` file and `.elf` file will be generated inside the `build` directory
