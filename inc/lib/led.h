@@ -6,9 +6,7 @@
 #include "config/config.h"
 #include "core/gpio.h"
 
-#if !defined(LIB_USE_LED) || LIB_USE_LED < 1
-#error "This library is not configured to use LED."
-#endif  // !defined(LIB_USE_LED) || LIB_USE_LED < 1
+static_assert(LIB_USE_LED, "Led library is disabled in your configuration.");
 
 class Led {
  public:
