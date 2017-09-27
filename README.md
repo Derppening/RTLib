@@ -1,5 +1,11 @@
+[![Build Status](https://travis-ci.org/HKUST-Robotics-Team/RTLib.svg?branch=master)](https://travis-ci.org/HKUST-Robotics-Team/RTLib)
+
 # RTLib
 You will love it :)
+
+# Documentation
+
+[Don't use the wiki! Go to our Doxygen docs page](https://hkust-robotics-team.github.io/RTLib/)
 
 # Prerequisites
 You will be needing the following to compile:
