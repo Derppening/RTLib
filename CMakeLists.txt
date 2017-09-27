@@ -30,6 +30,9 @@ include(cmake/libopencm3.cmake)
 # Include rtlib
 include(cmake/rtlib.cmake)
 
+# Include doxygen for dank docs
+include(cmake/doxygen.cmake)
+
 # Include additional compilation flags
 include(cmake/compile_flags.cmake)
 

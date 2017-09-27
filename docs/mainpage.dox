@@ -1,0 +1,80 @@
+/**
+@mainpage HKUST Robotics Team Library
+
+@section About
+
+This library uses libOpenCM3 as its base.
+Recommended to use this library as this is the library that will be getting the most development ;)
+Please don't use our SPL variants.
+
+@subsection Documentation
+
+You are here :)
+
+@subsection Prerequisites
+You will be needing the following to compile:
+
+- arm-none-eabi-gcc toolchain (Or your preferred compiler, in that case provide your own toolchain file)
+- CMake
+- Make
+- GNU awk
+
+@subsection Usage
+
+1. Add the library files to your project by adding it as a submodule to your project:
+    \code{.sh}
+    git submodule add git://github.com/waicool20/RTLib
+    \endcode
+2. Initialize all the submodule dependencies
+    \code{.sh}
+    git submodule update --init --recursive
+    \endcode
+3. Make LibOpenCM3
+    \code{.sh}
+    cd RTLib/libopencm3
+    make
+    \endcode
+4. Modify your `CMakeLists.txt`
+    You need let your compiler know about `libopencm3` and `RTLib`, checkout the `CMakeLists.txt` for an example on how to your write yours!
+5. Building your program
+    \code{.sh}
+    cd RTLib                        # Switch to the RTLib root directory first if you aren't already
+    mkdir build && cd build         # Then create a build directory where all the generate build files will be output
+
+    # Change the -G option according to your build system, might be different for example if you were using MINGW
+    cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../cmake/arm-toolchain.cmake -G "CodeBlocks - Unix Makefiles" ../
+
+    # Finally run the make command to initate the build process
+    make
+    \endcode
+
+A `.bin` file and `.elf` file will be generated inside the `build` directory
+
+If you are using CLion, then usually the `Build All` configuration is all you need to build the project and you skip all that terminal rubbish
+
+@subsection Updating Updating RTLib
+
+\code{.sh}
+cd RTLib                        # Switch to the RTLib root directory first if you aren't already
+git pull origin master          # Pull the latest upstream commits
+cd ..                           # Go back to your project directory
+git status                      # Check that there are changes to RTLib
+git add RTLib                   # Add the RTLib directory to the change list
+git commit                      # Commit the update
+\endcode
+
+@subsection License
+
+Ironic huh? We're part of HKUST but using the MIT License :thinking:
+
+\code{.cpp}
+class HKUSTLicense : public MITLicense {
+  public:
+    HKUSTLicense() {
+        std::cout << "This is definitely an HKUST License. *Believe me*." << std::endl;
+    }
+}
+\endcode
+
+Full license at LICENSE.md
+*/
