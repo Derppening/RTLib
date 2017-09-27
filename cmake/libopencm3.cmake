@@ -33,7 +33,7 @@ endif ()
 # Check if `awk` program is available
 find_program(AWK gawk)
 if (NOT AWK)
-    message(FATAL_ERROR "awk is required to generate the linker script, please install it.")
+    message(FATAL_ERROR "gawk is required to generate the linker script, please install it.")
 endif ()
 
 set(GENLINK_SCRIPT "${LIBOPENCM3_DIR}/scripts/genlink.awk")
