@@ -133,7 +133,7 @@ message(STATUS "Generated linker file: ${LINKER_SCRIPT}")
 JOIN("${ARCH_FLAGS}" " " ARCH_FLAGS)
 # Set linker flags
 set(LINKER_FLAGS "${LINKER_FLAGS} ${LDLIBS} -T${CMAKE_CURRENT_SOURCE_DIR}/${LINKER_SCRIPT} ${ARCH_FLAGS}")
-message(STATUS "Current linker flags: ${LINKER_FLAGS}")
+message(STATUS "Current target specific linker flags: ${LINKER_FLAGS}")
 
 # Compiler flags
 
@@ -143,8 +143,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GENLINK_CPPFLAGS} ${ARCH_FLAGS}")
 set(CMAKE_C_FLAGS_RELEASE "-Os")
 set(CMAKE_CXX_FLAGS_RELEASE "-Os")
 
-message(STATUS "Current C flags: ${CMAKE_C_FLAGS}")
-message(STATUS "Current CXX flags: ${CMAKE_CXX_FLAGS}")
+message(STATUS "Current target specific C flags: ${CMAKE_C_FLAGS}")
+message(STATUS "Current target specific CXX flags: ${CMAKE_CXX_FLAGS}")
 message("-------------------------------------")
 
 # Replace `add_executable` with custom macro with same name that adds libopencm3 as a linking target

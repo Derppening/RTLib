@@ -18,6 +18,9 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
 
+# Verbose logging
+set(LOG_VERBOSE 1)
+
 # Choose target device here
 set(DEVICE STM32F103VCT6)
 
