@@ -24,6 +24,14 @@ class GPIO {
    * @brief Type definition for GPIO Output Speed.
    */
   using Speed = uint8_t;
+  /**
+   * @brief Type definition for GPIO Internal Pullup.
+   */
+  using Pullup = uint8_t;
+  /**
+   * @brief Type definition for GPIO Pin Driver Type.
+   */
+  using DriverType = uint8_t;
 
   /**
    * @brief Configuration for GPIO.
@@ -35,35 +43,60 @@ class GPIO {
      * Defaults to {GPIOA, GPIO0}
      */
     Pinout pin = {};
+
     /**
      * @brief GPIO Mode.
      *
-     * Defaults to Floating input.
-     *
-     * See http://libopencm3.org/docs/latest/stm32f1/html/group__gpio__cnf.html for
-     * a list of available configurations.
+     * | MCU Series |       Default Value      |
+     * | :--------: | :---------------------:  |
+     * | STM32F1xx  | @c GPIO_CNF_INPUT_ANALOG |
+     * | STM32F4xx  | @c GPIO_MODE_INPUT       |
      */
-    Mode mode = GPIO_CNF_INPUT_FLOAT;
+    Mode mode = 0x0;
+
     /**
      * @brief GPIO Output Speed.
      *
-     * Defaults to Input.
-     *
-     * See http://libopencm3.org/docs/latest/stm32f1/html/group__gpio__mode.html for
-     * a list of available pin modes.
+     * | MCU Series |       Default Value      |
+     * | :--------: | :----------------------: |
+     * | STM32F1xx  | @c GPIO_MODE_INPUT       |
+     * | STM32F4xx  | @c GPIO_MODE_OSPEED_2MHZ |
      */
-    Speed speed = GPIO_MODE_INPUT;
+    Speed speed = 0x0;
+
+    /**
+     * @brief Whether to use MCU's internal pull-up/down resistor.
+     *
+     * | MCU Series |   Default Value   |
+     * | :--------: | :---------------: |
+     * | STM32F1xx  | No Effect         |
+     * | STM32F4xx  | @c GPIO_PUPD_NONE |
+     */
+    Pullup pullup = 0x0;
+
+    /**
+     * @brief GPIO Output Driver Type.
+     *
+     * | MCU Series |  Default Value   |
+     * | :--------: | :--------------: |
+     * | STM32F1xx  | No Effect        |
+     * | STM32F4xx  | @c GPIO_OTYPE_PP |
+     */
+    DriverType driver = 0x0;
   };
 
   /**
-   * @brief Default constructor for GPIO.
+   * @brief General constructor for GPIO.
+   *
+   * This constructor automatically delegates to the appropriate device-specific constructor.
    *
    * @param config Configuration for the GPIO. See GPIO#Config.
    */
   explicit GPIO(const Config& config);
 
+#if defined(STM32F1)
   /**
-   * Protected constructor for GPIO.
+   * @brief STM32F1xx-specific constructor for GPIO.
    *
    * This constructor is equivalent to @code GPIO::GPIO(const Config&) @endcode. However, it is suggested to use that
    * constructor instead.
@@ -73,6 +106,23 @@ class GPIO {
    * @param speed GPIO Speed
    */
   GPIO(const Pinout& pin, Mode mode, Speed speed);
+#endif  // defined(STM32F1)
+
+#if defined(STM32F4)
+  /**
+   * @brief STM32F4xx-specific constructor for GPIO.
+   *
+   * This constructor is equivalent to @code GPIO::GPIO(const Config&) @endcode. However, it is suggested to use that
+   * constructor instead.
+   *
+   * @param pin MCU pinout
+   * @param mode GPIO mode
+   * @param pullup Internal pull-up mode
+   * @param speed GPIO Output Speed
+   * @param driver GPIO Output Driver Type
+   */
+  GPIO(Pinout pin, Mode mode, Pullup pullup, Speed speed = 0x0, DriverType driver = 0x0);
+#endif  // defined(STM32F4)
 
   /**
    * Default trivial destructor.
@@ -131,8 +181,9 @@ class GPIO {
   void Reset() const;
 
  protected:
+#if defined(STM32F1)
   /**
-   * @brief Initializes this GPIO to the given configuration.
+   * @brief Initializes this GPIO to the given configuration for STM32F1xx devices.
    *
    * See GPIO#Config for what @p mode and @p speed means.
    *
@@ -140,6 +191,19 @@ class GPIO {
    * @param speed GPIO Speed
    */
   void Init(Mode mode, Speed speed) const;
+#endif  // defined(STM32F1)
+
+#if defined(STM32F4)
+  /**
+   * @brief Initializes this GPIO to the given configuration for STM32F4xx devices.
+   *
+   * @param mode GPIO Mode
+   * @param pullup Internal GPIO pull-up mode
+   * @param speed GPIO Output Speed
+   * @param driver GPIO Output Driver Type
+   */
+  void Init(Mode mode, Pullup pullup, Speed speed = 0x0, DriverType driver = 0x0) const;
+#endif  // defined(STM32F4)
   /**
    * @brief Initializes an RCC Clock according to which port is initialized.
    *
