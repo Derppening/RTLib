@@ -17,13 +17,25 @@ inline Pinout GetConfigPinout(const uint8_t id) {
 #if LIB_USE_LED > 0
     case 0:
       return LIB_LED1_PINOUT;
-#endif
+#endif  // LIB_USE_LED > 0
+#if LIB_USE_LED > 1
+    case 1:
+      return LIB_LED2_PINOUT;
+#endif  // LIB_USE_LED > 1
+#if LIB_USE_LED > 2
+    case 2:
+      return LIB_LED3_PINOUT;
+#endif  // LIB_USE_LED > 2
   }
 }
 }  // namespace
 
 Led::Led(const Config& config) :
+#if defined(STM32F1)
     gpio_(GetConfigPinout(config.id), GPIO_CNF_OUTPUT_PUSHPULL, GPIO_MODE_OUTPUT_50_MHZ),
+#elif defined(STM32F4)
+    gpio_(GetConfigPinout(config.id), GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_OSPEED_50MHZ),
+#endif
     polarity_(config.polarity) {
   SetEnable(false);
 }
