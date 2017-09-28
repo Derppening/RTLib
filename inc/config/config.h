@@ -8,6 +8,8 @@
 #include "example_config.h"
 #elif defined(STM32F103_DEV)
 #include "config/stm32f103_dev.h"
+#elif defined(STM32F407_DEV)
+#include "config/stm32f407_dev.h"
 #else
 #error "No configuration is specified. Please specify a target mainboard in CMakeLists.txt"
 #endif
