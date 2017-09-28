@@ -5,7 +5,7 @@ this file is commented and mostly identical, only some slight differences in the
 `include` paths and `add_executable` sources. I think at least.
 
 ]]
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.9)
 project(RTLib)
 
 # Include an error in case the user forgets to specify ARM as a toolchain
@@ -19,13 +19,13 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
 
 # Verbose logging
-set(LOG_VERBOSE 1)
+set(LOG_VERBOSE 0)
 
 # Choose target device here
-set(DEVICE STM32F103VCT6)
+set(DEVICE STM32F407VET6)
 
 # Choose target mainboard pin configuration here
-add_definitions(-DSTM32F103_DEV)
+add_definitions(-DSTM32F407_DEV)
 
 # Include libopencm3
 include(cmake/libopencm3.cmake)

@@ -21,7 +21,7 @@ add_custom_target(
         WORKING_DIRECTORY ${LIBOPENCM3_DIR}
 )
 link_directories(${LIBOPENCM3_DIR}/lib)
-include_directories(${LIBOPENCM3_DIR}/include)
+include_directories(SYSTEM ${LIBOPENCM3_DIR}/include)
 
 # Generate linker information for device, based on libopencm3/mk/genlink-config.mk
 
