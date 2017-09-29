@@ -13,9 +13,15 @@ if (NOT CMAKE_TOOLCHAIN_FILE)
     message(FATAL_ERROR "Cross compiling only. Please use -DCMAKE_TOOLCHAIN_FILE=rtlib/cmake/arm-toolchain.cmake or use your own toolchain file")
 endif ()
 
+if ((NOT ${CMAKE_C_COMPILER_ID} STREQUAL "GNU") OR
+    (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU") OR
+    (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.3.1))
+    message(WARNING "This project is targeted for ARM GCC versions 6.3.1 or above. Some features may not be supported by your compiler.")
+endif()
+
 # Set the C/C++ standards
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
 
 # Verbose logging
