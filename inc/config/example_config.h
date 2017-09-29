@@ -19,8 +19,8 @@
 // The format of the macro is
 // #define LIB_DEVICEx_PINOUT {GPIO, GPIO_PIN}
 // where DEVICE is the device under lib, x is the ID of the device, GPIO is the GPIO, and GPIO_PIN is the pin.
-// All devices IDs in this file start from 1, and corresponds to 0 in Config structs.
-#define LIB_LED1_PINOUT {GPIOB, GPIO0}
+// All devices IDs in this file start from 0, and corresponds to 0 in Config structs.
+#define LIB_LED0_PINOUT {GPIOB, GPIO0}
 
 // Other devices may require more than one pinout. These will also be defined here.
 // TODO(Derppening): Add example from SPI
