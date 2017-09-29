@@ -35,15 +35,12 @@ class Led {
   /**
    * @brief Default constructor for LED.
    *
-   * @note LED will always be in off state after constructor is called. If it isn't, your board may have a pull-up
-   * resistor; Set Led#Config#polarity to true if that is the case.
-   *
    * @param config LED configuration
    */
   explicit Led(const Config& config);
 
   /**
-   * Default trivial destructor.
+   * @brief Default trivial destructor.
    */
   ~Led() = default;
 
@@ -78,6 +75,9 @@ class Led {
 
   /**
    * @brief Sets the state of the LED.
+   *
+   * @note LED will always be in off state after constructor is called. If it isn't, your board may have a pull-up
+   * resistor; Set Led#Config#polarity to another value if that is the case.
    *
    * @param flag True if the LED should be on
    */

@@ -1,3 +1,24 @@
+/**
+ * @file stm32f407_dev.h
+ *
+ * @brief Pin configurations for STM32F407 development board.
+ *
+ * Taobao Link: https://m.intl.taobao.com/detail/detail.html?id=524181346955
+ *
+ * Led Configuration:
+ * |        Macro       | MCU Pinout | Mainboard Designation | Polarity |
+ * | :----------------: | :--------: | :-------------------: | :------: |
+ * | @c LIB_LED0_PINOUT |     PA6    |           D2          |  @c true |
+ * | @c LIB_LED1_PINOUT |     PA7    |           D3          |  @c true |
+ *
+ * Button Configuration:
+ * |          Macro        | MCU Pinout | Mainboard Designation |   Pull-Up/Pull-Down   |
+ * | :-------------------: | :--------: | :-------------------: | :-------------------: |
+ * | @c LIB_BUTTON0_PINOUT |     PA0    |          K_UP         |  @c Button::kPullDown |
+ * | @c LIB_BUTTON1_PINOUT |     PE4    |           K0          |   @c Button::kPullUp  |
+ * | @c LIB_BUTTON2_PINOUT |     PE3    |           K1          |   @c Button::kPullUp  |
+ */
+
 #ifndef RTLIB_CONFIG_STM32F407_DEV_H_
 #define RTLIB_CONFIG_STM32F407_DEV_H_
 

@@ -40,7 +40,7 @@ class GPIO {
     /**
      * @brief GPIO Pin to enable and initialize.
      *
-     * Defaults to {GPIOA, GPIO0}
+     * Defaults to @code {GPIOA, GPIO0} @endcode.
      */
     Pinout pin = {};
 
