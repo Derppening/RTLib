@@ -6,10 +6,12 @@ branches:
     - master
 
 addons:
-  sources:
-    - ubuntu-toolchain-r-test
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
+      - gcc-7
+      - g++-7
       - doxygen
       - doxygen-doc
       - doxygen-latex
@@ -21,6 +23,8 @@ install:
   - sudo sh cmake-3.9.2-Linux-x86_64.sh -- --skip-license --prefix=/usr
 
 script:
+  - export CC=/usr/bin/gcc-7
+  - export CXX=/usr/bin/g++-7
   - cd $TRAVIS_BUILD_DIR
   - mkdir cmake_build
   - cd cmake_build
