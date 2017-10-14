@@ -1,11 +1,11 @@
-[![Build Status](https://travis-ci.org/HKUST-Robotics-Team/RTLib.svg?branch=master)](https://travis-ci.org/HKUST-Robotics-Team/RTLib)
+[![Build Status](https://travis-ci.org/Derppening/RTLib.svg?branch=master)](https://travis-ci.org/Derppening/RTLib)
 
 # RTLib
 You will love it :)
 
 # Documentation
 
-[Don't use the wiki! Go to our Doxygen docs page](https://hkust-robotics-team.github.io/RTLib/)
+[Don't use the wiki! Go to our Doxygen docs page](https://Derppening.github.io/RTLib/)
 
 # Prerequisites
 You will be needing the following to compile:
@@ -20,7 +20,7 @@ You will be needing the following to compile:
 1. Add the library files to your project by adding it as a submodule to your project:
 
 ```bash
-git submodule add git://github.com/waicool20/RTLib
+git submodule add git://github.com/Derppening/RTLib
 ```
 
 2. Initialize all the submodule dependencies
