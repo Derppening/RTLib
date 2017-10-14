@@ -65,16 +65,7 @@ git commit                      # Commit the update
 
 @subsection License
 
-Ironic huh? We're part of HKUST but using the MIT License :thinking:
-
-\code{.cpp}
-class HKUSTLicense : public MITLicense {
-  public:
-    HKUSTLicense() {
-        std::cout << "This is definitely an HKUST License. *Believe me*." << std::endl;
-    }
-}
-\endcode
+Licensed under LGPLv3
 
 Full license at LICENSE.md
 */
