@@ -16,8 +16,9 @@ static_assert(LIB_USE_BUTTON > 0, "Button library is disabled in your configurat
  */
 class Button {
  public:
+#if defined(STM32F4)
   /**
-   * @brief Enumeration for different internal pull-up/pull-down states.
+   * @brief Enumeration for different internal pull-up/pull-down states for STM32F4xx.
    */
   enum PullupState : uint8_t {
     /**
@@ -39,6 +40,7 @@ class Button {
      */
     kPullDown = 0x2
   };
+#endif  // defined(STM32F4)
 
   /**
    * @brief Configuration for button.
@@ -51,9 +53,12 @@ class Button {
      */
     uint8_t id;
     /**
-     * @brief Whether to use the internal pull-up/pull-down resistor.
-     * 
-     * You may use Button#PullupState enumeration or libopencm3 macros.
+     * @brief Specifies default state of the button.
+     *
+     * For STM32F1xx, specifies if the button is active high.
+     *
+     * For STM32F4xx, specifies whether to use the internal pull-up/pull-down resistor. You may use the
+     * Button#PullupState enumeration or libopencm3 macros.
      */
     uint8_t pullup;
   };

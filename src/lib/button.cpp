@@ -32,12 +32,11 @@ inline Pinout GetConfigPinout(const uint8_t id) {
 
 Button::Button(const Config& config) :
 #if defined(STM32F1)
-#error "STM32F1xx configuration incomplete. Please file a bug report on Github."
-// TODO(Derppening): STM32F1 button config
+    gpio_(GetConfigPinout(config.id), GPIO_CNF_INPUT_PULL_UPDOWN, GPIO_MODE_INPUT),
 #elif defined(STM32F4)
     gpio_(GetConfigPinout(config.id), GPIO_MODE_INPUT, config.pullup, GPIO_OSPEED_50MHZ),
 #endif
-    polarity_(config.pullup == PullupState::kPullUp) {
+    polarity_(config.pullup == 0x1) {
 }
 
 bool Button::Read() {
