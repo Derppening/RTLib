@@ -34,7 +34,7 @@ set(LOG_VERBOSE 0)
 set(DEVICE STM32F103VCT6)
 
 # Choose target mainboard pin configuration here
-add_definitions(-DSTM32F103_DEV)
+add_definitions(-DMAINBOARD_VER4_2)
 
 # Include libopencm3
 include(cmake/libopencm3.cmake)
