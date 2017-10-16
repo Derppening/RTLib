@@ -1,6 +1,6 @@
 #include "config/config.h"
 
-#if defined(LIB_USE_LED) && (EMPTY_MACRO(LIB_USE_LED) != 1)
+#if defined(LIB_USE_LED) && LIB_USE_LED > 0
 
 #include "lib/led.h"
 
@@ -48,6 +48,6 @@ void Led::Switch() {
   gpio_.Toggle();
 }
 
-#else
+#elif !defined(LIB_USE_LED)
 #error "LIB_USE_LED macro not found. (Did you define it in your board configuration?)"
-#endif  // defined(LIB_USE_LED) && (EMPTY_MACRO(LIB_USE_LED) != 1)
+#endif

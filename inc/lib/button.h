@@ -6,7 +6,7 @@
 #include "config/config.h"
 #include "core/gpio.h"
 
-static_assert(LIB_USE_BUTTON, "Button library is disabButton in your configuration.");
+static_assert(LIB_USE_BUTTON > 0, "Button library is disabled in your configuration.");
 
 /**
  * @brief HAL implementation for buttons.

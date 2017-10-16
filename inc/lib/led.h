@@ -6,7 +6,7 @@
 #include "config/config.h"
 #include "core/gpio.h"
 
-static_assert(LIB_USE_LED, "Led library is disabled in your configuration.");
+static_assert(LIB_USE_LED > 0, "Led library is disabled in your configuration.");
 
 /**
  * @brief HAL implementation for LEDs.

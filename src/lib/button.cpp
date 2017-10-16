@@ -1,6 +1,6 @@
 #include "config/config.h"
 
-#if defined(LIB_USE_BUTTON) && (EMPTY_MACRO(LIB_USE_BUTTON) != 1)
+#if defined(LIB_USE_BUTTON) && LIB_USE_BUTTON > 0
 
 #include "lib/button.h"
 
@@ -44,6 +44,6 @@ bool Button::Read() {
   return static_cast<bool>(gpio_.Read() ^ polarity_);
 }
 
-#else
+#elif !defined(LIB_USE_BUTTON)
 #error "LIB_USE_BUTTON macro not found. (Did you define it in your board configuration?)"
-#endif  // defined(LIB_USE_BUTTON) && (EMPTY_MACRO(LIB_USE_BUTTON) != 1)
+#endif
