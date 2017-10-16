@@ -9,6 +9,11 @@
  * |        Macro       | MCU Pinout | Mainboard Designation | Polarity |
  * | :----------------: | :--------: | :-------------------: | :------: |
  * | @c LIB_LED0_PINOUT |     PB0    |          LED1         |  @c true |
+ *
+ * Button Configuration:
+ * |          Macro        | MCU Pinout | Mainboard Designation | Active High? |
+ * | :-------------------: | :--------: | :-------------------: | :----------: |
+ * | @c LIB_BUTTON0_PINOUT |     PE6    |          KEY1         |   @c false   |
  */
 
 #ifndef RTLIB_CONFIG_STM32F103_DEV_H_
@@ -21,6 +26,7 @@
 #define LIB_USE_LED 1
 #define LIB_LED0_PINOUT {GPIOB, GPIO0}
 
-#define LIB_USE_BUTTON 0
+#define LIB_USE_BUTTON 1
+#define LIB_BUTTON0_PINOUT {GPIOE, GPIO6}
 
 #endif  // RTLIB_CONFIG_STM32F103_DEV_H_
