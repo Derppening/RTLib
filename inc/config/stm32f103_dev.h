@@ -1,3 +1,16 @@
+/**
+ * @file stm32f103_dev.h
+ *
+ * @brief Pin configurations for STM32F103 development board.
+ *
+ * Taobao Link: https://detail.tmall.com/item.htm?id=549940576891&toSite=main
+ *
+ * Led Configuration:
+ * |        Macro       | MCU Pinout | Mainboard Designation | Polarity |
+ * | :----------------: | :--------: | :-------------------: | :------: |
+ * | @c LIB_LED0_PINOUT |     PB0    |          LED1         |  @c true |
+ */
+
 #ifndef RTLIB_CONFIG_STM32F103_DEV_H_
 #define RTLIB_CONFIG_STM32F103_DEV_H_
 
