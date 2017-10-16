@@ -17,7 +17,11 @@ extern "C" void sys_tick_handler() {
 void System::Init(ClockResolution clock_res) {
   clock_res_ = clock_res;
 
+#if defined(STM32F1)
+  systick_set_reload(72000000 / clock_res_);
+#elif defined(STM32F4)
   systick_set_reload(168000000 / clock_res_);
+#endif
   systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
   systick_counter_enable();
 
