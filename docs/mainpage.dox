@@ -3,23 +3,27 @@
 
 @section About
 
-This library uses libOpenCM3 as its base.
-It is recommended to use this library as this is the library that will be getting the most development ;)
-Please don't use our SPL variants.
+Experimental hardware abstraction layer for STM32F103 and STM32F407 devices, based on
+<a href="https://github.com/libopencm3/libopencm3">libopencm3</a>.
 
-@subsection Documentation
-
-You are here :)
-
-@subsection Prerequisites
+@section Prerequisites
 You will be needing the following to compile:
 
-- arm-none-eabi-gcc toolchain (Or your preferred compiler, in that case provide your own toolchain file)
-- CMake
-- Make
-- GNU awk
+- <a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm">arm-none-eabi-gcc</a> (Or your preferred
+compiler, in that case provide your own toolchain file)
+- <a href="https://cmake.org/">CMake</a>
+- <a href="https://www.gnu.org/software/make/">GNU Make</a>
+- <a href="https://www.gnu.org/software/gawk/">GNU awk</a>
 
-@subsection Usage
+Optional software that will make your life easier:
+- <a href="https://git-scm.com/">Git</a>
+- <a href="https://www.jetbrains.com/clion/">Jetbrains CLion</a>
+- One of the following flashing tools:
+    - <a href="https://www.segger.com/products/debug-probes/j-link/technology/flash-download/">JLink</a>
+    - <a href="https://github.com/texane/stlink">stlink</a>
+    - <a href="https://sourceforge.net/p/stm32flash/wiki/Home/">stm32flash</a>
+
+@section Usage
 
 1. Add the library files to your project by adding it as a submodule to your project:
     \code{.sh}
@@ -35,7 +39,8 @@ You will be needing the following to compile:
     make
     \endcode
 4. Modify your `CMakeLists.txt`
-    You need to let your compiler know about `libopencm3` and `RTLib`, checkout the `CMakeLists.txt` for an example on how to write yours!
+    You need to let your compiler know about `libopencm3` and `RTLib`, checkout the `CMakeLists.txt` for an example on
+    how to write yours!
 5. Building your program
     \code{.sh}
     cd RTLib                        # Switch to the RTLib root directory first if you aren't already
@@ -50,7 +55,42 @@ You will be needing the following to compile:
 
 A `.bin` file and `.elf` file will be generated inside the `build` directory
 
-If you are using CLion, then usually the `Build All` configuration is all you need to build the project and you skip all that terminal rubbish
+If you are using CLion, then usually the `Build All` configuration is all you need to build the project and you skip
+all that terminal rubbish.
+
+@subsection Testing Testing on a Device
+
+You should have either an ST-Link, USB-TTL, or JLink for your device. Check your mainboard if you are unsure.
+
+All following code assumes your current working directory is at the root of the project.
+
+@subsubsection ST-Link
+
+\code{.sh}
+cd scripts/
+./flash_stlink.sh ../build/[target].bin  # Replace target.bin with the appropriate file
+\endcode
+
+@subsubsection JLink
+
+\code{.sh}
+cd scripts/
+./flash.sh <device> ./jlink/[debug|release].jlink  # Replace [debug|release] with the file you want to flash
+\endcode
+
+@subsubsection USB-TTL
+
+\code{.sh}
+cd build/
+
+# Replace:
+# [target.bin] with the appropriate file
+# [115200] with the target baud rate
+# [/dev/ttyUSB0] with the target device
+sudo stm32flash -w [target.bin] -v -g 0x0 -b [115200] [/dev/ttyUSB0]
+\endcode
+
+Note: Please turn your device into BOOT mode when flashing via USB-TTL.
 
 @subsection Updating Updating RTLib
 
@@ -63,9 +103,15 @@ git add RTLib                   # Add the RTLib directory to the change list
 git commit                      # Commit the update
 \endcode
 
-@subsection License
+@section Contributors
 
-Licensed under LGPLv3
+- <b>David Mak</b> - <a href="https://github.com/Derppening/">Derppening</a>
+- <b>waicool20</b> - <a href="https://github.com/waicool20">waicool20</a>
 
-Full license at LICENSE.md
+@section License
+
+This project is licensed under LGPLv3 - see LICENSE.md for details.
+
+<a href="https://github.com/libopencm3/libopencm3">libopencm3</a> is licensed under
+<a href="https://github.com/libopencm3/libopencm3/blob/master/COPYING.LGPL3">LGPLv3</a>.
 */
