@@ -2,6 +2,7 @@
 
 #include <libopencm3/cm3/systick.h>
 
+bool System::has_init_ = false;
 System::ClockResolution System::clock_res_ = System::ClockResolution::kStdRes;
 
 namespace {
@@ -15,6 +16,9 @@ extern "C" void sys_tick_handler() {
 }
 
 void System::Init(ClockResolution clock_res) {
+  // check whether clock has already been initialized
+  if (has_init_) { return; }
+
   clock_res_ = clock_res;
 
 #if defined(STM32F1)
@@ -26,6 +30,8 @@ void System::Init(ClockResolution clock_res) {
   systick_counter_enable();
 
   systick_interrupt_enable();
+
+  has_init_ = true;
 }
 
 uint64_t System::GetUs() {

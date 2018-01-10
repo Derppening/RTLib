@@ -9,9 +9,9 @@
  * This abstraction layer provides timekeeping functionality. Since there is only one system clock, member functions
  * can be called directly.
  *
- * To use this class, Init() must be called. Otherwise, any of the member functions will refuse to work.
+ * To use this class, Init() must be called. Otherwise, any of the member functions will not work as intended.
  */
-class System {
+class System final {
  public:
   /**
    * @brief Enumeration of clock resolution.
@@ -39,6 +39,13 @@ class System {
      */
         kHighRes = 1000000
   };
+
+  /**
+   * @brief Default constructor for System.
+   *
+   * This constructor is disabled to enforce a static class (singleton) pattern.
+   */
+  System() = delete;
 
   /**
    * @brief Initializes the timekeeping functionality.
@@ -114,6 +121,7 @@ class System {
   static void DelayS(uint64_t wait_s);
 
  private:
+  static bool has_init_;
   static ClockResolution clock_res_;
 };
 
