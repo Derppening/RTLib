@@ -30,8 +30,11 @@ script:
   - cd cmake_build
   - cmake -DCMAKE_TOOLCHAIN_FILE=$TRAVIS_BUILD_DIR/cmake/arm-toolchain.cmake ../ && make doxygen
 
+before_deploy:
+  - cd $TRAVIS_BUILD_DIR
+
 deploy:
-  local_dir: $TRAVIS_BUILD_DIR/build/doxygen/html
+  local_dir: build/doxygen/html
   provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
