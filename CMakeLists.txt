@@ -31,10 +31,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
 set(LOG_VERBOSE 0)
 
 # Choose target device here
-set(DEVICE STM32F103VCT6)
+set(DEVICE STM32F407VET6)
 
 # Choose target mainboard pin configuration here
-add_definitions(-DMAINBOARD_VER4_2)
+add_definitions(-DSTM32F407_DEV)
 
 # Include libopencm3
 include(cmake/libopencm3.cmake)
@@ -50,8 +50,8 @@ include(cmake/compile_flags.cmake)
 
 # Collect sources into SOURCE_FILES variable and include your headers directory
 file(GLOB_RECURSE SOURCE_FILES "src/*.c" "src/*.cpp")
-file(GLOB_RECURSE INC_FILES "inc/*.h" "src/*.tpp")
-include_directories(inc)
+file(GLOB_RECURSE INC_FILES "src/*.h" "src/*.tpp")
+include_directories(src)
 
 # Specify output executable
 add_executable(${PROJECT_NAME}_${CMAKE_BUILD_TYPE}.elf main.cpp ${INC_FILES} ${RTLIB_SOURCE_FILES})

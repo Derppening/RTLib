@@ -6,17 +6,10 @@ set(CMAKE_CXX_FLAGS_RELEASE "-Os")
 set(LINKER_FLAGS "${LINKER_FLAGS} -nostartfiles -lc -lnosys --specs=rdimon.specs -Wl,--gc-sections,-Map,${CMAKE_PROJECT_NAME}_${CMAKE_BUILD_TYPE}.map")
 
 # Collect sources and includes
-
 find_file(RTLIB_SRC "src" PATHS "${CMAKE_CURRENT_SOURCE_DIR}/RTLib" "${CMAKE_CURRENT_SOURCE_DIR}")
-find_file(RTLIB_INC "inc" PATHS "${CMAKE_CURRENT_SOURCE_DIR}/RTLib" "${CMAKE_CURRENT_SOURCE_DIR}")
-
 if (RTLIB_SRC STREQUAL "RTLIB_SRC-NOTFOUND")
     message(FATAL_ERROR "Could not find RTLib sources")
 endif ()
 
-if (RTLIB_INC STREQUAL "RTLIB_INC-NOTFOUND")
-    message(FATAL_ERROR "Could not find RTLib includes")
-endif ()
-
 file(GLOB_RECURSE RTLIB_SOURCE_FILES "${RTLIB_SRC}/*.c" "${RTLIB_SRC}/*.cpp")
-include_directories(${RTLIB_INC})
+include_directories(${RTLIB_SRC})
