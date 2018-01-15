@@ -15,8 +15,8 @@ endif ()
 
 if ((NOT ${CMAKE_C_COMPILER_ID} STREQUAL "GNU") OR
     (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU") OR
-    (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.3.1))
-    message(WARNING "This project is targeted for ARM GCC versions 6.3.1 or above. Some features may not be supported\
+    (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 7.2.1))
+    message(WARNING "This project is targeted for ARM GCC versions 7.2.1 or above. Some features may not be supported\
      by your compiler. You are using:
      ${CMAKE_CXX_COMPILER_ID} C, version ${CMAKE_C_COMPILER_VERSION}
      ${CMAKE_CXX_COMPILER_ID} CXX, version ${CMAKE_CXX_COMPILER_VERSION}")
