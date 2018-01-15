@@ -4,6 +4,12 @@
 #include <cstdint>
 #include <utility>
 
+#if defined(STM32F1)
+#define CORE_NS core::stm32f1
+#elif defined(STM32F4)
+#define CORE_NS core::stm32f4
+#endif
+
 /**
  * @brief Type definition for MCU Port.
  */
