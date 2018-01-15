@@ -1,3 +1,8 @@
+/**
+ * @file src/core/util.h
+ *
+ * @brief Utility helpers for core library.
+ */
 #ifndef RTLIB_CORE_UTIL_H_
 #define RTLIB_CORE_UTIL_H_
 

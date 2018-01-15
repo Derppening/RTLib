@@ -1,3 +1,11 @@
+/**
+ * @file src/core/gpio.h
+ *
+ * @brief Helper file for selecting which GPIO class to enable.
+ *
+ * This file selects which GPIO class to enable according to the @c DEVICE set in @c CMakeLists.txt.
+ */
+
 #ifndef RTLIB_CORE_GPIO_H_
 #define RTLIB_CORE_GPIO_H_
 

@@ -1,3 +1,12 @@
+/**
+ * @file src/config/config.h
+ *
+ * @brief Helper file for selecting device configurations.
+ *
+ * This file selects which device configuration to use according to the definition given in @c CMakeLists.txt. If such
+ * configuration is not, this file will throw an error indicating such.
+ */
+
 #ifndef RTLIB_CONFIG_CONFIG_H_
 #define RTLIB_CONFIG_CONFIG_H_
 
@@ -10,7 +19,7 @@
 #elif defined(STM32F407_DEV)
 #include "config/stm32f407_dev.h"
 #else
-#error "No configuration is specified. Please specify a target mainboard in CMakeLists.txt"
+#error "No known configuration is specified. Please specify a target mainboard in CMakeLists.txt"
 #endif
 
 #endif  // RTLIB_CONFIG_CONFIG_H_

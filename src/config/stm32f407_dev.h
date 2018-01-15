@@ -1,5 +1,5 @@
 /**
- * @file stm32f407_dev.h
+ * @file src/config/stm32f407_dev.h
  *
  * @brief Pin configurations for STM32F407 development board.
  *

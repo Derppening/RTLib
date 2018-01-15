@@ -1,5 +1,5 @@
 /**
- * @file mainboard_ver4_2.h
+ * @file src/config/mainboard_ver4_2.h
  *
  * @brief Pin configurations for Mainboard Version 4.2, designed by Chan Tsz Ho.
  *

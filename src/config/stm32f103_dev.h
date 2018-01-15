@@ -1,5 +1,5 @@
 /**
- * @file stm32f103_dev.h
+ * @file src/config/stm32f103_dev.h
  *
  * @brief Pin configurations for STM32F103 development board.
  *
