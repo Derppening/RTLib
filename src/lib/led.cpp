@@ -6,6 +6,8 @@
 
 #include <cassert>
 
+using CORE_NS::GPIO;
+
 namespace {
 inline Pinout GetConfigPinout(const uint8_t id) {
   assert(id < LIB_USE_LED);
@@ -32,9 +34,9 @@ inline Pinout GetConfigPinout(const uint8_t id) {
 
 Led::Led(const Config& config) :
 #if defined(STM32F1)
-    gpio_(GetConfigPinout(config.id), GPIO_CNF_OUTPUT_PUSHPULL, GPIO_MODE_OUTPUT_50_MHZ),
+    gpio_(GetConfigPinout(config.id), GPIO::Configuration::kOutputPushPull, GPIO::Mode::kOutput50MHz),
 #elif defined(STM32F4)
-    gpio_(GetConfigPinout(config.id), GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_OSPEED_50MHZ),
+    gpio_(GetConfigPinout(config.id), GPIO::Mode::kOutput, GPIO::Pullup::kNone, GPIO::Speed::k50MHz),
 #endif
     polarity_(config.polarity) {
   SetEnable(false);

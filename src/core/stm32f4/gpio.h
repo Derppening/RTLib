@@ -22,21 +22,118 @@ namespace stm32f4 {
 class GPIO final {
  public:
   /**
-   * @brief Type definition for GPIO Mode.
+   * @brief Enumeration for different GPIO modes.
+   *
+   * This enum is intended to replace equivalent macros used in libopencm3.
+   *
+   * See http://libopencm3.org/docs/latest/stm32f4/html/group__gpio__mode.html.
    */
-  using Mode = uint8_t;
+  enum struct Mode : uint8_t {
+    /**
+     * @brief Use this GPIO as digital input.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_MODE_INPUT.
+     */
+    kInput = 0x0,
+    /**
+     * @brief Use this GPIO as digital output.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_MODE_OUTPUT.
+     */
+    kOutput,
+    /**
+     * @brief Use this GPIO as an alternate function.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_MODE_AF.
+     */
+    kAF,
+    /**
+     * @brief Use this GPIO as analog I/O.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_MODE_ANALOG.
+     */
+    kAnalog
+  };
+
   /**
-   * @brief Type definition for GPIO Output Speed.
+   * @brief Enumeration for different GPIO output speeds.
+   *
+   * This enum is intended to replace equivalent macros used in libopencm3.
+   *
+   * See http://libopencm3.org/docs/latest/stm32f4/html/group__gpio__speed.html.
    */
-  using Speed = uint8_t;
+  enum struct Speed : uint8_t {
+    /**
+     * @brief Output GPIO at 2MHz.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_OSPEED_2MHZ.
+     */
+    k2MHz = 0,
+    /**
+     * @brief Output GPIO at 25MHz.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_OSPEED_25MHZ.
+     */
+    k25MHz,
+    /**
+     * @brief Output GPIO at 50MHz.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_OSPEED_50MHZ.
+     */
+    k50MHz,
+    /**
+     * @brief Output GPIO at 100MHz.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_OSPEED_100MHZ.
+     */
+    k100MHz
+  };
+
   /**
-   * @brief Type definition for GPIO Internal Pullup.
+   * @brief Enumeration for different internal pull-up states.
+   *
+   * This enum is intended to replace equivalent macros used in libopencm3.
+   *
+   * See http://libopencm3.org/docs/latest/stm32f4/html/group__gpio__pup.html.
    */
-  using Pullup = uint8_t;
+  enum struct Pullup : uint8_t {
+    /**
+     * @brief Do not use the internal pull-up/pull-down resistor (i.e. floating mode).
+     *
+     * Equivalent to libopencm3 macro @c GPIO_PUPD_NONE.
+     */
+    kNone = 0,
+    /**
+     * @brief Use the internal pull-up resistor.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_PUPD_PULLUP.
+     */
+    kPullup,
+    /**
+     * @brief Use the internal pull-down resistor.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_PUPD_PULLDOWN.
+     */
+    kPulldown
+  };
+
   /**
-   * @brief Type definition for GPIO Pin Driver Type.
+   * @brief Enumeration for GPIO output driver modes.
+   *
+   * This enum is intended to replace equivalent macros used in libopencm3.
+   *
+   * See http://libopencm3.org/docs/latest/stm32f4/html/group__gpio__output__type.html.
    */
-  using DriverType = uint8_t;
+  enum struct DriverType : uint8_t {
+    /**
+     * @brief Drive GPIO output using push-pull (i.e. actively pushed to VCC/pulled to GND).
+     */
+    kPushPull = 0,
+    /**
+     * @brief Drive GPIO output using open-drain (i.e. only pull to GND).
+     */
+    kOpenDrain
+  };
 
   /**
    * @brief Configuration for GPIO.
@@ -52,30 +149,30 @@ class GPIO final {
     /**
      * @brief GPIO Mode.
      *
-     * Defaults to @c GPIO_MODE_INPUT.
+     * Defaults to Mode#kInput.
      */
-    Mode mode = GPIO_MODE_INPUT;
+    Mode mode = Mode::kInput;
 
     /**
      * @brief GPIO Output Speed.
      *
-     * Defaults to @c GPIO_OSPEED_2MHZ.
+     * Defaults to Speed#k2MHz.
      */
-    Speed speed = GPIO_OSPEED_2MHZ;
+    Speed speed = Speed::k2MHz;
 
     /**
      * @brief Whether to use MCU's internal pull-up/down resistor.
      *
-     * Defaults to @c GPIO_PUPD_NONE.
+     * Defaults to Pullup#kNone.
      */
-    Pullup pullup = GPIO_PUPD_NONE;
+    Pullup pullup = Pullup::kNone;
 
     /**
      * @brief GPIO Output Driver Type.
      *
-     * Defaults to @c GPIO_OTYPE_PP.
+     * Defaults to DriverType#kPushPull.
      */
-    DriverType driver = GPIO_OTYPE_PP;
+    DriverType driver = DriverType::kPushPull;
   };
 
   /**
@@ -97,7 +194,7 @@ class GPIO final {
    * @param speed GPIO Output Speed
    * @param driver GPIO Output Driver Type
    */
-  GPIO(Pinout pin, Mode mode, Pullup pullup, Speed speed = 0x0, DriverType driver = 0x0);
+  GPIO(Pinout pin, Mode mode, Pullup pullup, Speed speed = Speed::k2MHz, DriverType driver = DriverType::kPushPull);
 
   /**
    * Default trivial destructor.
@@ -164,7 +261,7 @@ class GPIO final {
    * @param speed GPIO Output Speed
    * @param driver GPIO Output Driver Type
    */
-  void Init(Mode mode, Pullup pullup, Speed speed = 0x0, DriverType driver = 0x0) const;
+  void Init(Mode mode, Pullup pullup, Speed speed = Speed::k2MHz, DriverType driver = DriverType::kPushPull) const;
   /**
    * @brief Initializes an RCC Clock according to which port is initialized.
    *

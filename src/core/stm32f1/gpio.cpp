@@ -11,20 +11,20 @@ namespace core {
 namespace stm32f1 {
 
 GPIO::GPIO(const Config& config) :
-    GPIO(config.pin, config.mode, config.speed) {}
+    GPIO(config.pin, config.cnf, config.mode) {}
 
-GPIO::GPIO(const Pinout& pin, Mode mode, Speed speed) :
-    pin_(pin) {
+GPIO::GPIO(Pinout pin, Configuration cnf, Mode mode) :
+    pin_(std::move(pin)) {
   // Use external oscillator for RCC
   rcc_clock_setup_in_hse_8mhz_out_72mhz();
 
   // Initialize the RCC and enable the GPIO
   InitRcc(pin_.first);
-  Init(mode, speed);
+  Init(cnf, mode);
 }
 
-void GPIO::Init(const Mode mode, const Speed speed) const {
-  gpio_set_mode(pin_.first, speed, mode, pin_.second);
+void GPIO::Init(const Configuration cnf, const Mode mode) const {
+  gpio_set_mode(pin_.first, static_cast<uint8_t>(mode), static_cast<uint8_t>(cnf), pin_.second);
 }
 
 void GPIO::InitRcc(const Port port) const {

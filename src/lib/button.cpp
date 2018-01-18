@@ -6,6 +6,8 @@
 
 #include <cassert>
 
+using CORE_NS::GPIO;
+
 namespace {
 inline Pinout GetConfigPinout(const uint8_t id) {
   assert(id < LIB_USE_BUTTON);
@@ -32,9 +34,12 @@ inline Pinout GetConfigPinout(const uint8_t id) {
 
 Button::Button(const Config& config) :
 #if defined(STM32F1)
-    gpio_(GetConfigPinout(config.id), GPIO_CNF_INPUT_PULL_UPDOWN, GPIO_MODE_INPUT),
+    gpio_(GetConfigPinout(config.id), GPIO::Configuration::kInputPullUpDown, GPIO::Mode::kInput),
 #elif defined(STM32F4)
-    gpio_(GetConfigPinout(config.id), GPIO_MODE_INPUT, config.pullup, GPIO_OSPEED_50MHZ),
+    gpio_(GetConfigPinout(config.id),
+          GPIO::Mode::kInput,
+          static_cast<GPIO::Pullup>(config.pullup),
+          GPIO::Speed::k50MHz),
 #endif
     polarity_(config.pullup == 0x1) {
 }

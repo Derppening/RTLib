@@ -22,13 +22,90 @@ namespace stm32f1 {
 class GPIO final {
  public:
   /**
-   * @brief Type definition for GPIO Mode.
+   * @brief Enumeration for different GPIO configurations.
+   *
+   * This enum is intended to replace equivalent macros used in libopencm3.
+   *
+   * See http://libopencm3.org/docs/latest/stm32f1/html/group__gpio__cnf.html.
    */
-  using Mode = uint8_t;
+  enum struct Configuration : uint8_t {
+    /**
+     * @brief Use this GPIO as analog input.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_CNF_INPUT_ANALOG.
+     */
+    kInputAnalog = 0x0,
+    /**
+     * @brief Use this GPIO as floating input.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_CNF_INPUT_FLOAT.
+     */
+    kInputFloat,
+    /**
+     * @brief Use this GPIO as pull-up/pull-down input.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_CNF_INPUT_PULL_UPDOWN.
+     */
+    kInputPullUpDown,
+    /**
+     * @brief Use this GPIO as digital push-pull output.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_CNF_OUTPUT_PUSHPULL
+     */
+    kOutputPushPull = 0x0,
+    /**
+     * @brief Use this GPIO as digital open-drain output.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_CNF_OUTPUT_OPENDRAIN.
+     */
+    kOutputOpenDrain,
+    /**
+     * @brief Use this GPIO as alternate function push-pull output.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_CNF_ALTFN_PUSHPULL.
+     */
+    kOutputAltFnPushPull,
+    /**
+     * @brief Use this GPIO as alternate function open-drain output.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_CNF_ALTFN_OPENDRAIN.
+     */
+    kOutputAltFnOpenDrain
+  };
+
   /**
-   * @brief Type definition for GPIO Output Speed.
+   * @brief Enumeration for different GPIO modes.
+   *
+   * This enum is intended to replace equivalent macros used in libopencm3.
+   *
+   * See http://libopencm3.org/docs/latest/stm32f1/html/group__gpio__mode.html.
    */
-  using Speed = uint8_t;
+  enum struct Mode : uint8_t {
+    /**
+     * @brief Input Mode.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_MODE_INPUT.
+     */
+    kInput,
+    /**
+     * @brief Output Mode at 10MHz max.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_MODE_OUTPUT_10MHZ.
+     */
+    kOutput10MHz,
+    /**
+     * @brief Output Mode at 2MHz max.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_MODE_OUTPUT_2MHZ.
+     */
+    kOutput2MHz,
+    /**
+     * @brief Output Mode at 50MHz max.
+     *
+     * Equivalent to libopencm3 macro @c GPIO_MODE_OUTPUT_50MHZ.
+     */
+    kOutput50MHz
+  };
 
   /**
    * @brief Configuration for GPIO.
@@ -44,16 +121,16 @@ class GPIO final {
     /**
      * @brief GPIO Mode.
      *
-     * Defaults to @c GPIO_CNF_INPUT_ANALOG.
+     * Defaults to Configuration#kInputFloat.
      */
-    Mode mode = GPIO_CNF_INPUT_ANALOG;
+    Configuration cnf = Configuration::kInputFloat;
 
     /**
      * @brief GPIO Output Speed.
      *
-     * Defaults to @c GPIO_MODE_INPUT.
+     * Defaults to Mode#kInput.
      */
-    Speed speed = GPIO_MODE_INPUT;
+    Mode mode = Mode::kInput;
   };
 
   /**
@@ -70,10 +147,10 @@ class GPIO final {
    * constructor instead for code readability.
    *
    * @param pin MCU pinout
+   * @param cnf GPIO Configuration
    * @param mode GPIO Mode
-   * @param speed GPIO Speed
    */
-  GPIO(const Pinout& pin, Mode mode, Speed speed);
+  GPIO(Pinout pin, Configuration cnf, Mode mode);
 
   /**
    * Default trivial destructor.
@@ -137,10 +214,10 @@ class GPIO final {
  *
  * See GPIO#Config for what @p mode and @p speed means.
  *
+ * @param cnf GPIO Configuration
  * @param mode GPIO Mode
- * @param speed GPIO Speed
  */
-  void Init(Mode mode, Speed speed) const;
+  void Init(Configuration cnf, Mode mode) const;
 
   /**
    * @brief Initializes an RCC Clock according to which port is initialized.
