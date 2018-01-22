@@ -1,9 +1,19 @@
 # Flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall ${TARGET_FLAGS} -ffunction-sections -fdata-sections")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall ${TARGET_FLAGS}")
-set(CMAKE_C_FLAGS_RELEASE "-Os")
-set(CMAKE_CXX_FLAGS_RELEASE "-Os")
-set(LINKER_FLAGS "${LINKER_FLAGS} -nostartfiles -lc -lnosys --specs=rdimon.specs -Wl,--gc-sections,-Map,${CMAKE_PROJECT_NAME}_${CMAKE_BUILD_TYPE}.map")
+
+# Configuration flags
+set(CMAKE_C_FLAGS_DEBUG "-O0")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0")
+set(CMAKE_C_FLAGS_RELEASE "-O2")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+set(CMAKE_C_FLAGS_MINSIZEREL "-Os")
+set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "-Og")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Og")
+
+set(LINKER_FLAGS "${LINKER_FLAGS} -nostartfiles -lc -lnosys --specs=rdimon.specs\
+    -Wl,--gc-sections,-Map,${CMAKE_PROJECT_NAME}_${CMAKE_BUILD_TYPE}.map,--cref")
 
 # Collect sources and includes
 find_file(RTLIB_SRC "src" PATHS "${CMAKE_CURRENT_SOURCE_DIR}/RTLib" "${CMAKE_CURRENT_SOURCE_DIR}")
