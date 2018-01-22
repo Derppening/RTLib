@@ -22,6 +22,13 @@ namespace stm32f4 {
 class GPIO final {
  public:
   /**
+   * @brief Type definition for GPIO alternate function selection.
+   *
+   * See http://libopencm3.org/docs/latest/stm32f4/html/group__gpio__af__num.html.
+   */
+  using AltFn = uint8_t;
+
+  /**
    * @brief Enumeration for different GPIO modes.
    *
    * This enum is intended to replace equivalent macros used in libopencm3.
@@ -68,7 +75,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c GPIO_OSPEED_2MHZ.
      */
-    k2MHz = 0,
+    k2MHz = 0x0,
     /**
      * @brief Output GPIO at 25MHz.
      *
@@ -102,7 +109,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c GPIO_PUPD_NONE.
      */
-    kNone = 0,
+    kNone = 0x0,
     /**
      * @brief Use the internal pull-up resistor.
      *
@@ -128,7 +135,7 @@ class GPIO final {
     /**
      * @brief Drive GPIO output using push-pull (i.e. actively pushed to VCC/pulled to GND).
      */
-    kPushPull = 0,
+    kPushPull = 0x0,
     /**
      * @brief Drive GPIO output using open-drain (i.e. only pull to GND).
      */
@@ -173,6 +180,13 @@ class GPIO final {
      * Defaults to DriverType#kPushPull.
      */
     DriverType driver = DriverType::kPushPull;
+
+    /**
+     * @brief GPIO Alternate Function Selection.
+     *
+     * Defaults to GPIO_AF0.
+     */
+    AltFn altfn = GPIO_AF0;
   };
 
   /**
@@ -193,8 +207,14 @@ class GPIO final {
    * @param pullup Internal pull-up mode
    * @param speed GPIO Output Speed
    * @param driver GPIO Output Driver Type
+   * @param altfn GPIO Alternate Function Select
    */
-  GPIO(Pinout pin, Mode mode, Pullup pullup, Speed speed = Speed::k2MHz, DriverType driver = DriverType::kPushPull);
+  GPIO(Pinout pin,
+       Mode mode,
+       Pullup pullup,
+       Speed speed = Speed::k2MHz,
+       DriverType driver = DriverType::kPushPull,
+       AltFn altfn = 0x0);
 
   /**
    * Default trivial destructor.
@@ -270,6 +290,15 @@ class GPIO final {
    * @param port The GPIO port which should be initialized
    */
   void InitRcc(Port port) const;
+
+  /**
+   * @brief Sets this GPIO to be used as an alternate function.
+   *
+   * Most pins have alternate functions associated with them. This function allows those functions to be used.
+   *
+   * @param altfn Alternate function number
+   */
+  void SetAltFn(uint8_t altfn);
 
   /**
    * @brief Retrieves the GPIO pinout currently managed by this object.

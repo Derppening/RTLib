@@ -11,9 +11,9 @@ namespace core {
 namespace stm32f4 {
 
 GPIO::GPIO(const Config& config) :
-    GPIO(config.pin, config.mode, config.pullup, config.speed, config.driver) {}
+    GPIO(config.pin, config.mode, config.pullup, config.speed, config.driver, config.altfn) {}
 
-GPIO::GPIO(Pinout pin, Mode mode, Pullup pullup, Speed speed, DriverType driver) :
+GPIO::GPIO(Pinout pin, Mode mode, Pullup pullup, Speed speed, DriverType driver, AltFn altfn) :
     pin_(std::move(pin)) {
   // Use external oscillator for RCC
   rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
@@ -21,6 +21,11 @@ GPIO::GPIO(Pinout pin, Mode mode, Pullup pullup, Speed speed, DriverType driver)
   // Initialize the RCC and enable the GPIO
   InitRcc(pin_.first);
   Init(mode, pullup, speed, driver);
+
+  // Set the alternate function if user specifies one
+  if (mode == Mode::kAF) {
+    SetAltFn(altfn);
+  }
 }
 
 void GPIO::Init(const Mode mode, const Pullup pullup, const Speed speed, const DriverType driver) const {
@@ -87,6 +92,15 @@ void GPIO::Toggle() const {
 
 void GPIO::Reset() const {
   gpio_mode_setup(pin_.first, GPIO_MODE_INPUT, GPIO_PUPD_NONE, pin_.second);
+}
+
+void GPIO::SetAltFn(uint8_t altfn) {
+  // Guard users from invalid configs
+  if (altfn > 0xF) {
+    return;
+  }
+
+  gpio_set_af(pin_.first, altfn, pin_.second);
 }
 
 }  // namespace f4

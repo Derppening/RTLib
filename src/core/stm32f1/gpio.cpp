@@ -76,6 +76,14 @@ void GPIO::Reset() const {
   gpio_set_mode(pin_.first, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, pin_.second);
 }
 
+void GPIO::SetPriAltFn(JTAGDisables swj_state, AltFnMaps maps) {
+  gpio_primary_remap(static_cast<uint32_t>(swj_state), maps);
+}
+
+void GPIO::SetSecAltFn(AltFnMaps maps) {
+  gpio_secondary_remap(maps);
+}
+
 }  // namespace stm32f1
 }  // namespace core
 
