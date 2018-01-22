@@ -19,8 +19,11 @@
       <option name="SPACE_AFTER_POINTER_IN_DECLARATION" value="true" />
       <option name="SPACE_BEFORE_REFERENCE_IN_DECLARATION" value="false" />
       <option name="SPACE_AFTER_REFERENCE_IN_DECLARATION" value="true" />
+      <option name="INSERT_VIRTUAL_WITH_OVERRIDE" value="true" />
       <option name="ADD_BRIEF_TAG" value="true" />
       <option name="FIELDS_SUFFIX" value="_" />
+      <option name="GETTERS_PREFIX" value="Get" />
+      <option name="SETTERS_PREFIX" value="Set" />
     </Objective-C>
     <Objective-C-extensions>
       <file>
@@ -63,6 +66,7 @@
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
+        <option name="TAB_SIZE" value="2" />
       </indentOptions>
     </codeStyleSettings>
   </code_scheme>

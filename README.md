@@ -8,7 +8,8 @@ This project is an in-house R&D project for the [HKUST Robotics Team](https://ro
 
 ## Documentation
 
-[Don't use the wiki! Go to our Doxygen docs page](https://Derppening.github.io/RTLib/)
+All APIs in this project is documented within the header in the most comprehensive way possible, with some references 
+back to the libopencm3 library. We strongly recommend using our [Doxygen docs](https://Derppening.github.io/RTLib/).
 
 ## Prerequisites
 You will be needing the following to compile:
