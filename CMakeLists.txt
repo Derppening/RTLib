@@ -1,8 +1,7 @@
 #[[
 
-Just use the `CMakeLists-template.txt` if you want a ready-to-go boilerplate file,
-this file is commented and mostly identical, only some slight differences in the
-`include` paths and `add_executable` sources. I think at least.
+One day, I'll have to rewrite `CMakeLists-template.txt`. Until then...
+# TODO(Derppening): Rewrite CMakeLists-template.txt.
 
 ]]
 cmake_minimum_required(VERSION 3.9)
@@ -10,7 +9,8 @@ project(RTLib)
 
 # Include an error in case the user forgets to specify ARM as a toolchain
 if (NOT CMAKE_TOOLCHAIN_FILE)
-    message(FATAL_ERROR "Cross compiling only. Please use -DCMAKE_TOOLCHAIN_FILE=rtlib/cmake/arm-toolchain.cmake or use your own toolchain file")
+    message(FATAL_ERROR "Cross compiling only. Please use -DCMAKE_TOOLCHAIN_FILE=rtlib/cmake/arm-toolchain.cmake or use\
+    your own toolchain file")
 endif ()
 
 if ((NOT ${CMAKE_C_COMPILER_ID} STREQUAL "GNU") OR
@@ -28,7 +28,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
 
 # Verbose logging
-set(LOG_VERBOSE 0)
+set(LOG_VERBOSE false)
 
 # Choose target device here
 set(DEVICE STM32F407VET6)
