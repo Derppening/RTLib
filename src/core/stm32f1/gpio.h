@@ -529,7 +529,11 @@ class GPIO final {
     /**
      * @brief TIM14 CH1 Remapping.
      *
-     * The default and alternate pin remap is MCU-dependent. Please consult the reference manual of your board.
+     * For STM32F100 devices: By default, TIM14_CH1 is connected to PC9. Enabling this remap will connect the channel to
+     * PB1.
+     *
+     * For other STM32F10x devices: By default, TIM14_CH1 is connected to PA7. Enabling this remap will connect the
+     * channel to PF9.
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM14_REMAP.
      */
@@ -537,7 +541,11 @@ class GPIO final {
     /**
      * @brief TIM13 CH1 Remapping.
      *
-     * The default and alternate pin remap is MCU-dependent. Please consult the reference manual of your board.
+     * For STM32F100 devices: By default, TIM13_CH1 is connected to PC8. Enabling this remap will connect the channel to
+     * PB0.
+     *
+     * For other STM32F10x devices: By default, TIM13_CH1 is connected to PA6. Enabling this remap will connect the
+     * channel to PF8.
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM13_REMAP.
      */
