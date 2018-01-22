@@ -203,5 +203,7 @@ tags
 
 build/
 cmake-build-debug/
+cmake-build-minsize-rel/
 cmake-build-release/
+cmake-build-relwithdebinfo/
 generated.*.ld
