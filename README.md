@@ -124,7 +124,7 @@ git commit                      # Commit the update
 
 ## License
 
-This project is licensed under LGPLv3 - see [LICENSE](LICENSE.md) for details.
+This project is licensed under LGPLv3 - see [COPYING](COPYING) and [COPYING.LESSER](COPYING.LESSER) for details.
 
 [libopencm3](https://github.com/libopencm3/libopencm3) is licensed under 
 [LGPLv3](https://github.com/libopencm3/libopencm3/blob/master/COPYING.LGPL3).

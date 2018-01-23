@@ -4,6 +4,29 @@ One day, I'll have to rewrite `CMakeLists-template.txt`. Until then...
 # TODO(Derppening): Rewrite CMakeLists-template.txt.
 
 ]]
+
+#[[
+
+This file is part of RTLib.
+
+Copyright (C) 2017 waicool20 <waicool20@gmail.com>
+Copyright (C) 2017-2018 Derppening <david.18.19.21@gmail.com>
+
+RTLib is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+RTLib is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with RTLib.  If not, see <http://www.gnu.org/licenses/>.
+
+]]
+
 cmake_minimum_required(VERSION 3.9)
 project(RTLib)
 

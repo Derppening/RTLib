@@ -110,7 +110,7 @@ git commit                      # Commit the update
 
 @section License
 
-This project is licensed under LGPLv3 - see LICENSE.md for details.
+This project is licensed under LGPLv3 - see COPYING and COPYING.LESSER for details.
 
 <a href="https://github.com/libopencm3/libopencm3">libopencm3</a> is licensed under
 <a href="https://github.com/libopencm3/libopencm3/blob/master/COPYING.LGPL3">LGPLv3</a>.
