@@ -44,9 +44,3 @@ set(CXX_WARN_FLAGS "${COMMON_WARN_FLAGS} -Wctor-dtor-privacy -Wnoexcept -Wold-st
 # Pass them back to the CMake variable
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_WARN_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_WARN_FLAGS}")
-
-if (LOG_VERBOSE)
-    message("-------------Warning Flags--------------")
-    message(STATUS "C   : ${C_WARN_FLAGS}")
-    message(STATUS "CXX : ${CXX_WARN_FLAGS}")
-endif ()

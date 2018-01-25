@@ -76,15 +76,5 @@ set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "-Og")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Og")
 
-# Dump all the flags at this point
-if (LOG_VERBOSE)
-    string(TOUPPER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
-
-    message("-------------Full Flag List-------------")
-    message(STATUS "C   : ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_${BUILD_TYPE}}")
-    message(STATUS "CXX : ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${BUILD_TYPE}}")
-    message(STATUS "LD  : ${LINKER_FLAGS}")
-endif()
-
 # Generate header for RTLib version
 configure_file(cmake/template/version.h.in ${RTLIB_SRC}/version.h)

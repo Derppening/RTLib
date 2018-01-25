@@ -72,7 +72,7 @@ include(cmake/doxygen.cmake)
 # Include additional compilation flags
 include(cmake/compile_flags.cmake)
 
-# Collect sources into SOURCE_FILES variable and include your headers directory
+# Collect sources into SOURCE_FILES variable and include your headers' directory
 file(GLOB_RECURSE SOURCE_FILES "src/*.c" "src/*.cpp")
 file(GLOB_RECURSE INC_FILES "src/*.h" "src/*.tpp")
 include_directories(src)
@@ -87,5 +87,10 @@ add_custom_command(
         COMMAND ${ARM_SIZE} ${PROJECT_NAME}_${CMAKE_BUILD_TYPE}.elf
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 )
+
+# Include version logging if specified
+if (LOG_VERBOSE)
+    include(cmake/logging.cmake)
+endif()
 
 message("----------------------------------------")
