@@ -21,15 +21,36 @@ along with RTLib.  If not, see <http://www.gnu.org/licenses/>.
 ]]
 
 # Get Build Information
-execute_process(COMMAND make --version OUTPUT_VARIABLE MAKE_OUTPUT)
-string(REGEX REPLACE "GNU Make ([0-9]\\.[0-9]\\.*[0-9]*).+" "\\1" MAKE_VERSION ${MAKE_OUTPUT})
+execute_process(COMMAND make --version
+                RESULT_VARIABLE MAKE_RESULT
+                OUTPUT_VARIABLE MAKE_OUTPUT)
+if (MAKE_RESULT EQUAL 0)
+    string(REGEX REPLACE "GNU Make ([0-9]\\.[0-9]\\.*[0-9]*).+" "\\1" MAKE_VERSION ${MAKE_OUTPUT})
+else()
+    set(MAKE_VERSION "Not detected")
+endif()
+
+message("-----------System Information-----------")
+message(STATUS "Host            : ${CMAKE_HOST_SYSTEM_NAME}")
+message(STATUS "GNU Make        : ${MAKE_VERSION}")
+message(STATUS "CC              : ${CMAKE_CXX_COMPILER_ID} ${CMAKE_C_COMPILER_VERSION}")
+message(STATUS "CXX             : ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+
+# Collect sources and includes
+find_file(RTLIB_SRC "src" PATHS "${CMAKE_CURRENT_SOURCE_DIR}/RTLib" "${CMAKE_CURRENT_SOURCE_DIR}")
+if (RTLIB_SRC STREQUAL "RTLIB_SRC-NOTFOUND")
+    message(FATAL_ERROR "Could not find RTLib sources. Tried:
+    - ${CMAKE_CURRENT_SOURCE_DIR}
+    - ${CMAKE_CURRENT_SOURCE_DIR}/RTLib")
+endif ()
+
+file(GLOB_RECURSE RTLIB_SOURCE_FILES "${RTLIB_SRC}/*.c" "${RTLIB_SRC}/*.cpp")
+include_directories(${RTLIB_SRC})
 
 message("-----------Build Information------------")
-message(STATUS "Host    : ${CMAKE_HOST_SYSTEM_NAME}")
-message(STATUS "Make    : ${MAKE_VERSION}")
-message(STATUS "CC      : ${CMAKE_CXX_COMPILER_ID} ${CMAKE_C_COMPILER_VERSION}")
-message(STATUS "CXX     : ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
-message(STATUS "Build   : ${CMAKE_BUILD_TYPE}")
+message(STATUS "RTLib Path      : ${RTLIB_SRC}")
+message(STATUS "RTLib Version   : ${PROJECT_VERSION}")
+message(STATUS "Build Type      : ${CMAKE_BUILD_TYPE}")
 
 # Additional Flags
 set(ADDITIONAL_C_FLAGS "-fmessage-length=0 -fno-strict-aliasing -ffunction-sections -fdata-sections -fsigned-char")
@@ -55,15 +76,6 @@ set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "-Og")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Og")
 
-# Collect sources and includes
-find_file(RTLIB_SRC "src" PATHS "${CMAKE_CURRENT_SOURCE_DIR}/RTLib" "${CMAKE_CURRENT_SOURCE_DIR}")
-if (RTLIB_SRC STREQUAL "RTLIB_SRC-NOTFOUND")
-    message(FATAL_ERROR "Could not find RTLib sources")
-endif ()
-
-file(GLOB_RECURSE RTLIB_SOURCE_FILES "${RTLIB_SRC}/*.c" "${RTLIB_SRC}/*.cpp")
-include_directories(${RTLIB_SRC})
-
 # Dump all the flags at this point
 if (LOG_VERBOSE)
     string(TOUPPER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
@@ -73,3 +85,6 @@ if (LOG_VERBOSE)
     message(STATUS "CXX : ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${BUILD_TYPE}}")
     message(STATUS "LD  : ${LINKER_FLAGS}")
 endif()
+
+# Generate header for RTLib version
+configure_file(cmake/template/version.h.in ${RTLIB_SRC}/version.h)

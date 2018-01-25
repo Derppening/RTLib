@@ -117,6 +117,13 @@ git add RTLib                   # Add the RTLib directory to the change list
 git commit                      # Commit the update
 ```
 
+### Versioning
+
+This library uses [SemVer](https://semver.org/) for versioning. Version constants are available in 
+[version.h](src/version.h) and are automatically generated for every release.
+
+For the versions available, see the [tags on this repository](https://github.com/Derppening/RTLib/tags).
+
 ## Contributors
 
 - **David Mak** - [Derppening](https://github.com/Derppening/)

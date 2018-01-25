@@ -84,6 +84,7 @@ execute_process(
         COMMAND awk "-v" "PAT=${DEVICE}" "-v" "MODE=DEFS" "-f" "${GENLINK_SCRIPT}" "${DEVICES_DATA}"
         OUTPUT_VARIABLE GENLINK_DEFS
 )
+
 message("----------------------------------------")
 message(STATUS "Fun Fact: This CMake file was painfully written by waicool20 and Derppening")
 message("----------------------------------------")
