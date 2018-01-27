@@ -4,7 +4,8 @@
 Experimental hardware abstraction layer for STM32F103 and STM32F407 devices, based on 
 [libopencm3](https://github.com/libopencm3/libopencm3).
 
-This project is an in-house R&D project for the [HKUST Robotics Team](https://robotics.ust.hk/).
+Initially an in-house R&D project for the [HKUST Robotics Team](https://robotics.ust.hk/), this project is now
+independently maintained by two former members of the team.
 
 ## Documentation
 
