@@ -29,8 +29,7 @@
 
 #include "core/util.h"
 
-namespace core {
-namespace stm32f1 {
+namespace rtlib::core::stm32f1 {
 
 /**
  * @brief STM32F1xx-specific HAL implementation for GPIO pins.
@@ -841,8 +840,7 @@ class GPIO final {
   Pinout pin_;
 };
 
-}  // namespace stm32f1
-}  // namespace core
+}  // namespace rtlib::core::stm32f1
 
 #endif  // defined(STM32F1)
 

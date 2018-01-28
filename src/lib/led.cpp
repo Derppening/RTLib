@@ -25,9 +25,11 @@
 
 #include <cassert>
 
-using CORE_NS::GPIO;
+using CORE_NS::Pinout;
+using DEVICE_NS::GPIO;
 
 namespace {
+
 inline Pinout GetConfigPinout(const uint8_t id) {
   assert(id < LIB_USE_LED);
   switch (id) {
@@ -49,7 +51,10 @@ inline Pinout GetConfigPinout(const uint8_t id) {
 #endif  // LIB_USE_LED > 2
   }
 }
+
 }  // namespace
+
+namespace rtlib::lib {
 
 Led::Led(const Config& config) :
 #if defined(STM32F1)
@@ -72,3 +77,5 @@ void Led::Switch() {
 #elif !defined(LIB_USE_LED)
 #error "LIB_USE_LED macro not found. (Did you define it in your board configuration?)"
 #endif
+
+}  // namespace rtlib::lib

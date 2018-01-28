@@ -29,11 +29,16 @@
 #include <cstdint>
 #include <utility>
 
+#define CORE_NS rtlib::core
 #if defined(STM32F1)
-#define CORE_NS core::stm32f1
+#define DEVICE_NS CORE_NS::stm32f1
 #elif defined(STM32F4)
-#define CORE_NS core::stm32f4
+#define DEVICE_NS CORE_NS::stm32f4
 #endif
+
+#define LIB_NS rtlib::lib
+
+namespace rtlib::core {
 
 /**
  * @brief Type definition for MCU Port.
@@ -47,5 +52,7 @@ using Pin = uint16_t;
  * @brief Type definition for MCU Pinout.
  */
 using Pinout = std::pair<Port, Pin>;
+
+}  // namespace rtlib::core
 
 #endif  // RTLIB_CORE_UTIL_H_

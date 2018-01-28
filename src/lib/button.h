@@ -27,6 +27,8 @@
 
 static_assert(LIB_USE_BUTTON > 0, "Button library is disabled in your configuration.");
 
+namespace rtlib::lib {
+
 /**
  * @brief HAL implementation for buttons.
  * 
@@ -62,7 +64,7 @@ class Button {
    * @param config Button configuration
    */
   explicit Button(const Config& config);
-  
+
   /**
    * @brief Default trivial destructor.
    */
@@ -111,11 +113,13 @@ class Button {
   /**
    * @return GPIO object which manages the pin of the button
    */
-  CORE_NS::GPIO* GetGpio() { return &gpio_; }
+  DEVICE_NS::GPIO* GetGpio() { return &gpio_; }
 
  private:
-  CORE_NS::GPIO gpio_;
+  DEVICE_NS::GPIO gpio_;
   bool polarity_;
 };
+
+}  // namespace rtlib::lib
 
 #endif  // RTLIB_LIB_BUTTON_H_

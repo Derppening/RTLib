@@ -22,6 +22,8 @@
 
 #include <cstdint>
 
+namespace rtlib::lib {
+
 /**
  * @brief HAL implementation for system clock.
  *
@@ -143,5 +145,7 @@ class System final {
   static bool has_init_;
   static ClockResolution clock_res_;
 };
+
+}  // namespace rtlib::lib
 
 #endif  // RTLIB_LIB_SYSTEM_H_

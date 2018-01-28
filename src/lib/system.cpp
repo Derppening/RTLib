@@ -21,18 +21,22 @@
 
 #include <libopencm3/cm3/systick.h>
 
-bool System::has_init_ = false;
-System::ClockResolution System::clock_res_ = System::ClockResolution::kStdRes;
+extern "C" void sys_tick_handler();
 
 namespace {
-volatile uint64_t counter = 0;
-}  // namespace
 
-extern "C" void sys_tick_handler();
+volatile uint64_t counter = 0;
+
+}  // namespace
 
 extern "C" void sys_tick_handler() {
   ++counter;
 }
+
+namespace rtlib::lib {
+
+bool System::has_init_ = false;
+System::ClockResolution System::clock_res_ = System::ClockResolution::kStdRes;
 
 void System::Init(ClockResolution clock_res) {
   // check whether clock has already been initialized
@@ -85,3 +89,5 @@ void System::DelayMs(uint64_t wait_ms) {
 void System::DelayS(uint64_t wait_s) {
   DelayUs(wait_s * 1000000);
 }
+
+}  // namespace rtlib::lib

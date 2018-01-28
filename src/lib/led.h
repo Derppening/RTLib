@@ -27,6 +27,8 @@
 
 static_assert(LIB_USE_LED > 0, "Led library is disabled in your configuration.");
 
+namespace rtlib::lib {
+
 /**
  * @brief HAL implementation for LEDs.
  *
@@ -110,11 +112,13 @@ class Led {
   /**
    * @return GPIO object which manages the pin of the button
    */
-  CORE_NS::GPIO* GetGpio() { return &gpio_; }
+  DEVICE_NS::GPIO* GetGpio() { return &gpio_; }
 
  private:
-  CORE_NS::GPIO gpio_;
+  DEVICE_NS::GPIO gpio_;
   bool polarity_;
 };
+
+}  // namespace rtlib::lib
 
 #endif  // RTLIB_LIB_LED_H_

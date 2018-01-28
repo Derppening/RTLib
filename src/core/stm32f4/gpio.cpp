@@ -26,8 +26,7 @@
 
 #include <libopencm3/stm32/rcc.h>
 
-namespace core {
-namespace stm32f4 {
+namespace rtlib::core::stm32f4 {
 
 GPIO::GPIO(const Config& config) :
     GPIO(config.pin, config.mode, config.pullup, config.speed, config.driver, config.altfn) {}
@@ -122,7 +121,6 @@ void GPIO::SetAltFn(uint8_t altfn) {
   gpio_set_af(pin_.first, altfn, pin_.second);
 }
 
-}  // namespace f4
-}  // namespace stm32
+}  // namespace rtlib::core::stm32f4
 
 #endif  // defined(STM32F4)

@@ -26,8 +26,7 @@
 
 #include <libopencm3/stm32/rcc.h>
 
-namespace core {
-namespace stm32f1 {
+namespace rtlib::core::stm32f1 {
 
 GPIO::GPIO(const Config& config) :
     GPIO(config.pin, config.cnf, config.mode) {}
@@ -103,7 +102,6 @@ void GPIO::SetSecAltFn(AltFnMaps maps) {
   gpio_secondary_remap(maps);
 }
 
-}  // namespace stm32f1
-}  // namespace core
+}  // namespace rtlib::core::stm32f1
 
 #endif  // defined(STM32F1)

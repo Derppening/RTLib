@@ -25,10 +25,12 @@
 
 #include <cassert>
 
-using CORE_NS::GPIO;
+using CORE_NS::Pinout;
+using DEVICE_NS::GPIO;
 
 namespace {
-inline Pinout GetConfigPinout(const uint8_t id) {
+
+inline CORE_NS::Pinout GetConfigPinout(const uint8_t id) {
   assert(id < LIB_USE_BUTTON);
   switch (id) {
     default:
@@ -49,7 +51,10 @@ inline Pinout GetConfigPinout(const uint8_t id) {
 #endif  // LIB_USE_BUTTON > 2
   }
 }
+
 }  // namespace
+
+namespace rtlib::lib {
 
 Button::Button(const Config& config) :
 #if defined(STM32F1)
@@ -70,3 +75,5 @@ bool Button::Read() {
 #elif !defined(LIB_USE_BUTTON)
 #error "LIB_USE_BUTTON macro not found. (Did you define it in your board configuration?)"
 #endif
+
+}  // namespace rtlib::lib
