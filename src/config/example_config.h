@@ -34,6 +34,10 @@
 #error "This configuration is designed for a STM32F103VCT6 device. (Did you set DEVICE in CMakeLists.txt correctly?)"
 #endif  // !defined(STM32F103VCT6)
 
+// You must define a constant 'kDeviceString', which corresponds to the MCU series. No checks will be done internally,
+// so you are responsible for the correctness of this constant.
+constexpr const char kDeviceString[] = "STM32F103xx";
+
 // You must define all LIB_USE_*. If your board does not have the feature, or you do not intend to expose the API to
 // other users, set the macro to 0. A compilation error will occur if a user tries to include a library which is
 // disabled in this file.
