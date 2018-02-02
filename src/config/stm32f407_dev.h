@@ -5,6 +5,17 @@
  *
  * Taobao Link: https://m.intl.taobao.com/detail/detail.html?id=524181346955
  *
+ * UART Configuration:
+ * |          Macro         | TX Pinout | RX Pinout |
+ * | :--------------------: | :-------: | :-------: |
+ * | @c CORE_UART1_*_PINOUT |    PA9    |    PA10   |
+ * | @c CORE_UART2_*_PINOUT |   Unused  |   Unused  |
+ * | @c CORE_UART3_*_PINOUT |   Unused  |   Unused  |
+ * | @c CORE_UART4_*_PINOUT |   Unused  |   Unused  |
+ * | @c CORE_UART6_*_PINOUT |   Unused  |   Unused  |
+ *
+ * @note Refer to the STM32F407xx Datasheet for alternate pinouts of each UART.
+ *
  * Led Configuration:
  * |        Macro       | MCU Pinout | Mainboard Designation | Polarity |
  * | :----------------: | :--------: | :-------------------: | :------: |
@@ -44,6 +55,19 @@
 #if !defined(STM32F407VET6)
 #error "This configuration is designed for a STM32F407VET6 device. (Did you set DEVICE in CMakeLists.txt correctly?)"
 #endif  // !defined(STM32F407VET6)
+
+constexpr const char kDeviceString[] = "STM32F407xx";
+
+#define CORE_UART1_TX_PINOUT {GPIOA, GPIO9}
+#define CORE_UART1_RX_PINOUT {GPIOA, GPIO10}
+#define CORE_UART2_TX_PINOUT {}
+#define CORE_UART2_RX_PINOUT {}
+#define CORE_UART3_TX_PINOUT {}
+#define CORE_UART3_RX_PINOUT {}
+#define CORE_UART4_TX_PINOUT {}
+#define CORE_UART4_RX_PINOUT {}
+#define CORE_UART6_TX_PINOUT {}
+#define CORE_UART6_RX_PINOUT {}
 
 #define LIB_USE_LED 2
 #define LIB_LED0_PINOUT {GPIOA, GPIO6}
