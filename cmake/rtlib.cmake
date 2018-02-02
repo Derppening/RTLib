@@ -67,14 +67,14 @@ message(STATUS "CXX : ${ADDITIONAL_CXX_FLAGS}")
 message(STATUS "LD  : ${ADDITIONAL_LINKER_FLAGS}")
 
 # Build-dependent flags
-set(CMAKE_C_FLAGS_DEBUG "-O0")
-set(CMAKE_CXX_FLAGS_DEBUG "-O0")
+set(CMAKE_C_FLAGS_DEBUG "-O0 -ggdb")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb")
 set(CMAKE_C_FLAGS_RELEASE "-O2")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 set(CMAKE_C_FLAGS_MINSIZEREL "-Os")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
-set(CMAKE_C_FLAGS_RELWITHDEBINFO "-Og")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Og")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "-Og -ggdb")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Og -ggdb")
 
 # Generate header for RTLib version
 configure_file(cmake/template/version.h.in ${RTLIB_SRC}/version.h)
