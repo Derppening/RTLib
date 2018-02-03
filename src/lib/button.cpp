@@ -72,8 +72,8 @@ bool Button::Read() {
   return static_cast<bool>(gpio_.Read() ^ polarity_);
 }
 
+}  // namespace rtlib::lib
+
 #elif !defined(LIB_USE_BUTTON)
 #error "LIB_USE_BUTTON macro not found. (Did you define it in your board configuration?)"
 #endif
-
-}  // namespace rtlib::lib

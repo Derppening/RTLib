@@ -74,8 +74,8 @@ void Led::Switch() {
   gpio_.Toggle();
 }
 
+}  // namespace rtlib::lib
+
 #elif !defined(LIB_USE_LED)
 #error "LIB_USE_LED macro not found. (Did you define it in your board configuration?)"
 #endif
-
-}  // namespace rtlib::lib
