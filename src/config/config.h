@@ -37,6 +37,8 @@
 #include "config/stm32f103_dev.h"
 #elif defined(STM32F407_DEV)
 #include "config/stm32f407_dev.h"
+#elif defined(ASC)
+#include "config/asc.h"
 #else
 #error "No known configuration is specified. Please specify a target mainboard in CMakeLists.txt"
 #endif
