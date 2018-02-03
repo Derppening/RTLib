@@ -31,10 +31,10 @@
 
 namespace rtlib::version {
 
-constexpr const char* kFull = "0.1.0";
+constexpr const char* kFull = "0.1.1";
 constexpr const unsigned kMajor = 0;
 constexpr const unsigned kMinor = 1;
-constexpr const unsigned kPatch = 0;
+constexpr const unsigned kPatch = 1;
 
 }  // namespace rtlib::version
 
