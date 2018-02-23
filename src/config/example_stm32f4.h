@@ -1,15 +1,15 @@
 /**
- * @file src/config/example_config.h
+ * @file src/config/example_stm32f4.h
  *
- * @brief Example configuration.
+ * @brief Example configuration for STM32F4-series MCUs.
  *
- * This configuration file is an example on how to create your own mainboard configurations.
+ * This configuration file is an example on how to create your own mainboard configurations with STM32F4-series MCUs.
  */
 
 /*
  * This file is part of RTLib.
  *
- * Copyright (C) 2017-2018 Derppening <david.18.19.21@gmail.com>
+ * Copyright (C) 2018 Derppening <david.18.19.21@gmail.com>
  *
  * RTLib is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,20 +25,34 @@
  * along with RTLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RTLIB_CONFIG_EXAMPLE_CONFIG_H_
-#define RTLIB_CONFIG_EXAMPLE_CONFIG_H_
+#ifndef RTLIB_CONFIG_EXAMPLE_STM32F4_H_
+#define RTLIB_CONFIG_EXAMPLE_STM32F4_H_
 
 // Use !defined(...) to check if the appropriate device is targeted before proceeding
 // Replace ... in the brackets to the MCU model of your target device.
-#if !defined(STM32F103VCT6)
-#error "This configuration is designed for a STM32F103VCT6 device. (Did you set DEVICE in CMakeLists.txt correctly?)"
-#endif  // !defined(STM32F103VCT6)
+#if !defined(STM32F407VET6)
+#error "This configuration is designed for a STM32F407VET6 device. (Did you set DEVICE in CMakeLists.txt correctly?)"
+#endif  // !defined(STM32F407VET6)
 
 
 // You must define two constants 'kDeviceSeries' and 'kDeviceString', which corresponds to the MCU series and MCU model
 // respectively. No checks will be done internally, so you are responsible for the correctness of these constant.
-constexpr const char kDeviceSeries[] = "STM32F1";
-constexpr const char kDeviceString[] = "STM32F103xx";
+constexpr const char kDeviceSeries[] = "STM32F4";
+constexpr const char kDeviceString[] = "STM32F407xx";
+
+// If a pin is unused or not designated, leave the curly braces empty ("{}").
+
+// For UART, you must define all following constants.
+#define CORE_UART1_TX_PINOUT {}
+#define CORE_UART1_RX_PINOUT {}
+#define CORE_UART2_TX_PINOUT {}
+#define CORE_UART2_RX_PINOUT {}
+#define CORE_UART3_TX_PINOUT {}
+#define CORE_UART3_RX_PINOUT {}
+#define CORE_UART4_TX_PINOUT {}
+#define CORE_UART4_RX_PINOUT {}
+#define CORE_UART6_TX_PINOUT {}
+#define CORE_UART6_RX_PINOUT {}
 
 // You must define all LIB_USE_*. If your board does not have the feature, or you do not intend to expose the API to
 // other users, set the macro to 0. A compilation error will occur if a user tries to include a library which is
@@ -48,12 +62,9 @@ constexpr const char kDeviceString[] = "STM32F103xx";
 
 // To use wrapper classes for any devices under lib, define all pin outputs here.
 // The format of the macro is
-// #define LIB_DEVICEx_PINOUT {GPIO, GPIO_PIN}
-// where DEVICE is the device under lib, x is the ID of the device, GPIO is the GPIO, and GPIO_PIN is the pin.
+// #define LIB_[DEVICE][x]_PINOUT {[GPIO], [GPIO_PIN]}
+// where [DEVICE] is the device under lib, [x] is the ID of the device, [GPIO] is the GPIO, and [GPIO_PIN] is the pin.
 // All devices IDs in this file start from 0, and corresponds to 0 in Config structs.
 #define LIB_LED0_PINOUT {GPIOB, GPIO0}
 
-// Other devices may require more than one pinout. These will also be defined here.
-// TODO(Derppening): Add example from UART. See config/stm32f407_dev.h for now.
-
-#endif  // RTLIB_CONFIG_EXAMPLE_CONFIG_H_
+#endif  // RTLIB_CONFIG_EXAMPLE_STM32F4_H_

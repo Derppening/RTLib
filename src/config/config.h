@@ -29,8 +29,10 @@
 #ifndef RTLIB_CONFIG_CONFIG_H_
 #define RTLIB_CONFIG_CONFIG_H_
 
-#if defined(EXAMPLE_CONFIG)
-#include "example_config.h"
+#if defined(EXAMPLE_STM32F1)
+#include "example_stm32f1.h"
+#elif defined(EXAMPLE_STM32F4)
+#include "example_stm32f4.h"
 #elif defined(MAINBOARD_VER4_2)
 #include "mainboard_ver4_2.h"
 #elif defined(STM32F103_DEV)
