@@ -56,7 +56,7 @@ class Led {
   /**
    * @brief Default constructor for LED.
    *
-   * @param config LED configuration
+   * @param[in] config LED configuration
    */
   explicit Led(const Config& config);
 
@@ -68,13 +68,14 @@ class Led {
   /**
    * @brief Move constructor for LED.
    *
-   * @param other LED object to move from
+   * @param[in] other LED object to move from
    */
   Led(Led&& other) noexcept = default;
   /**
    * @brief Move assignment operator for LED.
    *
-   * @param other LED object to move from
+   * @param[in] other LED object to move from
+   *
    * @return Reference to the moved LED.
    */
   Led& operator=(Led&& other) noexcept = default;
@@ -100,7 +101,7 @@ class Led {
    * @note LED will always be in off state after constructor is called. If it isn't, your board may have a pull-up
    * resistor; Set Led#Config#polarity to another value if that is the case.
    *
-   * @param flag True if the LED should be on
+   * @param[in] flag True if the LED should be on
    */
   void SetEnable(bool flag);
   /**

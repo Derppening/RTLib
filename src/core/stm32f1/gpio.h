@@ -680,7 +680,7 @@ class GPIO final {
   /**
    * @brief Conversion constructor.
    *
-   * @param config Configuration for the GPIO. See GPIO#Config.
+   * @param[in] config Configuration for the GPIO. See GPIO#Config.
    */
   explicit GPIO(const Config& config);
 
@@ -690,9 +690,9 @@ class GPIO final {
    * This constructor is equivalent to @code GPIO::GPIO(const Config&) @endcode. However, it is suggested to use that
    * constructor instead for code readability.
    *
-   * @param pin MCU pinout
-   * @param cnf GPIO Configuration
-   * @param mode GPIO Mode
+   * @param[in] pin MCU pinout
+   * @param[in] cnf GPIO Configuration
+   * @param[in] mode GPIO Mode
    */
   GPIO(Pinout pin, Configuration cnf, Mode mode);
 
@@ -704,13 +704,14 @@ class GPIO final {
   /**
    * @brief Move constructor.
    *
-   * @param other GPIO object to move from
+   * @param[in] other GPIO object to move from
    */
   GPIO(GPIO&& other) noexcept = default;
   /**
    * @brief Move assignment operator.
    *
-   * @param other GPIO object to move from
+   * @param[in] other GPIO object to move from
+   *
    * @return Reference to the moved GPIO.
    */
   GPIO& operator=(GPIO&& other) noexcept = default;
@@ -739,7 +740,7 @@ class GPIO final {
   /**
    * @brief Sets new GPIO state.
    *
-   * @param state New state of GPIO, where @c true represents a high value, and @c false represents a low value.
+   * @param[in] state New state of GPIO, where @c true represents a high value, and @c false represents a low value.
    */
   void Set(bool state) const;
   /**
@@ -762,9 +763,9 @@ class GPIO final {
    *
    * See the @c gpio_primary_remap() section of http://libopencm3.org/docs/latest/stm32f1/html/group__gpio__file.html.
    *
-   * @param swj_state Whether to disable JTAG capability
-   * @param maps The alternate functions to enable. Use bitwise OR on all libopencm3 constants to enable the remaps with
-   * one function call.
+   * @param[in] swj_state Whether to disable JTAG capability
+   * @param[in] maps The alternate functions to enable. Use bitwise OR on all libopencm3 constants to enable the remaps
+   * with one function call.
    */
   static void SetPriAltFn(JTAGDisables swj_state, AltFnMaps maps);
 
@@ -779,8 +780,8 @@ class GPIO final {
    *
    * See the @c gpio_secondary_remap() section of http://libopencm3.org/docs/latest/stm32f1/html/group__gpio__file.html.
    *
-   * @param maps The alternate functions to enable. Use bitwise OR on all libopencm3 constants to enable the remaps with
-   * one function call.
+   * @param[in] maps The alternate functions to enable. Use bitwise OR on all libopencm3 constants to enable the remaps
+   * with one function call.
    */
   static void SetSecAltFn(AltFnMaps maps);
 
@@ -790,31 +791,31 @@ class GPIO final {
    * As opposed to SetPriAltFn(JTAGDisables,AltFnMaps), this function only enables one alternate function from the
    * primary set.
    *
-   * @param swj_state Whether to disable JTAG capability
-   * @param map The alternate function to enable. See GPIO#PriRemap for a comprehensive list of primary alternate
+   * @param[in] swj_state Whether to disable JTAG capability
+   * @param[in] map The alternate function to enable. See GPIO#PriRemap for a comprehensive list of primary alternate
    * functions.
    */
   static void SetPriAltFn(JTAGDisables swj_state, PriRemap map) { SetPriAltFn(swj_state, static_cast<uint32_t>(map)); }
 
   /**
- * @brief Configures one secondary remap functionality.
- *
- * As opposed to SetSecAltFn(AltFnMaps), this function only enables one alternate function from the secondary set.
- *
- * @param map The alternate function to enable. See GPIO#SecRemap for a comprehensive list of secondary alternate
+   * @brief Configures one secondary remap functionality.
+   *
+   * As opposed to SetSecAltFn(AltFnMaps), this function only enables one alternate function from the secondary set.
+   *
+   * @param[in] map The alternate function to enable. See GPIO#SecRemap for a comprehensive list of secondary alternate
    * functions.
- */
+   */
   static void SetSecAltFn(SecRemap map) { SetSecAltFn(static_cast<uint32_t>(map)); }
 
  private:
   /**
- * @brief Initializes this GPIO to the given configuration for STM32F1xx devices.
- *
- * See GPIO#Config for what @p mode and @p speed means.
- *
- * @param cnf GPIO Configuration
- * @param mode GPIO Mode
- */
+   * @brief Initializes this GPIO to the given configuration for STM32F1xx devices.
+   *
+   * See GPIO#Config for what @p mode and @p speed means.
+   *
+   * @param[in] cnf GPIO Configuration
+   * @param[in] mode GPIO Mode
+   */
   void Init(Configuration cnf, Mode mode) const;
 
   /**
@@ -822,7 +823,7 @@ class GPIO final {
    *
    * This function is a simple helper function to determine which RCC to initialize, given the port we are working with.
    *
-   * @param port The GPIO port which should be initialized
+   * @param[in] port The GPIO port which should be initialized
    */
   void InitRcc(Port port) const;
 

@@ -45,6 +45,14 @@ using Pin = uint16_t;
  */
 using Pinout = std::pair<Port, Pin>;
 
+/**
+ * @brief Compares two c-strings in compile time.
+ *
+ * @param[in] a A string
+ * @param[in] b Another string
+ *
+ * @return Whether the c-strings are the same
+ */
 constexpr bool StringCompare(const char* a, const char* b) {
   return *a == *b && (*a == '\0' || StringCompare(a + 1, b + 1));
 }

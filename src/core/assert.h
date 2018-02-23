@@ -33,11 +33,11 @@
  *
  * A custom, constant-expression assertion function to replace @c assert(condition).
  *
- * @param bool_constexpr Expression to check against.
- * @param file Source file which invoked this function. Always @c __FILE__.
- * @param line Line in source file which invoked this function. Always @c __LINE__
- * @param fn Function which invoked this function. Always @c __func__.
- * @param message Message if assertion fails.
+ * @param[in] bool_constexpr Expression to check against.
+ * @param[in] file Source file which invoked this function. Always @c __FILE__.
+ * @param[in] line Line in source file which invoked this function. Always @c __LINE__
+ * @param[in] fn Function which invoked this function. Always @c __func__.
+ * @param[in] message Message if assertion fails.
  */
 constexpr void Assert(const bool bool_constexpr,
                       const char* file,
@@ -54,10 +54,10 @@ constexpr void Assert(const bool bool_constexpr,
  *
  * Asserts whether a rtlib::core::Pinout is valid (i.e. not default constructed).
  *
- * @param pinout Pinout to check
- * @param file Source file which invoked this function. Always @c __FILE__.
- * @param line Line in source file which invoked this function. Always @c __LINE__
- * @param fn Function which invoked this function. Always @c __func__.
+ * @param[in] pinout Pinout to check
+ * @param[in] file Source file which invoked this function. Always @c __FILE__.
+ * @param[in] line Line in source file which invoked this function. Always @c __LINE__
+ * @param[in] fn Function which invoked this function. Always @c __func__.
  *
  * @return @p pinout if assertion succeeds.
  */

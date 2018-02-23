@@ -32,7 +32,7 @@
 
 namespace rtlib::core::stm32f4 {
 
-class UART {
+class UART final {
  public:
   /**
    * @brief Enumeration for different UART interfaces.
@@ -335,7 +335,7 @@ class UART {
   /**
    * @brief Conversion constructor.
    * 
-   * @param config Configuration for the UART. See UART#Config.
+   * @param[in] config Configuration for the UART. See UART#Config.
    */
   explicit UART(const Config& config);
 
@@ -345,14 +345,14 @@ class UART {
    * This constructor is equivalent to @code UART::UART(const Config&) @endcode. However, it is suggested to use that
    * constructor instead for code readability.
    * 
-   * @param uart UART Interface
-   * @param baud_rate UART Baud Rate
-   * @param mode UART Mode
-   * @param data_bits Data bits to use
-   * @param stop_bits Stop bits to use
-   * @param parity Parity Mode
-   * @param flow_control Flow Control
-   * @param handler RX Handler function
+   * @param[in] uart UART Interface
+   * @param[in] baud_rate UART Baud Rate
+   * @param[in] mode UART Mode
+   * @param[in] data_bits Data bits to use
+   * @param[in] stop_bits Stop bits to use
+   * @param[in] parity Parity Mode
+   * @param[in] flow_control Flow Control
+   * @param[in] handler RX Handler function
    */
   UART(Interface uart,
        BaudRate baud_rate,
@@ -372,13 +372,14 @@ class UART {
   /**
    * @brief Move constructor.
    *
-   * @param other UART object to move from
+   * @param[in] other UART object to move from
    */
   UART(UART&& other) noexcept = default;
   /**
    * @brief Move assignment operator.
    *
-   * @param other UART object to move from
+   * @param[in] other UART object to move from
+   *
    * @return Reference to the moved UART.
    */
   UART& operator=(UART&& other) noexcept = default;
@@ -401,7 +402,7 @@ class UART {
   /**
    * @brief Sends one byte.
    * 
-   * @param c Character to send
+   * @param[in] c Character to send
    */
   void TxByte(char c);
   /**
@@ -409,8 +410,8 @@ class UART {
    *
    * Similar to @c std::printf.
    *
-   * @param format Format string
-   * @param ... Variable arguments
+   * @param[in] format Format string
+   * @param[in] ... Variable arguments
    */
   void Tx(const char* format, ...) __attribute__((format(printf, 2, 3)));
 

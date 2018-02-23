@@ -44,21 +44,21 @@ class System final {
     /**
      * @brief Low Clock Resolution.
      *
-     * %System clock will update once every 1 second.
+     * System clock will update once every 1 second.
      */
-        kLowRes = 1,
+    kLowRes = 1,
     /**
      * @brief Standard Clock Resolution.
      *
-     * %System clock will update once every 1 millisecond.
+     * System clock will update once every 1 millisecond.
      */
-        kStdRes = 1000,
+    kStdRes = 1000,
     /**
      * @brief High Clock Resolution.
      *
-     * %System clock will update once every 1 microsecond.
+     * System clock will update once every 1 microsecond.
      */
-        kHighRes = 1000000
+    kHighRes = 1000000
   };
 
   /**
@@ -74,7 +74,7 @@ class System final {
    * @warning This function should be invoked first before using other auxiliary functions. Failure to do so will
    * cause incorrect times to be reported, and infinitely delaying loops.
    *
-   * @param clock_res Resolution of the clock. Defaults to 1 ms/update.
+   * @param[in] clock_res Resolution of the clock. Defaults to 1 ms/update.
    */
   static void Init(ClockResolution clock_res = kStdRes);
 
@@ -129,7 +129,7 @@ class System final {
    *
    * @note If using low resolution clock, the wait time will be rounded to the nearest 1s.
    *
-   * @param wait_ms Milliseconds to wait.
+   * @param[in] wait_ms Milliseconds to wait.
    */
   static void DelayMs(uint64_t wait_ms);
   /**
@@ -137,7 +137,7 @@ class System final {
    *
    * It is recommended to use this function if you use a low resolution clock.
    *
-   * @param wait_s Seconds to wait.
+   * @param[in] wait_s Seconds to wait.
    */
   static void DelayS(uint64_t wait_s);
 

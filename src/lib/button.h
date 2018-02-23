@@ -61,7 +61,7 @@ class Button {
   /**
    * @brief Default constructor for Button.
    *
-   * @param config Button configuration
+   * @param[in] config Button configuration
    */
   explicit Button(const Config& config);
 
@@ -73,13 +73,14 @@ class Button {
   /**
    * @brief Move constructor for Button.
    *
-   * @param other Button object to move from
+   * @param[in] other Button object to move from
    */
   Button(Button&& other) noexcept = default;
   /**
    * @brief Move assignment operator for Button.
    *
-   * @param other Button object to move from
+   * @param[in] other Button object to move from
+   *
    * @return Reference to the moved Button.
    */
   Button& operator=(Button&& other) noexcept = default;

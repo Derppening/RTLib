@@ -210,7 +210,7 @@ class GPIO final {
   /**
    * @brief Conversion constructor.
    *
-   * @param config Configuration for the GPIO. See GPIO#Config.
+   * @param[in] config Configuration for the GPIO. See GPIO#Config.
    */
   explicit GPIO(const Config& config);
 
@@ -220,12 +220,12 @@ class GPIO final {
    * This constructor is equivalent to @code GPIO::GPIO(const Config&) @endcode. However, it is suggested to use that
    * constructor instead for code readability.
    *
-   * @param pin MCU pinout
-   * @param mode GPIO mode
-   * @param pullup Internal pull-up mode
-   * @param speed GPIO Output Speed
-   * @param driver GPIO Output Driver Type
-   * @param altfn GPIO Alternate Function Select
+   * @param[in] pin MCU pinout
+   * @param[in] mode GPIO mode
+   * @param[in] pullup Internal pull-up mode
+   * @param[in] speed GPIO Output Speed
+   * @param[in] driver GPIO Output Driver Type
+   * @param[in] altfn GPIO Alternate Function Select
    */
   GPIO(Pinout pin,
        Mode mode,
@@ -242,13 +242,14 @@ class GPIO final {
   /**
    * @brief Move constructor.
    *
-   * @param other GPIO object to move from
+   * @param[in] other GPIO object to move from
    */
   GPIO(GPIO&& other) noexcept = default;
   /**
    * @brief Move assignment operator.
    *
-   * @param other GPIO object to move from
+   * @param[in] other GPIO object to move from
+   *
    * @return Reference to the moved GPIO.
    */
   GPIO& operator=(GPIO&& other) noexcept = default;
@@ -277,7 +278,7 @@ class GPIO final {
   /**
    * @brief Sets new GPIO state.
    *
-   * @param state New state of GPIO, where @c true represents a high value, and @c false represents a low value.
+   * @param[in] state New state of GPIO, where @c true represents a high value, and @c false represents a low value.
    */
   void Set(bool state) const;
   /**
@@ -294,10 +295,10 @@ class GPIO final {
   /**
    * @brief Initializes this GPIO to the given configuration for STM32F4xx devices.
    *
-   * @param mode GPIO Mode
-   * @param pullup Internal GPIO pull-up mode
-   * @param speed GPIO Output Speed
-   * @param driver GPIO Output Driver Type
+   * @param[in] mode GPIO Mode
+   * @param[in] pullup Internal GPIO pull-up mode
+   * @param[in] speed GPIO Output Speed
+   * @param[in] driver GPIO Output Driver Type
    */
   void Init(Mode mode, Pullup pullup, Speed speed = Speed::k2MHz, DriverType driver = DriverType::kPushPull) const;
   /**
@@ -305,7 +306,7 @@ class GPIO final {
    *
    * This function is a simple helper function to determine which RCC to initialize, given the port we are working with.
    *
-   * @param port The GPIO port which should be initialized
+   * @param[in] port The GPIO port which should be initialized
    */
   void InitRcc(Port port) const;
 
@@ -314,7 +315,7 @@ class GPIO final {
    *
    * Most pins have alternate functions associated with them. This function allows those functions to be used.
    *
-   * @param altfn Alternate function number
+   * @param[in] altfn Alternate function number
    */
   void SetAltFn(uint8_t altfn);
 
