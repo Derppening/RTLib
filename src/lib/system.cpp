@@ -21,6 +21,10 @@
 
 #include <libopencm3/cm3/systick.h>
 
+#include "config/config.h"
+#include "core/assert.h"
+#include "core/util.h"
+
 extern "C" void sys_tick_handler();
 
 namespace {
@@ -44,11 +48,7 @@ void System::Init(ClockResolution clock_res) {
 
   clock_res_ = clock_res;
 
-#if defined(STM32F1)
-  systick_set_reload(72000000 / clock_res_);
-#elif defined(STM32F4)
-  systick_set_reload(168000000 / clock_res_);
-#endif
+  systick_set_reload(ClockSpeed() / clock_res_);
   systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
   systick_counter_enable();
 
@@ -79,7 +79,7 @@ uint64_t System::GetS() {
 
 void System::DelayUs(uint64_t wait_us) {
   uint64_t wake_tick = System::GetUs() + wait_us;
-  while (wake_tick > System::GetUs());
+  while (wake_tick > System::GetUs()) {}
 }
 
 void System::DelayMs(uint64_t wait_ms) {
@@ -88,6 +88,22 @@ void System::DelayMs(uint64_t wait_ms) {
 
 void System::DelayS(uint64_t wait_s) {
   DelayUs(wait_s * 1000000);
+}
+
+constexpr uint32_t System::ClockSpeed() noexcept {
+  // TODO(Derppening): Set clock speed according to clock
+
+  if constexpr (rtlib::core::StringCompare(kDeviceSeries, "STM32F1")) {
+    return 72000000;
+  }
+
+  if constexpr (rtlib::core::StringCompare(kDeviceSeries, "STM32F4")) {
+    return 168000000;
+  }
+
+  Assert(false, __FILE__, __LINE__, __func__, "Cannot set system clock: Unknown Device");
+
+  return 0;
 }
 
 }  // namespace rtlib::lib

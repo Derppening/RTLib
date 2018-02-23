@@ -142,6 +142,8 @@ class System final {
   static void DelayS(uint64_t wait_s);
 
  private:
+  static constexpr uint32_t ClockSpeed() noexcept;
+
   static bool has_init_;
   static ClockResolution clock_res_;
 };
