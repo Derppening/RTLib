@@ -49,8 +49,8 @@ GPIO::GPIO(Pinout pin, Mode mode, Pullup pullup, Speed speed, DriverType driver,
 }
 
 void GPIO::Init(const Mode mode, const Pullup pullup, const Speed speed, const DriverType driver) const {
-  gpio_mode_setup(pin_.first, static_cast<uint8_t>(mode), static_cast<uint8_t>(pullup), pin_.second);
-  gpio_set_output_options(pin_.first, static_cast<uint8_t>(driver), static_cast<uint8_t>(speed), pin_.second);
+  gpio_mode_setup(pin_.first, uint8_t(mode), uint8_t(pullup), pin_.second);
+  gpio_set_output_options(pin_.first, uint8_t(driver), uint8_t(speed), pin_.second);
 }
 
 void GPIO::InitRcc(const Port port) const {
@@ -95,7 +95,7 @@ void GPIO::InitRcc(const Port port) const {
 }
 
 bool GPIO::Read() const {
-  return static_cast<bool>(gpio_get(pin_.first, pin_.second));
+  return bool(gpio_get(pin_.first, pin_.second));
 }
 
 void GPIO::Set(const bool state) const {

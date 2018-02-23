@@ -62,14 +62,14 @@ Button::Button(const Config& config) :
 #elif defined(STM32F4)
     gpio_(GetConfigPinout(config.id),
           GPIO::Mode::kInput,
-          static_cast<GPIO::Pullup>(config.pullup),
+          GPIO::Pullup(config.pullup),
           GPIO::Speed::k50MHz),
 #endif
     polarity_(config.pullup == 0x1) {
 }
 
 bool Button::Read() {
-  return static_cast<bool>(gpio_.Read() ^ polarity_);
+  return bool(gpio_.Read() ^ polarity_);
 }
 
 }  // namespace rtlib::lib

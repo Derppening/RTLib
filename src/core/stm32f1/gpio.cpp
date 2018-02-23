@@ -42,7 +42,7 @@ GPIO::GPIO(Pinout pin, Configuration cnf, Mode mode) :
 }
 
 void GPIO::Init(const Configuration cnf, const Mode mode) const {
-  gpio_set_mode(pin_.first, static_cast<uint8_t>(mode), static_cast<uint8_t>(cnf), pin_.second);
+  gpio_set_mode(pin_.first, uint8_t(mode), uint8_t(cnf), pin_.second);
 }
 
 void GPIO::InitRcc(const Port port) const {
@@ -75,7 +75,7 @@ void GPIO::InitRcc(const Port port) const {
 }
 
 bool GPIO::Read() const {
-  return static_cast<bool>(gpio_get(pin_.first, pin_.second));
+  return bool(gpio_get(pin_.first, pin_.second));
 }
 
 void GPIO::Set(const bool state) const {
@@ -95,7 +95,7 @@ void GPIO::Reset() const {
 }
 
 void GPIO::SetPriAltFn(JTAGDisables swj_state, AltFnMaps maps) {
-  gpio_primary_remap(static_cast<uint32_t>(swj_state), maps);
+  gpio_primary_remap(uint32_t(swj_state), maps);
 }
 
 void GPIO::SetSecAltFn(AltFnMaps maps) {

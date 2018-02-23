@@ -150,7 +150,7 @@ UART::UART(Interface interface,
            Parity parity,
            FlowControl flow_control,
            HandlerFn handler) :
-    usart_(static_cast<uint32_t>(interface)),
+    usart_(uint32_t(interface)),
     tx_(GetTxPinout(),
         GPIO::Mode::kAF,
         GPIO::Pullup::kNone,
@@ -166,12 +166,12 @@ UART::UART(Interface interface,
   InitRcc();
   EnableIrq();
 
-  usart_set_baudrate(usart_, static_cast<uint32_t>(baud_rate));
+  usart_set_baudrate(usart_, uint32_t(baud_rate));
   usart_set_databits(usart_, data_bits);
-  usart_set_stopbits(usart_, static_cast<uint32_t>(stop_bits));
-  usart_set_mode(usart_, static_cast<uint32_t>(mode));
-  usart_set_parity(usart_, static_cast<uint32_t>(parity));
-  usart_set_flow_control(usart_, static_cast<uint32_t>(flow_control));
+  usart_set_stopbits(usart_, uint32_t(stop_bits));
+  usart_set_mode(usart_, uint32_t(mode));
+  usart_set_parity(usart_, uint32_t(parity));
+  usart_set_flow_control(usart_, uint32_t(flow_control));
 
   if (mode != Mode::kTx) {
     usart_enable_rx_interrupt(usart_);

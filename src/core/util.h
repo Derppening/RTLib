@@ -62,7 +62,6 @@ namespace DEVICE_NS = CORE_NS::stm32f1;
 #elif defined(STM32F4)
 namespace DEVICE_NS = CORE_NS::stm32f4;
 #endif
-
 namespace LIB_NS = rtlib::lib;
 
 #endif  // RTLIB_CORE_UTIL_H_
