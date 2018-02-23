@@ -142,6 +142,11 @@ class System final {
   static void DelayS(uint64_t wait_s);
 
  private:
+  /**
+   * @brief Retrieves the clock speed based on the current device.
+   *
+   * @return Clock speed in Hz.
+   */
   static constexpr uint32_t ClockSpeed() noexcept;
 
   static bool has_init_;
