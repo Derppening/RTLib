@@ -23,15 +23,114 @@
 
 #include <cassert>
 #include <cstdarg>
+
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/rcc.h>
-#include <config/config.h>
 
+#include "config/config.h"
 #include "core/util.h"
 
-namespace rtlib::core::stm32f4 {
+namespace {
+rtlib::core::stm32f4::UART::HandlerFn rx_handler = nullptr;
 
-constexpr const uint16_t UART::kTxBufferSize;
+extern "C" void usart1_isr() {
+  if (((USART_CR1(USART1) & USART_CR1_RXNEIE) != 0) &&
+      ((USART_SR(USART1) & USART_SR_RXNE) != 0)) {
+
+    uint16_t data = usart_recv(USART1);
+    if (rx_handler != nullptr) {
+      using rtlib::core::stm32f4::UART;
+      rx_handler(UART::kUART1, data);
+    }
+  }
+}
+
+extern "C" void usart2_isr() {
+  if (((USART_CR1(USART2) & USART_CR1_RXNEIE) != 0) &&
+      ((USART_SR(USART2) & USART_SR_RXNE) != 0)) {
+
+    uint16_t data = usart_recv(USART2);
+    if (rx_handler != nullptr) {
+      using rtlib::core::stm32f4::UART;
+      rx_handler(UART::kUART2, data);
+    }
+  }
+}
+
+extern "C" void usart3_isr() {
+  if (((USART_CR1(USART3) & USART_CR1_RXNEIE) != 0) &&
+      ((USART_SR(USART3) & USART_SR_RXNE) != 0)) {
+
+    uint16_t data = usart_recv(USART3);
+    if (rx_handler != nullptr) {
+      using rtlib::core::stm32f4::UART;
+      rx_handler(UART::kUART3, data);
+    }
+  }
+}
+
+extern "C" void uart4_isr() {
+  if (((USART_CR1(UART4) & USART_CR1_RXNEIE) != 0) &&
+      ((USART_SR(UART4) & USART_SR_RXNE) != 0)) {
+
+    uint16_t data = usart_recv(UART4);
+    if (rx_handler != nullptr) {
+      using rtlib::core::stm32f4::UART;
+      rx_handler(UART::kUART4, data);
+    }
+  }
+}
+
+extern "C" void uart5_isr() {
+  if (((USART_CR1(UART5) & USART_CR1_RXNEIE) != 0) &&
+      ((USART_SR(UART5) & USART_SR_RXNE) != 0)) {
+
+    uint16_t data = usart_recv(UART5);
+    if (rx_handler != nullptr) {
+      using rtlib::core::stm32f4::UART;
+      rx_handler(UART::kUART5, data);
+    }
+  }
+}
+
+extern "C" void usart6_isr() {
+  if (((USART_CR1(USART6) & USART_CR1_RXNEIE) != 0) &&
+      ((USART_SR(USART6) & USART_SR_RXNE) != 0)) {
+
+    uint16_t data = usart_recv(USART6);
+    if (rx_handler != nullptr) {
+      using rtlib::core::stm32f4::UART;
+      rx_handler(UART::kUART6, data);
+    }
+  }
+}
+
+extern "C" void uart7_isr() {
+  if (((USART_CR1(UART7) & USART_CR1_RXNEIE) != 0) &&
+      ((USART_SR(UART7) & USART_SR_RXNE) != 0)) {
+
+    uint16_t data = usart_recv(UART7);
+    if (rx_handler != nullptr) {
+      using rtlib::core::stm32f4::UART;
+      rx_handler(UART::kUART7, data);
+    }
+  }
+}
+
+extern "C" void uart8_isr() {
+  if (((USART_CR1(UART8) & USART_CR1_RXNEIE) != 0) &&
+      ((USART_SR(UART8) & USART_SR_RXNE) != 0)) {
+
+    uint16_t data = usart_recv(UART8);
+    if (rx_handler != nullptr) {
+      using rtlib::core::stm32f4::UART;
+      rx_handler(UART::kUART8, data);
+    }
+  }
+}
+}  // namespace
+
+namespace rtlib::core::stm32f4 {
 
 UART::UART(const Config& config) :
     UART(config.uart,
@@ -40,7 +139,8 @@ UART::UART(const Config& config) :
          config.data_bits,
          config.stop_bits,
          config.parity,
-         config.flow_control) {}
+         config.flow_control,
+         config.rx_handler_fn) {}
 
 UART::UART(Interface interface,
            BaudRate baud_rate,
@@ -48,7 +148,8 @@ UART::UART(Interface interface,
            uint32_t data_bits,
            StopBits stop_bits,
            Parity parity,
-           FlowControl flow_control) :
+           FlowControl flow_control,
+           HandlerFn handler) :
     usart_(static_cast<uint32_t>(interface)),
     tx_(GetTxPinout(),
         GPIO::Mode::kAF,
@@ -63,6 +164,7 @@ UART::UART(Interface interface,
         GPIO::DriverType::kOpenDrain,
         GetAltFn()) {
   InitRcc();
+  EnableIrq();
 
   usart_set_baudrate(usart_, static_cast<uint32_t>(baud_rate));
   usart_set_databits(usart_, data_bits);
@@ -72,30 +174,35 @@ UART::UART(Interface interface,
   usart_set_flow_control(usart_, static_cast<uint32_t>(flow_control));
 
   if (mode != Mode::kTx) {
-    EnableRxIrq();
     usart_enable_rx_interrupt(usart_);
   }
 
   usart_enable(usart_);
+
+  rx_handler = handler;
 }
 
 void UART::TxByte(char c) {
-  usart_send_blocking(usart_, static_cast<uint16_t>(c));
+  usart_send(usart_, uint16_t(c));
 }
 
-void UART::Tx(const char* data, ...) {
+void UART::Tx(const char* format, ...) {
   va_list args;
   char buffer[kTxBufferSize];
   char* ptr = buffer;
 
-  va_start(args, data);
-  std::vsprintf(buffer, data, args);
+  va_start(args, format);
+  std::vsprintf(buffer, format, args);
   va_end(args);
 
+  usart_enable_tx_interrupt(usart_);
+
   while (*ptr != '\0') {
-    TxByte(*ptr);
+    usart_send(usart_, uint16_t(*ptr));
     ++ptr;
   }
+
+  usart_disable_tx_interrupt(usart_);
 }
 
 void UART::InitRcc() const {
@@ -198,7 +305,7 @@ GPIO::AltFn UART::GetAltFn() const {
   }
 }
 
-void UART::EnableRxIrq() const {
+void UART::EnableIrq() const {
   switch (usart_) {
     case USART1:
       nvic_enable_irq(NVIC_USART1_IRQ);

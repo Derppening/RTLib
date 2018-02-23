@@ -167,7 +167,7 @@ class GPIO final {
     /**
      * @brief GPIO Pin to enable and initialize.
      *
-     * Defaults to @code {GPIOA, GPIO0} @endcode.
+     * Defaults to an indeterminate state.
      */
     Pinout pin = {};
 
