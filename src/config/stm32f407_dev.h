@@ -56,6 +56,7 @@
 #error "This configuration is designed for a STM32F407VET6 device. (Did you set DEVICE in CMakeLists.txt correctly?)"
 #endif  // !defined(STM32F407VET6)
 
+constexpr const char kDeviceSeries[] = "STM32F4";
 constexpr const char kDeviceString[] = "STM32F407xx";
 
 #define CORE_UART1_TX_PINOUT {GPIOA, GPIO9}

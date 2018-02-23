@@ -26,6 +26,7 @@
 #ifndef RTLIB_CONFIG_ASC_H_
 #define RTLIB_CONFIG_ASC_H_
 
+constexpr const char kDeviceSeries[] = "STM32F1";
 constexpr const char kDeviceString[] = "STM32F105xx";
 
 #if !defined(STM32F105RBT6)

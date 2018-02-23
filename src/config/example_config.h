@@ -34,8 +34,10 @@
 #error "This configuration is designed for a STM32F103VCT6 device. (Did you set DEVICE in CMakeLists.txt correctly?)"
 #endif  // !defined(STM32F103VCT6)
 
-// You must define a constant 'kDeviceString', which corresponds to the MCU series. No checks will be done internally,
-// so you are responsible for the correctness of this constant.
+
+// You must define two constants 'kDeviceSeries' and 'kDeviceString', which corresponds to the MCU series and MCU model
+// respectively. No checks will be done internally, so you are responsible for the correctness of these constant.
+constexpr const char kDeviceSeries[] = "STM32F1";
 constexpr const char kDeviceString[] = "STM32F103xx";
 
 // You must define all LIB_USE_*. If your board does not have the feature, or you do not intend to expose the API to
@@ -52,6 +54,6 @@ constexpr const char kDeviceString[] = "STM32F103xx";
 #define LIB_LED0_PINOUT {GPIOB, GPIO0}
 
 // Other devices may require more than one pinout. These will also be defined here.
-// TODO(Derppening): Add example from UART
+// TODO(Derppening): Add example from UART. See config/stm32f407_dev.h for now.
 
 #endif  // RTLIB_CONFIG_EXAMPLE_CONFIG_H_
