@@ -200,7 +200,7 @@ Session.vim
 # auto-generated tag files
 tags
 
-
+.sourcetrail/
 build/
 cmake-build-debug/
 cmake-build-minsizerel/

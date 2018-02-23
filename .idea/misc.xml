@@ -5,5 +5,8 @@
     <libraryRoots>
       <file path="$PROJECT_DIR$/libopencm3/include" />
     </libraryRoots>
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/.sourcetrail" />
+    </excludeRoots>
   </component>
 </project>
