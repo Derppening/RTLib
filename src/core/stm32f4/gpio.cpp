@@ -26,13 +26,15 @@
 
 #include <libopencm3/stm32/rcc.h>
 
+#include "core/assert.h"
+
 namespace rtlib::core::stm32f4 {
 
 GPIO::GPIO(const Config& config) :
     GPIO(config.pin, config.mode, config.pullup, config.speed, config.driver, config.altfn) {}
 
 GPIO::GPIO(Pinout pin, Mode mode, Pullup pullup, Speed speed, DriverType driver, AltFn altfn) :
-    pin_(std::move(pin)) {
+    pin_(AssertPin(std::move(pin), __FILE__, __LINE__, __func__)) {
   // Use external oscillator for RCC
   rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
 

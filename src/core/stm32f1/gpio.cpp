@@ -32,7 +32,7 @@ GPIO::GPIO(const Config& config) :
     GPIO(config.pin, config.cnf, config.mode) {}
 
 GPIO::GPIO(Pinout pin, Configuration cnf, Mode mode) :
-    pin_(std::move(pin)) {
+    pin_(AssertPin(std::move(pin), __FILE__, __LINE__, __func__)) {
   // Use external oscillator for RCC
   rcc_clock_setup_in_hse_8mhz_out_72mhz();
 

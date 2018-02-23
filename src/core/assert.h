@@ -26,8 +26,10 @@
 #ifndef RTLIB_CORE_ASSERT_H_
 #define RTLIB_CORE_ASSERT_H_
 
+#include "util.h"
+
 /**
- * @brief Custom assertion function.
+ * @brief Generic assertion function.
  *
  * A custom, constant-expression assertion function to replace @c assert(condition).
  *
@@ -45,6 +47,27 @@ constexpr void Assert(const bool bool_constexpr,
   if (bool_constexpr) { return; }
 
   __builtin_trap();
+}
+
+/**
+ * @brief Pin assertion function.
+ *
+ * Asserts whether a rtlib::core::Pinout is valid (i.e. not default constructed).
+ *
+ * @param pinout Pinout to check
+ * @param file Source file which invoked this function. Always @c __FILE__.
+ * @param line Line in source file which invoked this function. Always @c __LINE__
+ * @param fn Function which invoked this function. Always @c __func__.
+ *
+ * @return @p pinout if assertion succeeds.
+ */
+constexpr rtlib::core::Pinout AssertPin(rtlib::core::Pinout&& pinout,
+                              const char* file,
+                              const unsigned line,
+                              const char* fn) noexcept {
+  Assert(pinout != rtlib::core::Pinout(), file, line, fn, "Invalid Pin");
+
+  return pinout;
 }
 
 #endif  // RTLIB_CORE_ASSERT_H_
