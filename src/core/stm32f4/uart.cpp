@@ -21,9 +21,6 @@
 
 #if defined(STM32F4)
 
-#include <cassert>
-#include <cstdarg>
-
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/rcc.h>
 
@@ -183,27 +180,14 @@ UART::UART(Interface interface,
   rx_handler = handler;
 }
 
-void UART::TxByte(char c) {
-  usart_send(usart_, uint16_t(c));
+void UART::Tx(char c) const {
+  usart_send_blocking(usart_, uint16_t(c));
 }
 
-void UART::Tx(const char* format, ...) {
-  va_list args;
-  char buffer[kTxBufferSize];
-  char* ptr = buffer;
-
-  va_start(args, format);
-  std::vsprintf(buffer, format, args);
-  va_end(args);
-
-  usart_enable_tx_interrupt(usart_);
-
-  while (*ptr != '\0') {
-    usart_send(usart_, uint16_t(*ptr));
-    ++ptr;
+void UART::Tx(const char* str, std::size_t len) const {
+  for (std::size_t i = 0; i < len && *str != '\0'; ++str, ++i) {
+    Tx(*str);
   }
-
-  usart_disable_tx_interrupt(usart_);
 }
 
 constexpr void UART::InitRcc() const {

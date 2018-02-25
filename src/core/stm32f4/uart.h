@@ -23,7 +23,7 @@
 #if defined(STM32F4)
 
 #include <cstdint>
-#include <string>
+#include <limits>
 
 #include <libopencm3/stm32/usart.h>
 
@@ -404,16 +404,19 @@ class UART final {
    * 
    * @param[in] c Character to send
    */
-  void TxByte(char c);
+  void Tx(char c) const;
   /**
-   * @brief Sends a formatted string.
+   * @brief Sends a character string.
    *
-   * Similar to @c std::printf.
+   * Sends a c-string for @p len characters, or until a null-terminating character is reached.
    *
-   * @param[in] format Format string
-   * @param[in] ... Variable arguments
+   * @note Previously, this function accepts a format string and variable arguments (similar to @c std::printf). To
+   * migrate to this version, use @c std::snprinf to format your string, then pass the c-string into this function.
+   *
+   * @param[in] str Character string to send
+   * @param[in] len Length of string to send
    */
-  void Tx(const char* format, ...) __attribute__((format(printf, 2, 3)));
+  void Tx(const char* str, std::size_t len = std::numeric_limits<std::size_t>::max()) const;
 
  private:
   /**
