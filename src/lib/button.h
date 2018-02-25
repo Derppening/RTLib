@@ -114,10 +114,10 @@ class Button {
   /**
    * @return GPIO object which manages the pin of the button
    */
-  DEVICE_NS::GPIO* GetGpio() { return &gpio_; }
+  libdev::GPIO* GetGpio() { return &gpio_; }
 
  private:
-  DEVICE_NS::GPIO gpio_;
+  libdev::GPIO gpio_;
   bool polarity_;
 };
 

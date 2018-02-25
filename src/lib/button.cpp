@@ -25,8 +25,8 @@
 
 #include <cassert>
 
-using CORE_NS::Pinout;
-using DEVICE_NS::GPIO;
+using libcore::Pinout;
+using libdev::GPIO;
 
 namespace {
 

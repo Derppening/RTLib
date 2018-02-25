@@ -59,17 +59,23 @@ constexpr bool StringCompare(const char* a, const char* b) {
 
 namespace stm32f1 {}
 namespace stm32f4 {}
+
+#if defined(STM32F1)
+namespace device = stm32f1;
+#elif defined(STM32F4)
+namespace device = stm32f4;
+#endif
 }  // namespace core
 
 namespace lib {}
 }  // namespace rtlib
 
-namespace CORE_NS = rtlib::core;
+namespace libcore = rtlib::core;
 #if defined(STM32F1)
-namespace DEVICE_NS = CORE_NS::stm32f1;
+namespace libdev = libcore::stm32f1;
 #elif defined(STM32F4)
-namespace DEVICE_NS = CORE_NS::stm32f4;
+namespace libdev = libcore::stm32f4;
 #endif
-namespace LIB_NS = rtlib::lib;
+namespace libs = rtlib::lib;
 
 #endif  // RTLIB_CORE_UTIL_H_
