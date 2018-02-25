@@ -89,7 +89,7 @@ void GPIO::InitRcc(const Port port) const {
       rcc_periph_clock_enable(RCC_GPIOK);
       break;
     default:
-      assert(false);
+      Assert(false, __FILE__, __LINE__, __func__, "Invalid GPIO Port");
       break;
   }
 }

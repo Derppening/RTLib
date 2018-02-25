@@ -28,6 +28,7 @@
 #include <libopencm3/stm32/rcc.h>
 
 #include "config/config.h"
+#include "core/assert.h"
 #include "core/util.h"
 
 namespace {
@@ -232,7 +233,7 @@ void UART::InitRcc() const {
       rcc_periph_clock_enable(RCC_UART8);
       break;
     default:
-      assert(false);
+      Assert(false, __FILE__, __LINE__, __func__, "Invalid or unsupported UART Interface");
       break;
   }
 }
@@ -254,10 +255,9 @@ Pinout UART::GetTxPinout() const {
     case UART7:
     case UART8:
       // TODO(Derppening): Fill in UART7/8 Pins
-//      return GPIO_AF0;
     default:
-      assert(false);
-      break;
+      Assert(false, __FILE__, __LINE__, __func__, "Invalid or unsupported UART Interface");
+      return {};
   }
 }
 
@@ -278,10 +278,9 @@ Pinout UART::GetRxPinout() const {
     case UART7:
     case UART8:
       // TODO(Derppening): Fill in UART7/8 Pins
-//      return GPIO_AF0;
     default:
-      assert(false);
-      break;
+      Assert(false, __FILE__, __LINE__, __func__, "Invalid or unsupported UART Interface");
+      return {};
   }
 }
 
@@ -298,10 +297,9 @@ GPIO::AltFn UART::GetAltFn() const {
     case UART7:
     case UART8:
       // TODO(Derppening): Fill in UART7/8 AltFn
-//      return GPIO_AF0;
     default:
-      assert(false);
-      break;
+      Assert(false, __FILE__, __LINE__, __func__, "Invalid or unsupported UART Interface");
+      return GPIO_AF0;
   }
 }
 

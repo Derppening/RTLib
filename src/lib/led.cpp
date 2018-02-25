@@ -22,19 +22,19 @@
 #if defined(LIB_USE_LED) && LIB_USE_LED > 0
 
 #include "lib/led.h"
+#include "core/assert.h"
 
 using libcore::Pinout;
 using libdev::GPIO;
 
 namespace {
 
-inline Pinout GetConfigPinout(const uint8_t id) {
-  assert(id < LIB_USE_LED);
+constexpr Pinout GetConfigPinout(const uint8_t id) {
+  Assert(id < LIB_USE_LED, __FILE__, __LINE__, __func__, "Invalid LED ID");
   switch (id) {
     default:
       // not handled, since assert will catch this error
-      assert(false);
-      break;
+      return {};
 #if LIB_USE_LED > 0
     case 0:
       return LIB_LED0_PINOUT;

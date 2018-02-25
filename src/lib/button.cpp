@@ -23,20 +23,19 @@
 
 #include "lib/button.h"
 
-#include <cassert>
+#include "core/assert.h"
 
 using libcore::Pinout;
 using libdev::GPIO;
 
 namespace {
 
-inline CORE_NS::Pinout GetConfigPinout(const uint8_t id) {
-  assert(id < LIB_USE_BUTTON);
+constexpr libcore::Pinout GetConfigPinout(const uint8_t id) {
+  Assert(id < LIB_USE_BUTTON, __FILE__, __LINE__, __func__, "Invalid Button ID");
   switch (id) {
     default:
       // not handled, since assert will catch this error
-      assert(false);
-      break;
+      return {};
 #if LIB_USE_BUTTON > 0
     case 0:
       return LIB_BUTTON0_PINOUT;
