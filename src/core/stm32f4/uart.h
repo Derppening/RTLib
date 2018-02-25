@@ -423,30 +423,30 @@ class UART final {
    *
    * @param port The UART interface which should be initialized
    */
-  void InitRcc() const;
+  constexpr void InitRcc() const;
   /**
    * @brief Enables interrupt for this UART interface (if supported).
    */
-  void EnableIrq() const;
+  constexpr void EnableIrq() const;
 
   /**
    * @brief Retrieves the TX pinout from the configuration file.
    *
    * @return TX pinout
    */
-  Pinout GetTxPinout() const;
+  constexpr Pinout GetTxPinout() const;
   /**
    * @brief Retrieves the RX pinout from the configuration file.
    *
    * @return RX pinout
    */
-  Pinout GetRxPinout() const;
+  constexpr Pinout GetRxPinout() const;
   /**
    * @brief Retrieves the alternate function number based on the interface we are initializing.
    *
    * @return Alternate function number
    */
-  GPIO::AltFn GetAltFn() const;
+  constexpr GPIO::AltFn GetAltFn() const;
 
   /**
    * @brief C-String buffer size for transmission.

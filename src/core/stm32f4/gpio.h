@@ -308,7 +308,7 @@ class GPIO final {
    *
    * @param[in] port The GPIO port which should be initialized
    */
-  void InitRcc(Port port) const;
+  constexpr void InitRcc(Port port) const;
 
   /**
    * @brief Sets this GPIO to be used as an alternate function.
@@ -317,7 +317,7 @@ class GPIO final {
    *
    * @param[in] altfn Alternate function number
    */
-  void SetAltFn(uint8_t altfn);
+  void SetAltFn(uint8_t altfn) const;
 
   /**
    * @brief Retrieves the GPIO pinout currently managed by this object.

@@ -825,7 +825,7 @@ class GPIO final {
    *
    * @param[in] port The GPIO port which should be initialized
    */
-  void InitRcc(Port port) const;
+  constexpr void InitRcc(Port port) const;
 
   /**
    * @brief Retrieves the GPIO pinout currently managed by this object.

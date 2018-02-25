@@ -53,7 +53,7 @@ void GPIO::Init(const Mode mode, const Pullup pullup, const Speed speed, const D
   gpio_set_output_options(pin_.first, uint8_t(driver), uint8_t(speed), pin_.second);
 }
 
-void GPIO::InitRcc(const Port port) const {
+constexpr void GPIO::InitRcc(const Port port) const {
   switch (port) {
     case GPIOA:
       rcc_periph_clock_enable(RCC_GPIOA);
@@ -114,7 +114,7 @@ void GPIO::Reset() const {
   gpio_mode_setup(pin_.first, GPIO_MODE_INPUT, GPIO_PUPD_NONE, pin_.second);
 }
 
-void GPIO::SetAltFn(uint8_t altfn) {
+void GPIO::SetAltFn(uint8_t altfn) const {
   // Guard users from invalid configs
   if (altfn > 0xF) {
     return;

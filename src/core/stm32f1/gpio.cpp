@@ -45,7 +45,7 @@ void GPIO::Init(const Configuration cnf, const Mode mode) const {
   gpio_set_mode(pin_.first, uint8_t(mode), uint8_t(cnf), pin_.second);
 }
 
-void GPIO::InitRcc(const Port port) const {
+constexpr void GPIO::InitRcc(const Port port) const {
   switch (port) {
     case GPIOA:
       rcc_periph_clock_enable(RCC_GPIOA);

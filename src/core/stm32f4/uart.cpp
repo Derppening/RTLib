@@ -206,7 +206,7 @@ void UART::Tx(const char* format, ...) {
   usart_disable_tx_interrupt(usart_);
 }
 
-void UART::InitRcc() const {
+constexpr void UART::InitRcc() const {
   switch (usart_) {
     case USART1:
       rcc_periph_clock_enable(RCC_USART1);
@@ -238,7 +238,7 @@ void UART::InitRcc() const {
   }
 }
 
-Pinout UART::GetTxPinout() const {
+constexpr Pinout UART::GetTxPinout() const {
   switch (usart_) {
     case USART1:
       return CORE_UART1_TX_PINOUT;
@@ -261,7 +261,7 @@ Pinout UART::GetTxPinout() const {
   }
 }
 
-Pinout UART::GetRxPinout() const {
+constexpr Pinout UART::GetRxPinout() const {
   switch (usart_) {
     case USART1:
       return CORE_UART1_RX_PINOUT;
@@ -284,7 +284,7 @@ Pinout UART::GetRxPinout() const {
   }
 }
 
-GPIO::AltFn UART::GetAltFn() const {
+constexpr GPIO::AltFn UART::GetAltFn() const {
   switch (usart_) {
     case USART1:
     case USART2:
@@ -303,7 +303,7 @@ GPIO::AltFn UART::GetAltFn() const {
   }
 }
 
-void UART::EnableIrq() const {
+constexpr void UART::EnableIrq() const {
   switch (usart_) {
     case USART1:
       nvic_enable_irq(NVIC_USART1_IRQ);
