@@ -55,10 +55,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
 set(LOG_VERBOSE false)
 
 # Choose target device here
-set(DEVICE STM32F407VET6)
+set(DEVICE STM32F103RBT6)
 
 # Choose target mainboard pin configuration here
-add_definitions(-DSTM32F407_DEV)
+add_definitions(-DMAINBOARD_VER4_2)
 
 # Include libopencm3
 include(cmake/libopencm3.cmake)

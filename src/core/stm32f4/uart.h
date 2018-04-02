@@ -357,8 +357,7 @@ class UART final {
   UART(Interface uart,
        BaudRate baud_rate,
        Mode mode,
-       uint32_t
-       data_bits = 8,
+       uint32_t data_bits = 8,
        StopBits stop_bits = StopBits::kOne,
        Parity parity = Parity::kNone,
        FlowControl flow_control = FlowControl::kNone,
