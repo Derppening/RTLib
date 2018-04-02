@@ -26,6 +26,8 @@
 
 #include <libopencm3/stm32/rcc.h>
 
+#include "core/assert.h"
+
 namespace rtlib::core::stm32f1 {
 
 GPIO::GPIO(const Config& config) :
