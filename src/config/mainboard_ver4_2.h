@@ -39,9 +39,9 @@
 #ifndef RTLIB_CONFIG_MAINBOARD_VER4_2_H_
 #define RTLIB_CONFIG_MAINBOARD_VER4_2_H_
 
-#if !defined(STM32F103VCT6)
+#if !defined(STM32F103RBT6)
 #error "This configuration is designed for a STM32F103VCT6 device. (Did you set DEVICE in CMakeLists.txt correctly?)"
-#endif  // !defined(STM32F103VCT6)
+#endif  // !defined(STM32F103RBT6)
 
 constexpr const char kDeviceSeries[] = "STM32F1";
 constexpr const char kDeviceString[] = "STM32F103xx";
