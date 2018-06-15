@@ -52,36 +52,35 @@ if (NOT DEVICE)
 endif ()
 
 
-# Check if `gawk` program is available
-find_program(AWK gawk)
-if (NOT AWK)
-    message(FATAL_ERROR "gawk is required to generate the linker script, please install it.")
+find_program(PYTHON python)
+if (NOT PYTHON)
+    message(FATAL_ERROR "python is required to generate the linker script, please install it.")
 endif ()
 
-set(GENLINK_SCRIPT "${LIBOPENCM3_DIR}/scripts/genlink.awk")
+set(GENLINK_SCRIPT "${LIBOPENCM3_DIR}/scripts/genlink.py")
 set(DEVICES_DATA "${LIBOPENCM3_DIR}/ld/devices.data")
 execute_process(
-        COMMAND awk "-v" "PAT=${DEVICE}" "-v" "MODE=FAMILY" "-f" "${GENLINK_SCRIPT}" "${DEVICES_DATA}"
+        COMMAND "${PYTHON}" "${GENLINK_SCRIPT}" "${DEVICES_DATA}" "${DEVICE}" "FAMILY"
         OUTPUT_VARIABLE GENLINK_FAMILY
 )
 execute_process(
-        COMMAND awk "-v" "PAT=${DEVICE}" "-v" "MODE=SUBFAMILY" "-f" "${GENLINK_SCRIPT}" "${DEVICES_DATA}"
+        COMMAND "${PYTHON}" "${GENLINK_SCRIPT}" "${DEVICES_DATA}" "${DEVICE}" "USBFAMILY"
         OUTPUT_VARIABLE GENLINK_SUBFAMILY
 )
 execute_process(
-        COMMAND awk "-v" "PAT=${DEVICE}" "-v" "MODE=CPU" "-f" "${GENLINK_SCRIPT}" "${DEVICES_DATA}"
+        COMMAND "${PYTHON}" "${GENLINK_SCRIPT}" "${DEVICES_DATA}" "${DEVICE}" "CPU"
         OUTPUT_VARIABLE GENLINK_CPU
 )
 execute_process(
-        COMMAND awk "-v" "PAT=${DEVICE}" "-v" "MODE=FPU" "-f" "${GENLINK_SCRIPT}" "${DEVICES_DATA}"
+        COMMAND "${PYTHON}" "${GENLINK_SCRIPT}" "${DEVICES_DATA}" "${DEVICE}" "FPU"
         OUTPUT_VARIABLE GENLINK_FPU
 )
 execute_process(
-        COMMAND awk "-v" "PAT=${DEVICE}" "-v" "MODE=CPPFLAGS" "-f" "${GENLINK_SCRIPT}" "${DEVICES_DATA}"
+        COMMAND "${PYTHON}" "${GENLINK_SCRIPT}" "${DEVICES_DATA}" "${DEVICE}" "CPPFLAGS"
         OUTPUT_VARIABLE GENLINK_CPPFLAGS
 )
 execute_process(
-        COMMAND awk "-v" "PAT=${DEVICE}" "-v" "MODE=DEFS" "-f" "${GENLINK_SCRIPT}" "${DEVICES_DATA}"
+        COMMAND "${PYTHON}" "${GENLINK_SCRIPT}" "${DEVICES_DATA}" "${DEVICE}" "DEFS"
         OUTPUT_VARIABLE GENLINK_DEFS
 )
 
