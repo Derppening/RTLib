@@ -1,0 +1,4 @@
+<map id="System::DelayMs" name="System::DelayMs">
+<area shape="rect" id="node2" href="$classSystem.html#ab6f0771b525d562bbc06e4f8cf8ca4d5" title="Temporarily halt program execution. " alt="" coords="182,5,309,32"/>
+<area shape="rect" id="node3" href="$classSystem.html#aa798259e2b3ef69eb7ec08b639373940" title="Returns the time since clock initialization. " alt="" coords="358,5,471,32"/>
+</map>

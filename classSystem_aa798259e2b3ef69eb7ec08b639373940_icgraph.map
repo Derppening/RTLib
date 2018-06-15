@@ -1,0 +1,7 @@
+<map id="System::GetUs" name="System::GetUs">
+<area shape="rect" id="node2" href="$classSystem.html#a8b4b033df6f513b12584595aa7e05edb" title="Returns the time since clock initialization. " alt="" coords="175,5,289,32"/>
+<area shape="rect" id="node3" href="$classSystem.html#ab30d702b0fdb1df1e4f29c2d13493bdd" title="Returns the time since clock initialization. " alt="" coords="179,56,285,83"/>
+<area shape="rect" id="node4" href="$classSystem.html#ab6f0771b525d562bbc06e4f8cf8ca4d5" title="Temporarily halt program execution. " alt="" coords="169,107,295,133"/>
+<area shape="rect" id="node5" href="$classSystem.html#abda22ac8255ca627e50f9c0f6efdf605" title="Temporarily halt program execution. " alt="" coords="345,81,471,108"/>
+<area shape="rect" id="node6" href="$classSystem.html#a74c64ac944e597945787f651f1678e64" title="Temporarily halt program execution. " alt="" coords="349,132,467,159"/>
+</map>
