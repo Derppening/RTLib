@@ -39,9 +39,9 @@ endif ()
 
 if ((NOT ${CMAKE_C_COMPILER_ID} STREQUAL "GNU") OR
     (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU") OR
-    (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 7.2.1))
-    message(WARNING "This project is targeted for ARM GCC versions 7.2.1 or above. Some features may not be supported\
-     by your compiler. You are using:
+    (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 8.1.0))
+    message(WARNING "This project is only tested for ARM GCC versions 8.1.0 or above. Some features may not be\
+    supported by your compiler. You are using:
      ${CMAKE_CXX_COMPILER_ID} C, version ${CMAKE_C_COMPILER_VERSION}
      ${CMAKE_CXX_COMPILER_ID} CXX, version ${CMAKE_CXX_COMPILER_VERSION}")
 endif()
@@ -55,7 +55,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
 set(LOG_VERBOSE false)
 
 # Choose target device here
-set(DEVICE STM32F103RBT6)
+set(DEVICE STM32F103VCT6)
 
 # Choose target mainboard pin configuration here
 add_definitions(-DMAINBOARD_VER4_2)
