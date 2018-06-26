@@ -1,7 +1,7 @@
 /**
  * @file src/config/asc.h
  *
- * @brief Pin configurations for Android Server Control board.
+ * @brief Pin configurations for Android Server Control board v1.2.
  */
 
 /*
@@ -34,6 +34,10 @@ constexpr const char kDeviceString[] = "STM32F105xx";
 #endif  // !defined(STM32F105RBT6)
 
 #define LIB_USE_BUTTON 0
-#define LIB_USE_LED 0
+
+#define LIB_USE_LED 3
+#define LIB_LED0_PINOUT {GPIOB, GPIO12}
+#define LIB_LED1_PINOUT {GPIOB, GPIO13}
+#define LIB_LED2_PINOUT {GPIOB, GPIO14}
 
 #endif  // RTLIB_CONFIG_ASC_H_
