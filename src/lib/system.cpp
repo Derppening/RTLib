@@ -94,11 +94,11 @@ constexpr uint32_t System::ClockSpeed() noexcept {
   // TODO(Derppening): Set clock speed according to clock
 
   if constexpr (rtlib::core::StringCompare(kDeviceSeries, "STM32F1")) {
-    return 72000000;
+    return 72'000'000;
   }
 
   if constexpr (rtlib::core::StringCompare(kDeviceSeries, "STM32F4")) {
-    return 168000000;
+    return 168'000'000;
   }
 
   Assert(false, __FILE__, __LINE__, __func__, "Cannot set system clock: Unknown Device");
