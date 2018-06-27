@@ -35,7 +35,7 @@
  *
  * @param[in] bool_constexpr Expression to check against.
  * @param[in] file Source file which invoked this function. Always @c __FILE__.
- * @param[in] line Line in source file which invoked this function. Always @c __LINE__
+ * @param[in] line Line in source file which invoked this function. Always @c __LINE__.
  * @param[in] fn Function which invoked this function. Always @c __func__.
  * @param[in] message Message if assertion fails.
  */
@@ -56,15 +56,15 @@ constexpr void Assert(const bool bool_constexpr,
  *
  * @param[in] pinout Pinout to check
  * @param[in] file Source file which invoked this function. Always @c __FILE__.
- * @param[in] line Line in source file which invoked this function. Always @c __LINE__
+ * @param[in] line Line in source file which invoked this function. Always @c __LINE__.
  * @param[in] fn Function which invoked this function. Always @c __func__.
  *
  * @return @p pinout if assertion succeeds.
  */
 constexpr rtlib::core::Pinout AssertPin(rtlib::core::Pinout&& pinout,
-                              const char* file,
-                              const unsigned line,
-                              const char* fn) noexcept {
+                                        const char* file,
+                                        const unsigned line,
+                                        const char* fn) noexcept {
   Assert(pinout != rtlib::core::Pinout(), file, line, fn, "Invalid Pin");
 
   return pinout;
