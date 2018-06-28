@@ -831,11 +831,6 @@ class GPIO final {
 
  private:
   /**
-   * @brief Constant representing an invalid pinout.
-   */
-  static constexpr const Pinout kNullPinout = {Port(-1), Pin(-1)};
-
-  /**
    * @brief Initializes this GPIO to the given configuration for STM32F1xx devices.
    *
    * See GPIO#Config for what @p mode and @p speed means.
