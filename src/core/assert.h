@@ -40,10 +40,10 @@
  * @param[in] message Message if assertion fails.
  */
 constexpr void Assert(const bool bool_constexpr,
-                      const char* file,
-                      const unsigned line,
-                      const char* fn,
-                      const char* message = "") noexcept {
+                      [[maybe_unused]] const char* file,
+                      [[maybe_unused]] const unsigned line,
+                      [[maybe_unused]] const char* fn,
+                      [[maybe_unused]] const char* message = "") noexcept {
   if (bool_constexpr) { return; }
 
   __builtin_trap();
