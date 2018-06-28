@@ -658,9 +658,9 @@ class GPIO final {
     /**
      * @brief GPIO Pin to enable and initialize.
      *
-     * Defaults to @code {GPIOA, GPIO0} @endcode.
+     * Defaults to GPIO#kNullPinout.
      */
-    Pinout pin = {};
+    Pinout pin = kNullPinout;
 
     /**
      * @brief GPIO Mode.
@@ -676,6 +676,13 @@ class GPIO final {
      */
     Mode mode = Mode::kInput;
   };
+
+  /**
+   * @brief Default constructor.
+   *
+   * Initializes this object to an "unbinded" state, i.e. this object does not manage any GPIO.
+   */
+  GPIO();
 
   /**
    * @brief Conversion constructor.
@@ -698,8 +705,10 @@ class GPIO final {
 
   /**
    * Default trivial destructor.
+   *
+   * Side effects: Resets the currently managed GPIO pinout. Has no effect if this object does not manage a pinout.
    */
-  ~GPIO() = default;
+  ~GPIO();
 
   /**
    * @brief Move constructor.
@@ -732,6 +741,11 @@ class GPIO final {
   GPIO& operator=(const GPIO&) = delete;
 
   /**
+   * @return Whether this object is managing a GPIO pinout.
+   */
+  constexpr bool IsBinded() const { return pin_ != kNullPinout; }
+
+  /**
    * @brief Reads the current logic state of the managed GPIO.
    *
    * @return @c true if high value, otherwise @c false
@@ -750,6 +764,8 @@ class GPIO final {
 
   /**
    * @brief Resets the GPIO to its original configuration, i.e. when the RESET button is first pushed.
+   *
+   * This function is null-safe, i.e. if this object is not bound to any pinout, there are no effects.
    */
   void Reset() const;
 
@@ -809,6 +825,11 @@ class GPIO final {
 
  private:
   /**
+   * @brief Constant representing an invalid pinout.
+   */
+  static constexpr const Pinout kNullPinout = {Port(-1), Pin(-1)};
+
+  /**
    * @brief Initializes this GPIO to the given configuration for STM32F1xx devices.
    *
    * See GPIO#Config for what @p mode and @p speed means.
@@ -823,9 +844,11 @@ class GPIO final {
    *
    * This function is a simple helper function to determine which RCC to initialize, given the port we are working with.
    *
+   * This function will always assert if an invalid GPIO#Port is given.
+   *
    * @param[in] port The GPIO port which should be initialized
    */
-  constexpr void InitRcc(Port port) const;
+  void InitRcc(Port port) const;
 
   /**
    * @brief Retrieves the GPIO pinout currently managed by this object.

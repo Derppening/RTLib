@@ -29,6 +29,7 @@
 #include "core/assert.h"
 
 namespace rtlib::core::stm32f1 {
+GPIO::GPIO() : pin_(kNullPinout) {}
 
 GPIO::GPIO(const Config& config) :
     GPIO(config.pin, config.cnf, config.mode) {}
@@ -43,11 +44,15 @@ GPIO::GPIO(Pinout pin, Configuration cnf, Mode mode) :
   Init(cnf, mode);
 }
 
+GPIO::~GPIO() {
+  Reset();
+}
+
 void GPIO::Init(const Configuration cnf, const Mode mode) const {
   gpio_set_mode(pin_.first, uint8_t(mode), uint8_t(cnf), pin_.second);
 }
 
-constexpr void GPIO::InitRcc(const Port port) const {
+void GPIO::InitRcc(const Port port) const {
   switch (port) {
     case GPIOA:
       rcc_periph_clock_enable(RCC_GPIOA);
@@ -93,7 +98,9 @@ void GPIO::Toggle() const {
 }
 
 void GPIO::Reset() const {
-  gpio_set_mode(pin_.first, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, pin_.second);
+  if (IsBinded()) {
+    gpio_set_mode(pin_.first, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, pin_.second);
+  }
 }
 
 void GPIO::SetPriAltFn(JTAGDisables swj_state, AltFnMaps maps) {
