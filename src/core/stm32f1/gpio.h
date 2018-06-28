@@ -57,43 +57,43 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c GPIO_CNF_INPUT_ANALOG.
      */
-    kInputAnalog = 0x0,
+        kInputAnalog = 0x0,
     /**
      * @brief Use this GPIO as floating input.
      *
      * Equivalent to libopencm3 macro @c GPIO_CNF_INPUT_FLOAT.
      */
-    kInputFloat,
+        kInputFloat,
     /**
      * @brief Use this GPIO as pull-up/pull-down input.
      *
      * Equivalent to libopencm3 macro @c GPIO_CNF_INPUT_PULL_UPDOWN.
      */
-    kInputPullUpDown,
+        kInputPullUpDown,
     /**
      * @brief Use this GPIO as digital push-pull output.
      *
      * Equivalent to libopencm3 macro @c GPIO_CNF_OUTPUT_PUSHPULL
      */
-    kOutputPushPull = 0x0,
+        kOutputPushPull = 0x0,
     /**
      * @brief Use this GPIO as digital open-drain output.
      *
      * Equivalent to libopencm3 macro @c GPIO_CNF_OUTPUT_OPENDRAIN.
      */
-    kOutputOpenDrain,
+        kOutputOpenDrain,
     /**
      * @brief Use this GPIO as alternate function push-pull output.
      *
      * Equivalent to libopencm3 macro @c GPIO_CNF_ALTFN_PUSHPULL.
      */
-    kOutputAltFnPushPull,
+        kOutputAltFnPushPull,
     /**
      * @brief Use this GPIO as alternate function open-drain output.
      *
      * Equivalent to libopencm3 macro @c GPIO_CNF_ALTFN_OPENDRAIN.
      */
-    kOutputAltFnOpenDrain
+        kOutputAltFnOpenDrain
   };
 
   /**
@@ -109,25 +109,25 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c GPIO_MODE_INPUT.
      */
-    kInput,
+        kInput,
     /**
      * @brief Output Mode at 10MHz max.
      *
      * Equivalent to libopencm3 macro @c GPIO_MODE_OUTPUT_10MHZ.
      */
-    kOutput10MHz,
+        kOutput10MHz,
     /**
      * @brief Output Mode at 2MHz max.
      *
      * Equivalent to libopencm3 macro @c GPIO_MODE_OUTPUT_2MHZ.
      */
-    kOutput2MHz,
+        kOutput2MHz,
     /**
      * @brief Output Mode at 50MHz max.
      *
      * Equivalent to libopencm3 macro @c GPIO_MODE_OUTPUT_50MHZ.
      */
-    kOutput50MHz
+        kOutput50MHz
   };
 
   /**
@@ -143,25 +143,25 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_SWJ_CFG_FULL_SWJ.
      */
-    kNoDisable = AFIO_MAPR_SWJ_CFG_FULL_SWJ,
+        kNoDisable = AFIO_MAPR_SWJ_CFG_FULL_SWJ,
     /**
      * @brief Use full JTAG capability with JNTRST.
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_SWJ_CFG_FULL_SWJ_NO_JNTRST.
      */
-    kNoJNTRST = AFIO_MAPR_SWJ_CFG_FULL_SWJ_NO_JNTRST,
+        kNoJNTRST = AFIO_MAPR_SWJ_CFG_FULL_SWJ_NO_JNTRST,
     /**
      * @brief Disable JTAG but enable SWD.
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON.
      */
-    kDisableJTAG = AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON,
+        kDisableJTAG = AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON,
     /**
      * @brief Disable both JTAG and SWD.
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_OFF.
      */
-    kDisableJTAGSW = AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_OFF
+        kDisableJTAGSW = AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_OFF
   };
 
   /**
@@ -190,7 +190,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_ADC2_ETRGREG_REMAP.
      */
-    kADC2ExtTrigReg = AFIO_MAPR_ADC2_ETRGREG_REMAP,
+        kADC2ExtTrigReg = AFIO_MAPR_ADC2_ETRGREG_REMAP,
     /**
      * @brief ADC2 External Trigger Injected Conversion Remapping.
      *
@@ -201,7 +201,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_ADC2_ETRGINJ_REMAP.
      */
-    kADC2ExtTrigInj = AFIO_MAPR_ADC2_ETRGINJ_REMAP,
+        kADC2ExtTrigInj = AFIO_MAPR_ADC2_ETRGINJ_REMAP,
     /**
      * @brief ADC1 External Trigger Regulator Conversion Remapping.
      *
@@ -212,7 +212,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_ADC1_ETRGREG_REMAP.
      */
-    kADC1ExtTrigReg = AFIO_MAPR_ADC1_ETRGREG_REMAP,
+        kADC1ExtTrigReg = AFIO_MAPR_ADC1_ETRGREG_REMAP,
     /**
      * @brief ADC1 External Trigger Injected Conversion Remapping.
      *
@@ -223,7 +223,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_ADC1_ETRGINJ_REMAP.
      */
-    kADC1ExtTrigInj = AFIO_MAPR_ADC1_ETRGINJ_REMAP,
+        kADC1ExtTrigInj = AFIO_MAPR_ADC1_ETRGINJ_REMAP,
     /**
      * @brief TIM5 Channel 4 Internal Remapping.
      *
@@ -234,7 +234,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM5CH4_IREMAP.
      */
-    kTIM5Ch4 = AFIO_MAPR_TIM5CH4_IREMAP,
+        kTIM5Ch4 = AFIO_MAPR_TIM5CH4_IREMAP,
     /**
      * @brief Port D0/D1 Remapping.
      *
@@ -245,7 +245,7 @@ class GPIO final {
      *
      * Equivalent to libopecm3 macro @c AFIO_MAPR_PD01_REMAP.
      */
-    kPD01 = AFIO_MAPR_PD01_REMAP,
+        kPD01 = AFIO_MAPR_PD01_REMAP,
     /**
      * @brief TIM4 CH1/CH2/CH3/CH4 Remapping.
      *
@@ -255,7 +255,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM4_REMAP.
      */
-    kTIM4 = AFIO_MAPR_TIM4_REMAP,
+        kTIM4 = AFIO_MAPR_TIM4_REMAP,
     /**
      * @brief USART2 CTS/RTS/TX/RX/CK Remapping.
      *
@@ -263,7 +263,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_USART2_REMAP.
      */
-    kUSART2 = AFIO_MAPR_USART2_REMAP,
+        kUSART2 = AFIO_MAPR_USART2_REMAP,
     /**
      * @brief USART1 TX/RX Remapping.
      *
@@ -271,7 +271,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_USART1_REMAP.
      */
-    kUSART1 = AFIO_MAPR_USART1_REMAP,
+        kUSART1 = AFIO_MAPR_USART1_REMAP,
     /**
      * @brief I2C1 SCL/SDA Remapping.
      *
@@ -279,7 +279,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_I2C1_REMAP.
      */
-    kI2C1 = AFIO_MAPR_I2C1_REMAP,
+        kI2C1 = AFIO_MAPR_I2C1_REMAP,
     /**
      * @brief SPI1 NSS/SCK/MISO/MOSI Remapping.
      *
@@ -287,7 +287,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_SPI1_REMAP.
      */
-    kSPI1 = AFIO_MAPR_SPI1_REMAP,
+        kSPI1 = AFIO_MAPR_SPI1_REMAP,
     /**
      * @brief CAN1 RX/TX Port A Remapping.
      *
@@ -297,7 +297,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_CAN1_REMAP_PORTA.
      */
-    kCAN1PA = AFIO_MAPR_CAN1_REMAP_PORTA,
+        kCAN1PA = AFIO_MAPR_CAN1_REMAP_PORTA,
     /**
      * @brief CAN1 RX/TX Port B Remapping.
      *
@@ -308,7 +308,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_CAN1_REMAP_PORTB.
      */
-    kCAN1PB = AFIO_MAPR_CAN1_REMAP_PORTB,
+        kCAN1PB = AFIO_MAPR_CAN1_REMAP_PORTB,
     /**
      * @brief CAN1 RX/TX Port D Remapping.
      *
@@ -318,7 +318,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_CAN1_REMAP_PORTD.
      */
-    kCAN1PD = AFIO_MAPR_CAN1_REMAP_PORTD,
+        kCAN1PD = AFIO_MAPR_CAN1_REMAP_PORTD,
     /**
      * @brief TIM3 No Remapping. (Default)
      *
@@ -326,7 +326,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM3_REMAP_NO_REMAP.
      */
-    kTIM3NoRemap = AFIO_MAPR_TIM3_REMAP_NO_REMAP,
+        kTIM3NoRemap = AFIO_MAPR_TIM3_REMAP_NO_REMAP,
     /**
      * @brief TIM3 CH1-CH2 Partial Remapping.
      *
@@ -336,7 +336,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM3_REMAP_PARTIAL_REMAP.
      */
-    kTIM3PartRemap = AFIO_MAPR_TIM3_REMAP_PARTIAL_REMAP,
+        kTIM3PartRemap = AFIO_MAPR_TIM3_REMAP_PARTIAL_REMAP,
     /**
      * @brief TIM3 CH1-CH4 Full Remapping.
      *
@@ -346,7 +346,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM3_REMAP_FULL_REMAP.
      */
-    kTIM3FullRemap = AFIO_MAPR_TIM3_REMAP_FULL_REMAP,
+        kTIM3FullRemap = AFIO_MAPR_TIM3_REMAP_FULL_REMAP,
     /**
      * @brief TIM2 No Remapping. (Default)
      *
@@ -354,7 +354,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM2_REMAP_NO_REMAP.
      */
-    kTIM2NoRemap = AFIO_MAPR_TIM2_REMAP_NO_REMAP,
+        kTIM2NoRemap = AFIO_MAPR_TIM2_REMAP_NO_REMAP,
     /**
      * @brief TIM2 ETR/CH1-CH2 Partial Remapping (1).
      *
@@ -362,7 +362,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM2_REMAP_PARTIAL_REMAP1.
      */
-    kTIM2PartRemap1 = AFIO_MAPR_TIM2_REMAP_PARTIAL_REMAP1,
+        kTIM2PartRemap1 = AFIO_MAPR_TIM2_REMAP_PARTIAL_REMAP1,
     /**
      * @brief TIM2 ETR/CH1-CH4 Partial Remapping (2).
      *
@@ -370,7 +370,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM2_REMAP_PARTIAL_REMAP2.
      */
-    kTIM2PartRemap2 = AFIO_MAPR_TIM2_REMAP_PARTIAL_REMAP2,
+        kTIM2PartRemap2 = AFIO_MAPR_TIM2_REMAP_PARTIAL_REMAP2,
     /**
      * @brief TIM2 ETR/CH1-CH4 Full Remapping.
      *
@@ -378,7 +378,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM2_REMAP_PARTIAL_REMAP1.
      */
-    kTIM2FullRemap = AFIO_MAPR_TIM2_REMAP_FULL_REMAP,
+        kTIM2FullRemap = AFIO_MAPR_TIM2_REMAP_FULL_REMAP,
     /**
      * @brief TIM1 No Remapping. (Default)
      *
@@ -386,7 +386,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM1_REMAP_NO_REMAP.
      */
-    kTIM1NoRemap = AFIO_MAPR_TIM1_REMAP_NO_REMAP,
+        kTIM1NoRemap = AFIO_MAPR_TIM1_REMAP_NO_REMAP,
     /**
      * @brief TIM1 BKIN/CH1N-CH3N Partial Remapping.
      *
@@ -394,7 +394,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM1_REMAP_PARTIAL_REMAP.
      */
-    kTIM1PartRemap = AFIO_MAPR_TIM1_REMAP_PARTIAL_REMAP,
+        kTIM1PartRemap = AFIO_MAPR_TIM1_REMAP_PARTIAL_REMAP,
     /**
      * @brief TIM1 ETR/CH1-CH4/BKIN/CH1N-CH3N Full Remapping.
      *
@@ -402,7 +402,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM1_REMAP_FULL_REMAP.
      */
-    kTIM1FullRemap = AFIO_MAPR_TIM1_REMAP_FULL_REMAP,
+        kTIM1FullRemap = AFIO_MAPR_TIM1_REMAP_FULL_REMAP,
     /**
      * @brief USART3 No Remapping. (Default)
      *
@@ -410,7 +410,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_USART3_REMAP_NO_REMAP.
      */
-    kUSART3NoRemap = AFIO_MAPR_USART3_REMAP_NO_REMAP,
+        kUSART3NoRemap = AFIO_MAPR_USART3_REMAP_NO_REMAP,
     /**
      * @brief USART3 TX/RX/CK Partial Remapping.
      *
@@ -418,7 +418,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_USART3_REMAP_PARTIAL_REMAP.
      */
-    kUSART3PartRemap = AFIO_MAPR_USART3_REMAP_PARTIAL_REMAP,
+        kUSART3PartRemap = AFIO_MAPR_USART3_REMAP_PARTIAL_REMAP,
     /**
      * @brief USART3 TX/RX/CK/CTS/RTS Full Remapping.
      *
@@ -426,7 +426,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_USART3_REMAP_FULL_REMAP.
      */
-    kUSART3FullRemap = AFIO_MAPR_USART3_REMAP_FULL_REMAP,
+        kUSART3FullRemap = AFIO_MAPR_USART3_REMAP_FULL_REMAP,
     /**
      * @brief Ethernet PTP PPS Remapping.
      *
@@ -436,7 +436,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_PTP_PPS_REMAP.
      */
-    kPTPPPS = AFIO_MAPR_PTP_PPS_REMAP,
+        kPTPPPS = AFIO_MAPR_PTP_PPS_REMAP,
     /**
      * @brief TIM2 Internal Trigger 1 Remapping.
      *
@@ -447,7 +447,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_TIM2ITR1_IREMAP.
      */
-    kTIM2IntTrig1 = AFIO_MAPR_TIM2ITR1_IREMAP,
+        kTIM2IntTrig1 = AFIO_MAPR_TIM2ITR1_IREMAP,
     /**
      * @brief SPI3 NSS/SCK/MISO/MOSI and I2S3 WS/CK/SD Remapping.
      *
@@ -457,7 +457,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_SPI3_REMAP.
      */
-    kSPI3 = AFIO_MAPR_SPI3_REMAP,
+        kSPI3 = AFIO_MAPR_SPI3_REMAP,
     /**
      * @brief MII/RMII Selection.
      *
@@ -468,7 +468,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_MII_RMII_SEL.
      */
-    kMIIOrRMIISelect = AFIO_MAPR_MII_RMII_SEL,
+        kMIIOrRMIISelect = AFIO_MAPR_MII_RMII_SEL,
     /**
      * @brief CAN2 RX/TX Remapping.
      *
@@ -478,7 +478,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_CAN2_REMAP.
      */
-    kCAN2 = AFIO_MAPR_CAN2_REMAP,
+        kCAN2 = AFIO_MAPR_CAN2_REMAP,
     /**
      * @brief Ethernet MAC DV/RXD0-RXD3 Remapping.
      *
@@ -489,7 +489,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR_ETH_REMAP.
      */
-    kEthMAC = AFIO_MAPR_ETH_REMAP
+        kEthMAC = AFIO_MAPR_ETH_REMAP
   };
 
   /**
@@ -511,7 +511,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_MISC_REMAP.
      */
-    kMisc = AFIO_MAPR2_MISC_REMAP,
+        kMisc = AFIO_MAPR2_MISC_REMAP,
     /**
      * @brief TIM12 CH1-CH2 Remapping.
      *
@@ -521,7 +521,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM12_REMAP.
      */
-    kTIM12 = AFIO_MAPR2_TIM12_REMAP,
+        kTIM12 = AFIO_MAPR2_TIM12_REMAP,
     /**
      * @brief TIM6-TIM7 DAC to DMA Remapping.
      *
@@ -532,7 +532,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM76_DAC_DMA_REMAPE.
      */
-    kTIM76DMA = AFIO_MAPR2_TIM76_DAC_DMA_REMAPE,
+        kTIM76DMA = AFIO_MAPR2_TIM76_DAC_DMA_REMAPE,
     /**
      * @brief NADV Connection Selection.
      *
@@ -543,7 +543,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_FSMC_NADV_DISCONNECT.
      */
-    kDisconnectNADV = AFIO_MAPR2_FSMC_NADV_DISCONNECT,
+        kDisconnectNADV = AFIO_MAPR2_FSMC_NADV_DISCONNECT,
     /**
      * @brief TIM14 CH1 Remapping.
      *
@@ -555,7 +555,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM14_REMAP.
      */
-    kTIM14 = AFIO_MAPR2_TIM14_REMAP,
+        kTIM14 = AFIO_MAPR2_TIM14_REMAP,
     /**
      * @brief TIM13 CH1 Remapping.
      *
@@ -567,7 +567,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM13_REMAP.
      */
-    kTIM13 = AFIO_MAPR2_TIM13_REMAP,
+        kTIM13 = AFIO_MAPR2_TIM13_REMAP,
     /**
      * @brief TIM11 CH1 Remapping.
      *
@@ -577,7 +577,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM11_REMAP.
      */
-    kTIM11 = AFIO_MAPR2_TIM11_REMAP,
+        kTIM11 = AFIO_MAPR2_TIM11_REMAP,
     /**
      * @brief TIM10 CH1 Remapping.
      *
@@ -587,7 +587,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM10_REMAP.
      */
-    kTIM10 = AFIO_MAPR2_TIM10_REMAP,
+        kTIM10 = AFIO_MAPR2_TIM10_REMAP,
     /**
      * @brief TIM9 CH1-CH2 Remapping.
      *
@@ -597,7 +597,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM9_REMAP.
      */
-    kTIM9 = AFIO_MAPR2_TIM9_REMAP,
+        kTIM9 = AFIO_MAPR2_TIM9_REMAP,
     /**
      * @brief TIM1 DMA Remapping.
      *
@@ -608,7 +608,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM1_DMA_REMAP.
      */
-    kTIM1DMA = AFIO_MAPR2_TIM1_DMA_REMAP,
+        kTIM1DMA = AFIO_MAPR2_TIM1_DMA_REMAP,
     /**
      * @brief CEC Remapping.
      *
@@ -618,7 +618,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_CEC_REMAP.
      */
-    kCEC = AFIO_MAPR2_CEC_REMAP,
+        kCEC = AFIO_MAPR2_CEC_REMAP,
     /**
      * @brief TIM17 CH1 Remapping.
      *
@@ -628,7 +628,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM17_REMAP.
      */
-    kTIM17 = AFIO_MAPR2_TIM17_REMAP,
+        kTIM17 = AFIO_MAPR2_TIM17_REMAP,
     /**
      * @brief TIM16 CH1 Remapping.
      *
@@ -638,7 +638,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM16_REMAP.
      */
-    kTIM16 = AFIO_MAPR2_TIM16_REMAP,
+        kTIM16 = AFIO_MAPR2_TIM16_REMAP,
     /**
      * @brief TIM15 CH1-CH2 Remapping.
      *
@@ -648,7 +648,7 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c AFIO_MAPR2_TIM16_REMAP.
      */
-    kTIM15 = AFIO_MAPR1_TIM16_REMAP
+        kTIM15 = AFIO_MAPR1_TIM16_REMAP
   };
 
   /**
@@ -690,18 +690,6 @@ class GPIO final {
    * @param[in] config Configuration for the GPIO. See GPIO#Config.
    */
   explicit GPIO(const Config& config);
-
-  /**
-   * @brief Constructor for internal API use.
-   *
-   * This constructor is equivalent to @code GPIO::GPIO(const Config&) @endcode. However, it is suggested to use that
-   * constructor instead for code readability.
-   *
-   * @param[in] pin MCU pinout
-   * @param[in] cnf GPIO Configuration
-   * @param[in] mode GPIO Mode
-   */
-  GPIO(Pinout pin, Configuration cnf, Mode mode);
 
   /**
    * Default trivial destructor.

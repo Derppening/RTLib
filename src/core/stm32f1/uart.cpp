@@ -96,13 +96,13 @@ namespace rtlib::core::stm32f1 {
 
 UART::UART(const Config& config) :
     UART(config.uart,
-    config.baud_rate,
-    config.mode,
-    config.data_bits,
-    config.stop_bits,
-    config.parity,
-    config.flow_control,
-    config.rx_handler_fn) {}
+         config.baud_rate,
+         config.mode,
+         config.data_bits,
+         config.stop_bits,
+         config.parity,
+         config.flow_control,
+         config.rx_handler_fn) {}
 
 UART::UART(Interface interface,
            BaudRate baud_rate,
@@ -112,13 +112,17 @@ UART::UART(Interface interface,
            Parity parity,
            FlowControl flow_control,
            HandlerFn handler) :
-    usart_(uint32_t(interface)),
-    tx_(GetTxPinout(),
-        GPIO::Configuration::kOutputAltFnPushPull,
-        GPIO::Mode::kOutput50MHz),
-    rx_(GetRxPinout(),
-        GPIO::Configuration::kInputFloat,
-        GPIO::Mode::kInput) {
+    usart_(uint32_t(interface)) {
+  GPIO::Config gpio_config;
+  gpio_config.pin = GetTxPinout();
+  gpio_config.cnf = GPIO::Configuration::kOutputAltFnPushPull;
+  gpio_config.mode = GPIO::Mode::kOutput50MHz;
+  tx_ = GPIO(gpio_config);
+  gpio_config.pin = GetRxPinout();
+  gpio_config.cnf = GPIO::Configuration::kInputFloat;
+  gpio_config.mode = GPIO::Mode::kInput;
+  rx_ = GPIO(gpio_config);
+
   InitRcc();
   EnableIrq();
 

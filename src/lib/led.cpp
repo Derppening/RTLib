@@ -55,12 +55,17 @@ constexpr Pinout GetConfigPinout(const uint8_t id) {
 namespace rtlib::lib {
 
 Led::Led(const Config& config) :
-#if defined(STM32F1)
-    gpio_(GetConfigPinout(config.id), GPIO::Configuration::kOutputPushPull, GPIO::Mode::kOutput50MHz),
-#elif defined(STM32F4)
-    gpio_(GetConfigPinout(config.id), GPIO::Mode::kOutput, GPIO::Pullup::kNone, GPIO::Speed::k50MHz),
-#endif
     polarity_(config.polarity) {
+#if defined(STM32F1)
+  GPIO::Config gpio_config;
+  gpio_config.pin = GetConfigPinout(config.id);
+  gpio_config.cnf = GPIO::Configuration::kOutputPushPull;
+  gpio_config.mode = GPIO::Mode::kOutput50MHz;
+  gpio_ = GPIO(gpio_config);
+#elif defined(STM32F4)
+      gpio_ = GPIO(GetConfigPinout(config.id), GPIO::Mode::kOutput, GPIO::Pullup::kNone, GPIO::Speed::k50MHz),
+#endif
+
   SetEnable(false);
 }
 

@@ -45,23 +45,23 @@ class UART {
     /**
      * @brief Corresponds to hardware USART1.
      */
-    kUART1 = USART1,
+        kUART1 = USART1,
     /**
      * @brief Corresponds to hardware USART2.
      */
-    kUART2 = USART2,
+        kUART2 = USART2,
     /**
      * @brief Corresponds to hardware USART3.
      */
-    kUART3 = USART3,
+        kUART3 = USART3,
     /**
      * @brief Corresponds to hardware UART4.
      */
-    kUART4 = UART4,
+        kUART4 = UART4,
     /**
      * @brief Corresponds to hardware UART5.
      */
-    kUART5 = UART5
+        kUART5 = UART5
   };
 
   /**
@@ -259,7 +259,7 @@ class UART {
   /**
    * @brief Type definition for RX interrupt handler function.
    */
-  using HandlerFn = void(*)(const Interface, const uint16_t);
+  using HandlerFn = void (*)(const Interface, const uint16_t);
 
   /**
    * @brief Configuration for UART.

@@ -56,15 +56,19 @@ constexpr libcore::Pinout GetConfigPinout(const uint8_t id) {
 namespace rtlib::lib {
 
 Button::Button(const Config& config) :
+    polarity_(config.pullup == 0x1) {
 #if defined(STM32F1)
-    gpio_(GetConfigPinout(config.id), GPIO::Configuration::kInputPullUpDown, GPIO::Mode::kInput),
+  GPIO::Config gpio_config;
+  gpio_config.pin = GetConfigPinout(config.id);
+  gpio_config.cnf = GPIO::Configuration::kInputPullUpDown;
+  gpio_config.mode = GPIO::Mode::kInput;
+  gpio_ = GPIO(gpio_config);
 #elif defined(STM32F4)
-    gpio_(GetConfigPinout(config.id),
+  gpio_ = GPIO(GetConfigPinout(config.id),
           GPIO::Mode::kInput,
           GPIO::Pullup(config.pullup),
           GPIO::Speed::k50MHz),
 #endif
-    polarity_(config.pullup == 0x1) {
 }
 
 bool Button::Read() {

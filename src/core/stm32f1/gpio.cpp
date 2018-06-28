@@ -32,16 +32,13 @@ namespace rtlib::core::stm32f1 {
 GPIO::GPIO() : pin_(kNullPinout) {}
 
 GPIO::GPIO(const Config& config) :
-    GPIO(config.pin, config.cnf, config.mode) {}
-
-GPIO::GPIO(Pinout pin, Configuration cnf, Mode mode) :
-    pin_(AssertPin(std::move(pin), __FILE__, __LINE__, __func__)) {
+    pin_(AssertPin(config.pin, __FILE__, __LINE__, __func__)) {
   // Use external oscillator for RCC
   rcc_clock_setup_in_hse_8mhz_out_72mhz();
 
   // Initialize the RCC and enable the GPIO
   InitRcc(pin_.first);
-  Init(cnf, mode);
+  Init(config.cnf, config.mode);
 }
 
 GPIO::~GPIO() {
