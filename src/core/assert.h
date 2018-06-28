@@ -61,11 +61,11 @@ constexpr void Assert(const bool bool_constexpr,
  *
  * @return @p pinout if assertion succeeds.
  */
-constexpr rtlib::core::Pinout AssertPin(rtlib::core::Pinout&& pinout,
+constexpr const rtlib::core::Pinout& AssertPin(const rtlib::core::Pinout& pinout,
                                         const char* file,
                                         const unsigned line,
                                         const char* fn) noexcept {
-  Assert(pinout != rtlib::core::Pinout(), file, line, fn, "Invalid Pin");
+  Assert(pinout != rtlib::core::Pinout() && pinout != rtlib::core::kNullPinout, file, line, fn, "Invalid Pin");
 
   return pinout;
 }
