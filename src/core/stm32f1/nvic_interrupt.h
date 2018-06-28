@@ -394,24 +394,27 @@ class NVICInterrupt final {
   /**
    * @brief Enables this interrupt.
    *
-   * Has no effect if this object is not managing an interrupt.
+   * If validation is enabled, this function will assert if invoked on a non-owning object.
    */
   void Enable() const;
   /**
    * @brief Disables this interrupt.
    *
-   * Has no effect if this object is not managing an interrupt.
+   * If validation is enabled, this function will assert if invoked on a non-owning object.
    */
   void Disable() const;
   /**
    * @brief Sets the priority of this interrupt.
+   *
+   * If validation is enabled, this function will assert if invoked on a non-owning object.
+   *
    * @param[in] priority The new priority of this interrupt.
    */
   void SetPriority(uint8_t priority) const;
 
   /**
-   * @return Whether this interrupt is pending service. Will always return @c false if this object is not managing an
-   * interrupt.
+   * @return Whether this interrupt is pending service.
+   * Will always return @c false if this object is not managing an interrupt.
    */
   bool HasPending() const;
 

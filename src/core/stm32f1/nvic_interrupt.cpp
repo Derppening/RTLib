@@ -32,18 +32,28 @@ NVICInterrupt::~NVICInterrupt() {
 }
 
 void NVICInterrupt::Enable() const {
-  if (IsBinded()) {
-    nvic_enable_irq(nvic_);
-  }
+#if defined(RTLIB_ENABLE_VALIDATION)
+  Assert(IsBinded(), __FILE__, __LINE__, __func__);
+#endif  // defined(RTLIB_ENABLE_VALIDATION)
+
+  nvic_enable_irq(nvic_);
 }
 
 void NVICInterrupt::Disable() const {
+#if defined(RTLIB_ENABLE_VALIDATION)
+  Assert(IsBinded(), __FILE__, __LINE__, __func__);
+#endif  // defined(RTLIB_ENABLE_VALIDATION)
+
   if (IsBinded()) {
     nvic_disable_irq(nvic_);
   }
 }
 
 void NVICInterrupt::SetPriority(uint8_t priority) const {
+#if defined(RTLIB_ENABLE_VALIDATION)
+  Assert(IsBinded(), __FILE__, __LINE__, __func__);
+#endif  // defined(RTLIB_ENABLE_VALIDATION)
+
   if (IsBinded()) {
     nvic_set_priority(nvic_, priority);
   }
@@ -52,9 +62,10 @@ void NVICInterrupt::SetPriority(uint8_t priority) const {
 bool NVICInterrupt::HasPending() const {
   if (IsBinded()) {
     return bool(nvic_get_pending_irq(nvic_));
-  } else {
-    return false;
   }
+
+  return false;
+
 }
 }  // namespace rtlib::core::stm32f1
 
