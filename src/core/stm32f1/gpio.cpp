@@ -82,10 +82,18 @@ void GPIO::InitRcc(const Port port) const {
 }
 
 bool GPIO::Read() const {
+#if defined(RTLIB_ENABLE_VALIDATION)
+  Assert(IsBinded(), __FILE__, __LINE__, __func__);
+#endif  // !defined(RTLIB_ENABLE_VALIDATION)
+
   return bool(gpio_get(pin_.first, pin_.second));
 }
 
 void GPIO::Set(const bool state) const {
+#if defined(RTLIB_ENABLE_VALIDATION)
+  Assert(IsBinded(), __FILE__, __LINE__, __func__);
+#endif  // !defined(NDEBUG)
+
   if (state) {
     gpio_set(pin_.first, pin_.second);
   } else {
@@ -94,6 +102,10 @@ void GPIO::Set(const bool state) const {
 }
 
 void GPIO::Toggle() const {
+#if defined(RTLIB_ENABLE_VALIDATION)
+  Assert(IsBinded(), __FILE__, __LINE__, __func__);
+#endif  // !defined(NDEBUG)
+
   gpio_toggle(pin_.first, pin_.second);
 }
 

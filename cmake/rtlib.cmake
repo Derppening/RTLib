@@ -76,5 +76,10 @@ set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "-Og -ggdb")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Og -ggdb")
 
+# Automatically enable validations if building for Debug
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    add_definitions(-DRTLIB_ENABLE_VALIDATION)
+endif()
+
 # Generate header for RTLib version
 configure_file(cmake/template/version.h.in ${RTLIB_SRC}/version.h)

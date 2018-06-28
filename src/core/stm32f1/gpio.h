@@ -749,16 +749,22 @@ class GPIO final {
    * @brief Reads the current logic state of the managed GPIO.
    *
    * @return @c true if high value, otherwise @c false
+   *
+   * If validation is enabled, this function will assert if invoked on a non-owning object.
    */
   bool Read() const;
   /**
    * @brief Sets new GPIO state.
    *
    * @param[in] state New state of GPIO, where @c true represents a high value, and @c false represents a low value.
+   *
+   * If validation is enabled, this function will assert if invoked on a non-owning object.
    */
   void Set(bool state) const;
   /**
    * @brief Toggles GPIO state. Logic High -> Logic Low and vice versa.
+   *
+   * If validation is enabled, this function will assert if invoked on a non-owning object.
    */
   void Toggle() const;
 
