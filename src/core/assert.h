@@ -62,12 +62,31 @@ constexpr void Assert(const bool bool_constexpr,
  * @return @p pinout if assertion succeeds.
  */
 constexpr const rtlib::core::Pinout& AssertPin(const rtlib::core::Pinout& pinout,
-                                        const char* file,
-                                        const unsigned line,
-                                        const char* fn) noexcept {
+                                               const char* file,
+                                               const unsigned line,
+                                               const char* fn) noexcept {
   Assert(pinout != rtlib::core::Pinout() && pinout != rtlib::core::kNullPinout, file, line, fn, "Invalid Pin");
 
   return pinout;
+}
+
+/**
+ * @brief Runtime assertion for methods missing an implementation.
+ *
+ * @tparam[in] FAIL_RUNTIME Whether to fail during compile time.
+ * @param[in] file Source file which invoked this function. Always @c __FILE__.
+ * @param[in] line Line in source file which invoked this function. Always @c __LINE__.
+ * @param[in] fn Function which invoked this function. Always @c __func__.
+ * @param[in] message Message explaining the failure.
+ */
+template<bool FAIL_COMPILE = false>
+constexpr void TODO([[maybe_unused]] const char* file,
+                    [[maybe_unused]] const unsigned line,
+                    [[maybe_unused]] const char* fn,
+                    [[maybe_unused]] const char* message = "Stub") noexcept {
+  static_assert(!FAIL_COMPILE, "Incomplete compile-time TODO");
+
+  __builtin_trap();
 }
 
 #endif  // RTLIB_CORE_ASSERT_H_
