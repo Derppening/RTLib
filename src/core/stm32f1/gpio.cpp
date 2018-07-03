@@ -29,8 +29,6 @@
 #include "core/assert.h"
 
 namespace rtlib::core::stm32f1 {
-GPIO::GPIO() : pin_(kNullPinout) {}
-
 GPIO::GPIO(const Config& config) :
     pin_(AssertPin(config.pin, __FILE__, __LINE__, __func__)) {
   // Use external oscillator for RCC
@@ -42,7 +40,7 @@ GPIO::GPIO(const Config& config) :
 }
 
 GPIO::~GPIO() {
-  Reset();
+  Release();
 }
 
 void GPIO::Init(const Configuration cnf, const Mode mode) const {
@@ -106,10 +104,22 @@ void GPIO::Toggle() const {
   gpio_toggle(pin_.first, pin_.second);
 }
 
-void GPIO::Reset() const {
-  if (IsBinded()) {
-    gpio_set_mode(pin_.first, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, pin_.second);
+void GPIO::Release() {
+  if (!IsBinded()) {
+    return;
   }
+
+  Reset();
+
+  pin_ = kNullPinout;
+}
+
+void GPIO::Reset() const {
+  if (!IsBinded()) {
+    return;
+  }
+
+  gpio_set_mode(pin_.first, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, pin_.second);
 }
 
 void GPIO::SetPriAltFn(JTAGDisables swj_state, AltFnMaps maps) {

@@ -682,7 +682,7 @@ class GPIO final {
    *
    * Initializes this object to an "unbinded" state, i.e. this object does not manage any GPIO.
    */
-  GPIO();
+  constexpr GPIO() : pin_(kNullPinout) {}
 
   /**
    * @brief Conversion constructor.
@@ -692,7 +692,7 @@ class GPIO final {
   explicit GPIO(const Config& config);
 
   /**
-   * Default trivial destructor.
+   * Default destructor.
    *
    * Side effects: Resets the currently managed GPIO pinout. Has no effect if this object does not manage a pinout.
    */
@@ -703,7 +703,10 @@ class GPIO final {
    *
    * @param[in] other GPIO object to move from
    */
-  GPIO(GPIO&& other) noexcept = default;
+  constexpr GPIO(GPIO&& other) noexcept :
+      pin_(std::move(other.pin_)) {
+      other.pin_ = kNullPinout;
+  }
   /**
    * @brief Move assignment operator.
    *
@@ -711,7 +714,14 @@ class GPIO final {
    *
    * @return Reference to the moved GPIO.
    */
-  GPIO& operator=(GPIO&& other) noexcept = default;
+  constexpr GPIO& operator=(GPIO&& other) noexcept {
+    if (this != &other) {
+      pin_ = std::move(other.pin_);
+      other.pin_ = kNullPinout;
+    }
+
+    return *this;
+  }
 
   /**
    * @brief Copy constructor.
@@ -757,11 +767,13 @@ class GPIO final {
   void Toggle() const;
 
   /**
-   * @brief Resets the GPIO to its original configuration, i.e. when the RESET button is first pushed.
+   * @brief Releases the ownership of the GPIO from this object.
+   *
+   * This function implicitly invokes GPIO#Reset, and releases the ownership of the currently managed GPIO.
    *
    * This function is null-safe, i.e. if this object is not bound to any pinout, there are no effects.
    */
-  void Reset() const;
+  void Release();
 
   /**
    * @brief Configures the primary remap functionality of all GPIOs.
@@ -838,6 +850,13 @@ class GPIO final {
    * @param[in] port The GPIO port which should be initialized
    */
   void InitRcc(Port port) const;
+
+  /**
+   * @brief Resets the GPIO to its original configuration, i.e. when the RESET button is first pushed.
+   *
+   * This function is null-safe, i.e. if this object is not bound to any pinout, there are no effects.
+   */
+  void Reset() const;
 
   /**
    * @brief Retrieves the GPIO pinout currently managed by this object.
