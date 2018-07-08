@@ -43,6 +43,10 @@ class UART {
    */
   enum Interface {
     /**
+     * @brief Representation of an invalid UART interface.
+     */
+      kNullUART = -1,
+    /**
      * @brief Corresponds to hardware USART1.
      */
         kUART1 = USART1,
@@ -321,6 +325,13 @@ class UART {
   };
 
   /**
+   * @brief Default constructor.
+   *
+   * Initializes this object to an "unbinded" state, i.e. this object does not manage any UART.
+   */
+  constexpr UART() : usart_(kNullUART) {}
+
+  /**
    * @brief Conversion constructor.
    *
    * @param[in] config Configuration for the UART. See UART#Config.
@@ -328,40 +339,19 @@ class UART {
   explicit UART(const Config& config);
 
   /**
-   * @brief Constructor for internal API use.
-   *
-   * This constructor is equivalent to @code UART::UART(const Config&) @endcode. However, it is suggested to use that
-   * constructor instead for code readability.
-   *
-   * @param[in] uart UART Interface
-   * @param[in] baud_rate UART Baud Rate
-   * @param[in] mode UART Mode
-   * @param[in] data_bits Data bits to use
-   * @param[in] stop_bits Stop bits to use
-   * @param[in] parity Parity Mode
-   * @param[in] flow_control Flow Control
-   * @param[in] handler RX Handler function
+   * @brief Destructor.
    */
-  UART(Interface uart,
-       BaudRate baud_rate,
-       Mode mode,
-       uint32_t data_bits = 8,
-       StopBits stop_bits = StopBits::kOne,
-       Parity parity = Parity::kNone,
-       FlowControl flow_control = FlowControl::kNone,
-       HandlerFn handler = nullptr);
-
-  /**
-   * @brief Default trivial constructor.
-   */
-  ~UART() = default;
+  ~UART();
 
   /**
    * @brief Move constructor.
    *
    * @param[in] other UART object to move from
    */
-  UART(UART&& other) noexcept = default;
+  constexpr UART(UART&& other) noexcept :
+      usart_(other.usart_), tx_(std::move(other.tx_)), rx_(std::move(other.rx_)) {
+    other.usart_ = kNullUART;
+  }
   /**
    * @brief Move assignment operator.
    *
@@ -369,7 +359,17 @@ class UART {
    *
    * @return Reference to the moved UART.
    */
-  UART& operator=(UART&& other) noexcept = default;
+  constexpr UART& operator=(UART&& other) noexcept {
+    if (this != &other) {
+      usart_ = other.usart_;
+      tx_ = std::move(other.tx_);
+      rx_ = std::move(other.rx_);
+
+      other.usart_ = kNullUART;
+    }
+
+    return *this;
+  }
 
   /**
    * @brief Copy constructor.
@@ -385,6 +385,21 @@ class UART {
    * std::unique_ptr.
    */
   UART& operator=(const UART&) = delete;
+
+  /**
+   * @return Whether this object is managing a UART interface.
+   */
+  constexpr bool IsBinded() const { return usart_ != kNullUART; }
+
+  /**
+   * @brief Releases the ownership of the UART from this object.
+   *
+   * This function implicitly invokes GPIO#Reset, and releases the ownership of the currently managed UART interface and
+   * GPIO pinouts.
+   *
+   * This function is null-safe, i.e. if this object is not bound to any UART, there are no effects.
+   */
+  void Release();
 
   /**
    * @brief Sends one byte.
@@ -418,6 +433,15 @@ class UART {
    * @brief Enables interrupt for this UART interface (if supported).
    */
   constexpr void EnableIrq() const;
+
+  /**
+   * @brief Resets the UART to its original configuration, i.e. when the RESET button is first pushed.
+   *
+   * No changes will be made to the GPIO pins which are bound to this object.
+   *
+   * This function is null-safe, i.e. if this object is not bound to any pinout, there are no effects.
+   */
+  void Reset() const;
 
   /**
    * @brief Retrieves the TX pinout from the configuration file.
