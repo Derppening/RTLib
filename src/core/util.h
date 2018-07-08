@@ -73,6 +73,7 @@ namespace device = stm32f4;
 }  // namespace core
 
 namespace lib {}
+namespace util {}
 }  // namespace rtlib
 
 namespace libcore = rtlib::core;
@@ -82,5 +83,6 @@ namespace libdev = libcore::stm32f1;
 namespace libdev = libcore::stm32f4;
 #endif
 namespace libs = rtlib::lib;
+namespace libutil = rtlib::util;
 
 #endif  // RTLIB_CORE_UTIL_H_
