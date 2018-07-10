@@ -37,8 +37,8 @@
 
 // You must define two constants 'kDeviceSeries' and 'kDeviceString', which corresponds to the MCU series and MCU model
 // respectively. No checks will be done internally, so you are responsible for the correctness of these constant.
-constexpr const char kDeviceSeries[] = "STM32F4";
-constexpr const char kDeviceString[] = "STM32F407xx";
+#define DEVICE_SERIES "STM32F4"
+#define DEVICE_STRING "STM32F407xx"
 
 // If a pin is unused or not designated, leave the curly braces empty ("{}").
 

@@ -93,11 +93,11 @@ void System::DelayS(uint64_t wait_s) {
 constexpr uint32_t System::ClockSpeed() noexcept {
   // TODO(Derppening): Set clock speed according to clock
 
-  if constexpr (rtlib::core::StringCompare(kDeviceSeries, "STM32F1")) {
+  if constexpr (rtlib::core::StringCompare(DEVICE_SERIES, "STM32F1")) {
     return 72'000'000;
   }
 
-  if constexpr (rtlib::core::StringCompare(kDeviceSeries, "STM32F4")) {
+  if constexpr (rtlib::core::StringCompare(DEVICE_SERIES, "STM32F4")) {
     return 168'000'000;
   }
 

@@ -26,12 +26,14 @@
 #ifndef RTLIB_CONFIG_ASC_H_
 #define RTLIB_CONFIG_ASC_H_
 
-constexpr const char kDeviceSeries[] = "STM32F1";
-constexpr const char kDeviceString[] = "STM32F105xx";
+#define DEVICE_SERIES "STM32F1"
+#define DEVICE_STRING "STM32F105xx"
 
 #if !defined(STM32F105RBT6)
 #error "This configuration is designed for a STM32F105RBT6 device. (Did you set DEVICE in CMakeLists.txt correctly?)"
 #endif  // !defined(STM32F105RBT6)
+
+#define CORE_LIBUSBHOST_USART_DEBUG 0
 
 #define LIB_USE_BUTTON 0
 
