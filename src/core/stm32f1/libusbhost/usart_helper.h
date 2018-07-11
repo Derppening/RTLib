@@ -1,9 +1,3 @@
-/**
- * @file src/config/asc.h
- *
- * @brief Pin configurations for Android Server Control board v1.2.
- */
-
 /*
  * This file is part of RTLib.
  *
@@ -23,23 +17,23 @@
  * along with RTLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RTLIB_CONFIG_ASC_H_
-#define RTLIB_CONFIG_ASC_H_
+#ifndef RTLIB_CORE_STM32F1_LIBUSBHOST_USART_HELPER_H_
+#define RTLIB_CORE_STM32F1_LIBUSBHOST_USART_HELPER_H_
 
-#define DEVICE_SERIES "STM32F1"
-#define DEVICE_STRING "STM32F105xx"
+#include <stdarg.h>
 
-#if !defined(STM32F105RBT6)
-#error "This configuration is designed for a STM32F105RBT6 device. (Did you set DEVICE in CMakeLists.txt correctly?)"
-#endif  // !defined(STM32F105RBT6)
+#include "config/config.h"
 
-#define CORE_LIBUSBHOST_USART_DEBUG USART1
+/**
+ * @brief Directly pipes a message to an UART interface.
+ *
+ * The UART interface to use should be defined by @c CORE_LIBUSBHOST_USART_DEBUG in your board configuration file.
+ *
+ * The internal buffer is guaranteed to have a capacity of 1024 characters.
+ *
+ * @param fmt Format string.
+ * @param ... Arguments for the format string.
+ */
+void ToUART(const char* fmt, ...) __attribute__((format(printf, 1, 2)));
 
-#define LIB_USE_BUTTON 0
-
-#define LIB_USE_LED 3
-#define LIB_LED0_PINOUT {GPIOB, GPIO12}
-#define LIB_LED1_PINOUT {GPIOB, GPIO13}
-#define LIB_LED2_PINOUT {GPIOB, GPIO14}
-
-#endif  // RTLIB_CONFIG_ASC_H_
+#endif  // RTLIB_CORE_STM32F1_LIBUSBHOST_USART_HELPER_H_

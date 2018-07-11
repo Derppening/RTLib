@@ -41,11 +41,11 @@ class UART {
    *
    * See http://libopencm3.org/docs/latest/stm32f4/html/group__usart__reg__base.html
    */
-  enum Interface {
+  enum Interface : std::uint32_t {
     /**
      * @brief Representation of an invalid UART interface.
      */
-      kNullUART = -1,
+        kNullUART = ~std::uint32_t(0),
     /**
      * @brief Corresponds to hardware USART1.
      */

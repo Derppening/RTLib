@@ -1,9 +1,3 @@
-/**
- * @file src/config/asc.h
- *
- * @brief Pin configurations for Android Server Control board v1.2.
- */
-
 /*
  * This file is part of RTLib.
  *
@@ -23,23 +17,25 @@
  * along with RTLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RTLIB_CONFIG_ASC_H_
-#define RTLIB_CONFIG_ASC_H_
+#include "usart_helper.h"
 
-#define DEVICE_SERIES "STM32F1"
-#define DEVICE_STRING "STM32F105xx"
+#include <stdio.h>
+#include <libopencm3/stm32/usart.h>
 
-#if !defined(STM32F105RBT6)
-#error "This configuration is designed for a STM32F105RBT6 device. (Did you set DEVICE in CMakeLists.txt correctly?)"
-#endif  // !defined(STM32F105RBT6)
+void ToUART(const char* fmt, ...) {
+#if defined(CORE_LIBUSBHOST_USART_DEBUG) && CORE_LIBUSBHOST_USART_DEBUG != 0
+#define BUFFER_SIZE 1024
 
-#define CORE_LIBUSBHOST_USART_DEBUG USART1
+  char buf[BUFFER_SIZE];
 
-#define LIB_USE_BUTTON 0
+  va_list va;
+  va_start(va, fmt);
+  vsnprintf(buf, BUFFER_SIZE, fmt, va);
+  va_end(va);
 
-#define LIB_USE_LED 3
-#define LIB_LED0_PINOUT {GPIOB, GPIO12}
-#define LIB_LED1_PINOUT {GPIOB, GPIO13}
-#define LIB_LED2_PINOUT {GPIOB, GPIO14}
-
-#endif  // RTLIB_CONFIG_ASC_H_
+  for (int i = 0; buf[i] != '\0'; ++i) {
+    usart_send_blocking(CORE_LIBUSBHOST_USART_DEBUG, (uint16_t)buf[i]);
+  }
+#undef BUFFER_SIZE
+#endif  // defined(CORE_LIBUSBHOST_USART_DEBUG) && CORE_LIBUSBHOST_USART_DEBUG != 0
+}
