@@ -41,11 +41,11 @@ class UART {
    *
    * See http://libopencm3.org/docs/latest/stm32f4/html/group__usart__reg__base.html
    */
-  enum Interface {
+  enum Interface : std::uint32_t {
     /**
      * @brief Representation of an invalid UART interface.
      */
-      kNullUART = -1,
+        kNullUART = 0xFF'FF'FF'FF,
     /**
      * @brief Corresponds to hardware USART1.
      */
@@ -75,51 +75,55 @@ class UART {
     /**
      * @brief Transmit at 2400Hz.
      */
-        k2400 = 2400,
+        k2400 = 2'400,
     /**
      * @brief Transmit at 4800Hz.
      */
-        k4800 = 4800,
+        k4800 = 4'800,
     /**
      * @brief Transmit at 9600Hz.
      */
-        k9600 = 9600,
+        k9600 = 9'600,
     /**
      * @brief Transmit at 14400Hz.
      */
-        k14400 = 14400,
+        k14400 = 14'400,
     /**
      * @brief Transmit at 19200Hz.
      */
-        k19200 = 19200,
+        k19200 = 19'200,
     /**
      * @brief Transmit at 28800Hz.
      */
-        k28800 = 28800,
+        k28800 = 28'800,
     /**
      * @brief Transmit at 38400Hz.
      */
-        k38400 = 38400,
+        k38400 = 38'400,
     /**
      * @brief Transmit at 57600Hz.
      */
-        k57600 = 57600,
+        k57600 = 57'600,
     /**
      * @brief Transmit at 76800Hz.
      */
-        k76800 = 76800,
+        k76800 = 76'800,
     /**
      * @brief Transmit at 115200Hz.
      */
-        k115200 = 115200,
+        k115200 = 115'200,
     /**
      * @brief Transmit at 230400Hz.
      */
-        k230400 = 230400,
+        k230400 = 230'400,
     /**
      * @brief Transmit at 468000Hz.
      */
-        k460800 = 460800,
+        k460800 = 460'800,
+    /**
+     * @brief Transmit at 921600Hz.
+     */
+        k921600 = 921'600,
   };
 
   /**
@@ -277,6 +281,8 @@ class UART {
     Interface uart;
     /**
      * @brief UART Baud Rate.
+     *
+     * If the target baud rate is not available in BaudRate, it could be specified by using `BaudRate(baud_rate)`.
      *
      * Defaults to BaudRate#k9600 (9600Hz).
      */
