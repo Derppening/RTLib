@@ -29,6 +29,7 @@
 #include "core/util.h"
 
 namespace {
+// TODO(Derppening): Refactor to use one handler per UART
 libdev::UART::HandlerFn rx_handler = nullptr;
 
 extern "C" void usart1_isr() {
@@ -95,6 +96,10 @@ extern "C" void uart5_isr() {
 namespace rtlib::core::stm32f1 {
 UART::UART(const Config& config) :
     usart_(uint32_t(config.uart)) {
+  if (usart_ == kNullUART) {
+    return;
+  }
+
   GPIO::Config gpio_config;
   gpio_config.pin = GetTxPinout();
   gpio_config.cnf = GPIO::Configuration::kOutputAltFnPushPull;
@@ -146,10 +151,15 @@ void UART::Reset() const {
     return;
   }
 
-  if (usart_ == USART1) {
-    rcc_periph_reset_pulse(RST_USART1);
-  } else {
-    rcc_periph_reset_pulse(rcc_periph_rst(_REG_BIT(0x10, 17 + (usart_ - USART2_BASE) / 0x0400)));
+  // There is no need to check for usart_ perfect matches, because these are already checked in initialization
+  // this saves us ~100 B in debug builds
+  switch (usart_) {
+    case USART1:
+      rcc_periph_reset_pulse(RST_USART1);
+      break;
+    default:
+      rcc_periph_reset_pulse(rcc_periph_rst(_REG_BIT(0x10, 17 + (usart_ - USART2_BASE) / 0x0400)));
+      break;
   }
 }
 
@@ -172,25 +182,14 @@ void UART::Tx(const char* str, std::size_t len) const {
 }
 
 constexpr void UART::InitRcc() const {
+  // There is no need to check for usart_ perfect matches, because these are already checked in GPIO inits
+  // this saves us ~100 B in debug builds
   switch (usart_) {
     case USART1:
       rcc_periph_clock_enable(RCC_USART1);
       break;
-    case USART2:
-//      rcc_periph_clock_enable(RCC_USART2);
-//      break;
-    case USART3:
-//      rcc_periph_clock_enable(RCC_USART3);
-//      break;
-    case UART4:
-//      rcc_periph_clock_enable(RCC_UART4);
-//      break;
-    case UART5:
-//      rcc_periph_clock_enable(RCC_UART5);
-      rcc_periph_clock_enable(rcc_periph_clken(_REG_BIT(0x1C, 17 + (usart_ - USART2_BASE) / 0x0400)));
-      break;
     default:
-      Assert(false, __FILE__, __LINE__, __func__, "Invalid or unsupported UART Interface");
+      rcc_periph_clock_enable(rcc_periph_clken(_REG_BIT(0x1C, 17 + (usart_ - USART2_BASE) / 0x0400)));
       break;
   }
 }
@@ -231,17 +230,18 @@ constexpr Pinout UART::GetRxPinout() const {
   }
 }
 
-constexpr void UART::EnableIrq() const {
-  // TODO(Derppening): Replace this with nvic_interrupt
+constexpr void UART::EnableIrq() {
   switch (usart_) {
     case USART1:
-      nvic_enable_irq(NVIC_USART1_IRQ);
+      nvic_ = NVICInterrupt(NVICInterrupt::kUSART1);
       break;
     case USART2:
-      nvic_enable_irq(NVIC_USART2_IRQ);
-      break;
     case USART3:
-      nvic_enable_irq(NVIC_USART3_IRQ);
+      nvic_ = NVICInterrupt(NVICInterrupt::Source(NVIC_USART2_IRQ + (usart_ - USART2) / 0x0400));
+      break;
+    case UART4:
+    case UART5:
+      nvic_ = NVICInterrupt(NVICInterrupt::Source(NVIC_UART4_IRQ + (usart_ - UART4) / 0x0400));
       break;
     default:
       // Target UART cannot be used synchronously; Assert/ignore this request.
@@ -249,6 +249,10 @@ constexpr void UART::EnableIrq() const {
       Assert(usart_ != kNullUART, __FILE__, __LINE__, __func__);
 #endif  // defined(RTLIB_ENABLE_VALIDATION)
       break;
+  }
+
+  if (nvic_.IsBinded()) {
+    nvic_.Enable();
   }
 }
 

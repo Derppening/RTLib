@@ -29,6 +29,7 @@
 
 #include "core/util.h"
 #include "core/stm32f1/gpio.h"
+#include "core/stm32f1/nvic_interrupt.h"
 
 namespace rtlib::core::stm32f1 {
 
@@ -278,7 +279,7 @@ class UART {
      *
      * Defaults to an indeterminate state.
      */
-    Interface uart;
+    Interface uart = kNullUART;
     /**
      * @brief UART Baud Rate.
      *
@@ -438,7 +439,7 @@ class UART {
   /**
    * @brief Enables interrupt for this UART interface (if supported).
    */
-  constexpr void EnableIrq() const;
+  constexpr void EnableIrq();
 
   /**
    * @brief Resets the UART to its original configuration, i.e. when the RESET button is first pushed.
@@ -470,6 +471,7 @@ class UART {
   uint32_t usart_;
   GPIO tx_;
   GPIO rx_;
+  NVICInterrupt nvic_;
 };
 
 }  // namespace rtlib::core::stm32f1
