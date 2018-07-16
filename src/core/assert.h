@@ -73,7 +73,7 @@ constexpr const rtlib::core::Pinout& AssertPin(const rtlib::core::Pinout& pinout
 /**
  * @brief Runtime assertion for methods missing an implementation.
  *
- * @tparam[in] FAIL_RUNTIME Whether to fail during compile time.
+ * @tparam FAIL_COMPILE Whether to fail during compile time.
  * @param[in] file Source file which invoked this function. Always @c __FILE__.
  * @param[in] line Line in source file which invoked this function. Always @c __LINE__.
  * @param[in] fn Function which invoked this function. Always @c __func__.
