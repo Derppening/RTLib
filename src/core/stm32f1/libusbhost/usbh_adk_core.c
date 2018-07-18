@@ -1,3 +1,49 @@
+/**
+  ******************************************************************************
+  * @file    usbh_adk_core.c
+  * @author  Yuuichi Akagawa
+  * @version V1.0.0
+  * @date    2012/03/05
+  * @brief   Android Open Accessory implementation
+  ******************************************************************************
+  * @attention
+  *
+  * Licensed under the Apache License, Version 2.0 (the "License");
+  * you may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at
+  *
+  *      http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  * <h2><center>&copy; COPYRIGHT (C)2012 Yuuichi Akagawa</center></h2>
+  *
+  ******************************************************************************
+  */
+/*
+ * This file is part of RTLib, ported from the STM32F4_ADK library
+ * (https://github.com/YuuichiAkagawa/STM32F4_ADK). The original license text
+ * is attached directly above this license.
+ *
+ * Copyright (C) 2018 Derppening <david.18.19.21@gmail.com>
+ *
+ * RTLib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RTLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with RTLib.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "usbh_adk_core.h"
 
 #include <stdint.h>
@@ -13,8 +59,6 @@ static bool initialized = false;
 
 struct _adk_process {
   uint16_t pid;
-//  uint8_t hc_num_in;
-//  uint8_t hc_num_out;
   uint8_t BulkOutEp;
   uint8_t BulkInEp;
   uint16_t BulkInEpSize;
@@ -102,6 +146,7 @@ static void remove(void* drvdata) {
 
   adk_machine_t* adk = (adk_machine_t*) drvdata;
 
+  // TODO(Derppening): Process disconnect
 //  adk->state = ADK_STATE_WAIT_INIT;
 //  adk->initstate = ADK_INIT_STATE_SETUP;
 
@@ -230,7 +275,7 @@ static void send_data(usbh_device_t* dev, usbh_packet_callback_data_t cb_data) {
 
       }
     case ADK_INIT_STATE_GET_DEVDESC:
-//       TODO: what do i do? :(
+      // TODO(Derppening): See if we need to do something here
 //      break;
       // fallthrough
     case ADK_INIT_STATE_CONFIGURE_ANDROID:
@@ -288,7 +333,6 @@ static bool analyze_descriptor(void* drvdata, void* descriptor) {
 
       if (ep->bEndpointAddress & 0x80) {
         adk->BulkInEp = ep->bEndpointAddress & 0x7f;
-//        adk->BulkInEp = ep->bEndpointAddress & 0x80;
         adk->BulkInEpSize = ep->wMaxPacketSize;
       } else {
         adk->BulkOutEp = ep->bEndpointAddress;

@@ -44,8 +44,8 @@
  * along with RTLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RTLIB_USBH_ADK_CORE_H
-#define RTLIB_USBH_ADK_CORE_H
+#ifndef RTLIB_CORE_STM32F1_LIBUSBHOST_USBH_ADK_CORE_H_
+#define RTLIB_CORE_STM32F1_LIBUSBHOST_USBH_ADK_CORE_H_
 
 #include <stdint.h>
 
@@ -123,4 +123,4 @@ extern const usbh_dev_driver_t usbh_adk_generic_driver;
 
 END_DECLS
 
-#endif //RTLIB_USBH_ADK_CORE_H
+#endif  // RTLIB_CORE_STM32F1_LIBUSBHOST_USBH_ADK_CORE_H_
