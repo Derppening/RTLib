@@ -485,6 +485,12 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           channels[channel].packet.callback(
               channels[channel].packet.callback_arg,
               cb_data);
+
+          if (eptyp == USBH_ENDPOINT_TYPE_CONTROL) {
+            channels[channel].packet.toggle[0] = 1;
+          } else {
+            channels[channel].packet.toggle[0] ^= 1;
+          }
         }
 
         if (hcint & OTG_HCINT_ACK) {
@@ -597,7 +603,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
           free_channel(dev, channel);
           usbh_packet_callback_data_t cb_data;
-          if (channels[channel].data_index == channels[channel].packet.datalen || channels[channel].packet.datalen == (uint16_t) -1) {
+          if (channels[channel].data_index == channels[channel].packet.datalen || channels[channel].data_index < channels[channel].packet.endpoint_size_max) {
             cb_data.status = USBH_PACKET_CALLBACK_STATUS_OK;
           } else {
             cb_data.status = USBH_PACKET_CALLBACK_STATUS_ERRSIZ;
@@ -667,11 +673,6 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           ToUART("INFO : poll_run() - CHH\r\n");
           free_channel(dev, channel);
         }
-
-        // TODO(Derppening): Hopefully this works?
-//        if (!(REBASE(OTG_GINTSTS) & OTG_GINTSTS_RXFLVL)) {
-//          free_channel(dev, channel);
-//        }
       }
     }
   }

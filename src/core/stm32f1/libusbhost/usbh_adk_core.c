@@ -125,7 +125,6 @@ static void* init(usbh_device_t* usbh_dev) {
 
   // find free data space
   for (i = 0; i < USBH_ADK_MAX_DEVICES; i++) {
-//    if (adk_machine[i].initstate == ADK_INIT_STATE_SETUP) {
     drvdata = &adk_machine[i];
     adk_machine->BulkInEp = 0;
     adk_machine->BulkOutEp = 0;
@@ -135,7 +134,6 @@ static void* init(usbh_device_t* usbh_dev) {
     adk_machine->ep_out_toggle = 0;
     adk_machine->usbh_device = usbh_dev;
     break;
-//    }
   }
 
   return drvdata;
@@ -146,20 +144,16 @@ static void remove(void* drvdata) {
 
   adk_machine_t* adk = (adk_machine_t*) drvdata;
 
-  // TODO(Derppening): Process disconnect
-//  adk->state = ADK_STATE_WAIT_INIT;
-//  adk->initstate = ADK_INIT_STATE_SETUP;
+  if (adk->BulkInEp) {
+    adk->BulkInEp = 0;
+  }
 
-//  if (adk->hc_num_out) {
-//    adk->hc_num_out = 0;
-//  }
+  if (adk->BulkOutEp) {
+    adk->BulkOutEp = 0;
+  }
 
-//  if (adk->hc_num_in) {
-//    adk->hc_num_in = 0;
-//  }
-
-//  adk->state = ADK_STATE_WAIT_INIT;
-//  adk->initstate = ADK_INIT_STATE_SETUP;
+  adk->initstate = ADK_INIT_STATE_SETUP;
+  adk->state = ADK_STATE_WAIT_INIT;
 }
 
 static void send_data(usbh_device_t* dev, usbh_packet_callback_data_t cb_data) {
@@ -361,12 +355,13 @@ void adk_write(const uint8_t* buff, uint16_t len) {
 }
 
 uint16_t adk_read(uint8_t* buff, uint16_t len) {
-  if (adk_machine->inSize > 0) {
+  uint16_t xfercount = adk_machine->inSize;
+  if (xfercount > 0) {
     memcpy(buff, adk_machine->inbuff, len);
     adk_machine->inSize = 0;
   }
 
-  return adk_machine->inSize;
+  return (uint16_t) xfercount;
 }
 
 static void write_buffer_event(usbh_device_t* dev, usbh_packet_callback_data_t cb_data) {
@@ -418,7 +413,6 @@ static void read_adk_in_endpoint(adk_machine_t* adk) {
   usbh_packet_t packet;
   packet.address = adk->usbh_device->address;
   packet.data.in = &adk->inbuff[0];
-  packet.datalen = (uint16_t) -1;
   packet.endpoint_address = adk->BulkInEp;
   packet.endpoint_size_max = adk->BulkInEpSize;
   packet.endpoint_type = USBH_ENDPOINT_TYPE_BULK;
@@ -478,9 +472,9 @@ static void poll(void* drvdata, uint32_t time_curr_us) {
         data.wLength = 2;
 
         device_control(adk->usbh_device, send_data, &data, &adk_machine->protocol);
-      }
 
-      adk->state = ADK_STATE_INITIALIZING;
+        adk->state = ADK_STATE_INITIALIZING;
+      }
 
     default:
       break;
