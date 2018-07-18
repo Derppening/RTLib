@@ -13,8 +13,8 @@ static bool initialized = false;
 
 struct _adk_process {
   uint16_t pid;
-  uint8_t hc_num_in;
-  uint8_t hc_num_out;
+//  uint8_t hc_num_in;
+//  uint8_t hc_num_out;
   uint8_t BulkOutEp;
   uint8_t BulkInEp;
   uint16_t BulkInEpSize;
@@ -81,28 +81,40 @@ static void* init(usbh_device_t* usbh_dev) {
 
   // find free data space
   for (i = 0; i < USBH_ADK_MAX_DEVICES; i++) {
-    if (adk_machine[i].initstate == ADK_INIT_STATE_SETUP) {
-      drvdata = &adk_machine[i];
-      adk_machine->inSize = 0;
-      adk_machine->outSize = 0;
-      adk_machine->usbh_device = usbh_dev;
-      break;
-    }
+//    if (adk_machine[i].initstate == ADK_INIT_STATE_SETUP) {
+    drvdata = &adk_machine[i];
+    adk_machine->BulkInEp = 0;
+    adk_machine->BulkOutEp = 0;
+    adk_machine->inSize = 0;
+    adk_machine->outSize = 0;
+    adk_machine->ep_in_toggle = 0;
+    adk_machine->ep_out_toggle = 0;
+    adk_machine->usbh_device = usbh_dev;
+    break;
+//    }
   }
 
   return drvdata;
 }
 
 static void remove(void* drvdata) {
+  ToUART("INFO : usbh_adk_core::remove()\r\n");
+
   adk_machine_t* adk = (adk_machine_t*) drvdata;
 
-  if (adk->hc_num_out) {
-    adk->hc_num_out = 0;
-  }
+//  adk->state = ADK_STATE_WAIT_INIT;
+//  adk->initstate = ADK_INIT_STATE_SETUP;
 
-  if (adk->hc_num_in) {
-    adk->hc_num_in = 0;
-  }
+//  if (adk->hc_num_out) {
+//    adk->hc_num_out = 0;
+//  }
+
+//  if (adk->hc_num_in) {
+//    adk->hc_num_in = 0;
+//  }
+
+//  adk->state = ADK_STATE_WAIT_INIT;
+//  adk->initstate = ADK_INIT_STATE_SETUP;
 }
 
 static void send_data(usbh_device_t* dev, usbh_packet_callback_data_t cb_data) {
@@ -112,6 +124,8 @@ static void send_data(usbh_device_t* dev, usbh_packet_callback_data_t cb_data) {
     ToUART("WARN : usbh_driver_cdc::send_data() - send data while not in config state\r\n");
     return;
   }
+
+  ToUART("INFO : send_data() - adk->initstate = %d\r\n", adk->initstate);
 
   switch (adk->initstate) {
     case ADK_INIT_STATE_SETUP:
@@ -268,20 +282,17 @@ static bool analyze_descriptor(void* drvdata, void* descriptor) {
       ToUART("INFO : usbh_adk_core::analyze_descriptor() - Configure bulk endpoint\r\n");
 
       const struct usb_endpoint_descriptor* ep = (const struct usb_endpoint_descriptor*) descriptor;
-      if (ep[0].bEndpointAddress & 0x80) {
-        adk->BulkInEp = ep[0].bEndpointAddress;
-        adk->BulkInEpSize = ep[0].wMaxPacketSize;
-      } else {
-        adk->BulkOutEp = ep[0].bEndpointAddress;
-        adk->BulkOutEpSize = ep[0].wMaxPacketSize;
-      }
 
-      if (ep[1].bEndpointAddress & 0x80) {
-        adk->BulkInEp = ep[0].bEndpointAddress;
-        adk->BulkInEpSize = ep[0].wMaxPacketSize;
+      ToUART("INFO : usbh_adk_core::analyze_descriptor() - packet length = %d\r\n", ep->bLength);
+      ToUART("INFO : usbh_adk_core::analyze_descriptor() - packet = %x\r\n", ep[0]);
+
+      if (ep->bEndpointAddress & 0x80) {
+        adk->BulkInEp = ep->bEndpointAddress & 0x7f;
+//        adk->BulkInEp = ep->bEndpointAddress & 0x80;
+        adk->BulkInEpSize = ep->wMaxPacketSize;
       } else {
-        adk->BulkOutEp = ep[0].bEndpointAddress;
-        adk->BulkOutEpSize = ep[0].wMaxPacketSize;
+        adk->BulkOutEp = ep->bEndpointAddress;
+        adk->BulkOutEpSize = ep->wMaxPacketSize;
       }
 
       break;
@@ -290,8 +301,9 @@ static bool analyze_descriptor(void* drvdata, void* descriptor) {
       break;
   }
 
+  ToUART("INFO : usbh_adk_core::analyze_descriptor() - %d %d\r\n", adk->BulkInEp, adk->BulkOutEp);
+
   if (adk->BulkInEp && adk->BulkOutEp) {
-    ToUART("INFO : usbh_adk_core::analyze_descriptor() - init state = %d\r\n", adk->initstate);
     adk->initstate = ADK_INIT_STATE_DONE;
     return true;
   }
@@ -299,7 +311,7 @@ static bool analyze_descriptor(void* drvdata, void* descriptor) {
   return false;
 }
 
-void adk_write(uint8_t* buff, uint16_t len) {
+void adk_write(const uint8_t* buff, uint16_t len) {
   memcpy(adk_machine->outbuff, buff, len);
   adk_machine->outSize = len;
 }
@@ -329,17 +341,19 @@ static void read_buffer_event(usbh_device_t* dev, usbh_packet_callback_data_t cb
   if (cb_data.status == USBH_PACKET_CALLBACK_STATUS_OK) {
     adk->inSize = (uint16_t) cb_data.transferred_length;
 
-    ToUART("INFO : usbh_adk_core::write_buffer_event() - Read OK\r\n");
+    ToUART("INFO : usbh_adk_core::read_buffer_event() - Read OK\r\n");
   } else {
-    ToUART("WARN : usbh_adk_core::write_buffer_event() - Read Failed (%d)\r\n", cb_data.status);
+    ToUART("WARN : usbh_adk_core::read_buffer_event() - Read Failed (%d)\r\n", cb_data.status);
   }
 }
 
 static void write_adk_in_endpoint(adk_machine_t* adk) {
+  ToUART("INFO : write_adk_in_endpoint() - %d\r\n", adk->ep_out_toggle);
+
   usbh_packet_t packet;
   packet.address = adk->usbh_device->address;
   packet.data.out = adk->outbuff;
-  packet.datalen = 4;
+  packet.datalen = adk->outSize;
   packet.endpoint_address = adk->BulkOutEp;
   packet.endpoint_size_max = adk->BulkOutEpSize;
   packet.endpoint_type = USBH_ENDPOINT_TYPE_BULK;
@@ -355,10 +369,12 @@ static void write_adk_in_endpoint(adk_machine_t* adk) {
 }
 
 static void read_adk_in_endpoint(adk_machine_t* adk) {
+  ToUART("INFO : read_adk_in_endpoint() - %d\r\n", adk->ep_in_toggle);
+
   usbh_packet_t packet;
   packet.address = adk->usbh_device->address;
-  packet.data.in = adk->inbuff;
-  packet.datalen = adk->BulkInEpSize;
+  packet.data.in = &adk->inbuff[0];
+  packet.datalen = (uint16_t) -1;
   packet.endpoint_address = adk->BulkInEp;
   packet.endpoint_size_max = adk->BulkInEpSize;
   packet.endpoint_type = USBH_ENDPOINT_TYPE_BULK;
@@ -368,11 +384,9 @@ static void read_adk_in_endpoint(adk_machine_t* adk) {
   packet.toggle = &adk->ep_in_toggle;
 
   usbh_read(adk->usbh_device, &packet);
-
-  adk->state = ADK_STATE_IDLE;
 }
 
-enum ADK_STATE adk_get_status(void) {
+enum ADK_STATE adk_get_state(void) {
   return adk_machine->state;
 }
 
@@ -399,7 +413,7 @@ static void poll(void* drvdata, uint32_t time_curr_us) {
       adk->outSize = 0;
       break;
     case ADK_STATE_WAIT_INIT:
-      ToUART("INFO : initializing");
+      ToUART("INFO : usbh_adk_core::poll() - initializing\r\n");
 
       if (adk->usbh_device->drv->info->idVendor == USB_ACCESSORY_VENDOR_ID
           && (adk->usbh_device->drv->info->idProduct == USB_ACCESSORY_PRODUCT_ID
@@ -407,13 +421,13 @@ static void poll(void* drvdata, uint32_t time_curr_us) {
         adk->initstate = ADK_INIT_STATE_DONE;
 
         adk->state = ADK_STATE_IDLE;
-        ToUART("INFO : usbh_adk_core::send_data() - Configuration complete\r\n");
+        ToUART("INFO : usbh_adk_core::poll() - Configuration complete\r\n");
       } else {
         adk->initstate = ADK_INIT_STATE_GET_PROTOCOL;
         adk->protocol = -1;
 
         struct usb_setup_data data;
-        data.bmRequestType = USB_REQ_TYPE_VENDOR | USB_REQ_TYPE_DEVICE;
+        data.bmRequestType = USB_REQ_TYPE_IN | USB_REQ_TYPE_VENDOR | USB_REQ_TYPE_DEVICE;
         data.bRequest = ACCESSORY_GET_PROTOCOL;
         data.wValue = 0;
         data.wIndex = 0;
@@ -451,6 +465,17 @@ static const usbh_dev_driver_info_t adb_driver_info = {
     .ifaceProtocol = -1
 };
 
+static const usbh_dev_driver_info_t adk_generic_driver_info = {
+    .deviceClass = -1,
+    .deviceSubClass = -1,
+    .deviceProtocol = -1,
+    .idVendor = -1,
+    .idProduct = -1,
+    .ifaceClass = -1,
+    .ifaceSubClass = -1,
+    .ifaceProtocol = -1
+};
+
 const usbh_dev_driver_t usbh_adk_driver = {
     .init = init,
     .analyze_descriptor = analyze_descriptor,
@@ -465,4 +490,12 @@ const usbh_dev_driver_t usbh_adb_adk_driver = {
     .poll = poll,
     .remove = remove,
     .info = &adb_driver_info
+};
+
+const usbh_dev_driver_t usbh_adk_generic_driver = {
+    .init = init,
+    .analyze_descriptor = analyze_descriptor,
+    .poll = poll,
+    .remove = remove,
+    .info = &adk_generic_driver_info
 };

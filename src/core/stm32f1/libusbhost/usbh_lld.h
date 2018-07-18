@@ -11,7 +11,6 @@ BEGIN_DECLS
 
 // pass this to usbh init
 extern const usbh_low_level_driver_t usbh_lld_stm32f1_driver_fs;
-extern const usbh_low_level_driver_t usbh_lld_stm32f1_driver_hs;
 
 #ifdef USART_DEBUG
 void print_channels(const void *drvdata);

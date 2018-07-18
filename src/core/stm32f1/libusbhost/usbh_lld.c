@@ -120,7 +120,7 @@ static void init(void* drvdata) {
   dev->timestamp_us = dev->time_curr_us;
 
   //Disable interrupts first
-  REBASE(OTG_GAHBCFG) &= ~(unsigned) OTG_GAHBCFG_GINT;
+  REBASE(OTG_GAHBCFG) &= ~OTG_GAHBCFG_GINT;
 
   // Select full speed phy
   REBASE(OTG_GUSBCFG) |= OTG_GUSBCFG_PHYSEL;
@@ -145,12 +145,12 @@ static uint32_t usbh_to_stm32_endpoint_type(enum USBH_ENDPOINT_TYPE usbh_eptyp) 
   }
 }
 
-static void stm32f4_usbh_port_channel_setup(
+static void stm32f1_usbh_port_channel_setup(
     void* drvdata, uint32_t channel, uint32_t epdir) {
   usbh_lld_driver_data_t* dev = drvdata;
   channel_t* channels = dev->channels;
   uint32_t max_packet_size = channels[channel].packet.endpoint_size_max;
-  uint32_t address = (uint32_t) channels[channel].packet.address;
+  uint32_t address = channels[channel].packet.address;
   uint32_t epnum = channels[channel].packet.endpoint_address;
   uint32_t eptyp = usbh_to_stm32_endpoint_type(channels[channel].packet.endpoint_type);
 
@@ -159,7 +159,7 @@ static void stm32f4_usbh_port_channel_setup(
     speed = OTG_HCCHAR_LSDEV;
   }
 
-  REBASE_CH(OTG_HCCHAR, channel) = (unsigned) OTG_HCCHAR_CHENA |
+  REBASE_CH(OTG_HCCHAR, channel) = OTG_HCCHAR_CHENA |
       (OTG_HCCHAR_DAD_MASK & (address << 22)) |
       OTG_HCCHAR_MCNT_1 |
       (OTG_HCCHAR_EPTYP_MASK & (eptyp)) |
@@ -200,14 +200,14 @@ static void read(void* drvdata, usbh_packet_t* packet) {
 
   uint32_t num_packets;
   if (packet->datalen) {
-    num_packets = (uint32_t) ((packet->datalen - 1) / packet->endpoint_size_max) + 1;
+    num_packets = ((packet->datalen - 1) / packet->endpoint_size_max) + 1;
   } else {
     num_packets = 0;
   }
 
   REBASE_CH(OTG_HCTSIZ, channel) = dpid | (num_packets << 19) | packet->datalen;
 
-  stm32f4_usbh_port_channel_setup(dev, (uint32_t) channel, OTG_HCCHAR_EPDIR_IN);
+  stm32f1_usbh_port_channel_setup(dev, channel, OTG_HCCHAR_EPDIR_IN);
 }
 
 /**
@@ -252,13 +252,13 @@ static void write(void* drvdata, const usbh_packet_t* packet) {
 
   uint32_t num_packets;
   if (packet->datalen) {
-    num_packets = (uint32_t) ((packet->datalen - 1) / packet->endpoint_size_max) + 1;
+    num_packets = ((packet->datalen - 1) / packet->endpoint_size_max) + 1;
   } else {
     num_packets = 1;
   }
   REBASE_CH(OTG_HCTSIZ, channel) = dpid | (num_packets << 19) | packet->datalen;
 
-  stm32f4_usbh_port_channel_setup(dev, (uint32_t) channel, OTG_HCCHAR_EPDIR_OUT);
+  stm32f1_usbh_port_channel_setup(dev, channel, OTG_HCCHAR_EPDIR_OUT);
 
   if (packet->endpoint_type == USBH_ENDPOINT_TYPE_CONTROL ||
       packet->endpoint_type == USBH_ENDPOINT_TYPE_BULK) {
@@ -276,7 +276,7 @@ static void write(void* drvdata, const usbh_packet_t* packet) {
 
     if (i > 0) {
       ToUART("INFO : write() - \t\t");
-      *fifo = *buf32 & (unsigned) ((1 << (8 * i)) - 1);
+      *fifo = *buf32 & ((1 << (8 * i)) - 1);
       uint8_t* buf8 = (uint8_t*) buf32;
       while (i--) {
         ToUART("%02X ", *buf8++);
@@ -313,19 +313,21 @@ static void rxflvl_handle(void* drvdata) {
     }
     // Receive data from fifo
     volatile uint32_t* fifo = &REBASE_CH(OTG_FIFO, channel);
-    for (i = (int32_t) len; i > 4; i -= 4) {
+    for (i = len; i > 4; i -= 4) {
       *buf32++ = *fifo++;
     }
     extra = *fifo;
 
-    memcpy(buf32, &extra, (size_t) i);
+    memcpy(buf32, &extra, i);
     channels[channel].data_index += len;
 
     // If transfer not complete, Enable channel to continue
     if (channels[channel].data_index < channels[channel].packet.datalen) {
       if (len == channels[channel].packet.endpoint_size_max) {
-        REBASE_CH(OTG_HCCHAR, channel) |= (unsigned) OTG_HCCHAR_CHENA;
-        ToUART("INFO : rxflvl_handle() - CHENA[%ld/%d]\r\n", channels[channel].data_index, channels[channel].packet.datalen);
+        REBASE_CH(OTG_HCCHAR, channel) |= OTG_HCCHAR_CHENA;
+        ToUART("INFO : rxflvl_handle() - CHENA[%ld/%d]\r\n",
+               channels[channel].data_index,
+               channels[channel].packet.datalen);
       }
 
     }
@@ -335,7 +337,7 @@ static void rxflvl_handle(void* drvdata) {
     uint32_t i;
     ToUART("INFO : rxflvl_handle() - DATA: ");
     for (i = 0; i < channels[channel].data_index; i++) {
-      uint8_t *data = channels[channel].packet.data.in;
+      uint8_t* data = channels[channel].packet.data.in;
       ToUART("%02X ", data[i]);
     }
     ToUART("\r\n");
@@ -371,10 +373,10 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
     if ((REBASE(OTG_HPRT) & OTG_HPRT_PCDET) && (REBASE(OTG_HPRT) & OTG_HPRT_PCSTS)) {
       if ((REBASE(OTG_HPRT) & OTG_HPRT_PSPD_MASK) == OTG_HPRT_PSPD_FULL) {
-        REBASE(OTG_HFIR) = (REBASE(OTG_HFIR) & ~(unsigned) OTG_HFIR_FRIVL_MASK) | 48000;
+        REBASE(OTG_HFIR) = (REBASE(OTG_HFIR) & ~OTG_HFIR_FRIVL_MASK) | 48000;
 
         if ((REBASE(OTG_HCFG) & OTG_HCFG_FSLSPCS_MASK) != OTG_HCFG_FSLSPCS_48MHz) {
-          REBASE(OTG_HCFG) = (REBASE(OTG_HCFG) & ~(unsigned) OTG_HCFG_FSLSPCS_MASK) | OTG_HCFG_FSLSPCS_48MHz;
+          REBASE(OTG_HCFG) = (REBASE(OTG_HCFG) & ~OTG_HCFG_FSLSPCS_MASK) | OTG_HCFG_FSLSPCS_48MHz;
           ToUART("INFO : poll_run() - Reset Full-Speed\r\n");
         }
 
@@ -383,9 +385,9 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
         reset_start(dev);
 
       } else if ((REBASE(OTG_HPRT) & OTG_HPRT_PSPD_MASK) == OTG_HPRT_PSPD_LOW) {
-        REBASE(OTG_HFIR) = (REBASE(OTG_HFIR) & ~(unsigned)OTG_HFIR_FRIVL_MASK) | 6000;
+        REBASE(OTG_HFIR) = (REBASE(OTG_HFIR) & ~OTG_HFIR_FRIVL_MASK) | 6000;
         if ((REBASE(OTG_HCFG) & OTG_HCFG_FSLSPCS_MASK) != OTG_HCFG_FSLSPCS_6MHz) {
-          REBASE(OTG_HCFG) = (REBASE(OTG_HCFG) & ~(unsigned)OTG_HCFG_FSLSPCS_MASK) | OTG_HCFG_FSLSPCS_6MHz;
+          REBASE(OTG_HCFG) = (REBASE(OTG_HCFG) & ~OTG_HCFG_FSLSPCS_MASK) | OTG_HCFG_FSLSPCS_6MHz;
           ToUART("INFO : poll_run() - Reset Low-Speed\r\n");
         }
 
@@ -423,7 +425,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
       // HARDWARE BUG - not mentioned in errata
       // To clear interrupt write 0 to PENA
       // To disable port write 1 to PENCHNG
-      REBASE(OTG_HPRT) &= ~(unsigned)OTG_HPRT_PENA;
+      REBASE(OTG_HPRT) &= ~OTG_HPRT_PENA;
       ToUART("INFO : poll_run() - PENCHNG\r\n");
       if ((hprt & OTG_HPRT_PENA)) {
         return USBH_POLL_STATUS_DEVICE_CONNECTED;
@@ -461,7 +463,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
     for (channel = 0; channel < dev->num_channels; channel++) {
       if (channels[channel].state != CHANNEL_STATE_WORK ||
-          !(REBASE(OTG_HAINT) & (unsigned)(1 << channel))) {
+          !(REBASE(OTG_HAINT) & (1 << channel))) {
         continue;
       }
       uint32_t hcint = REBASE_CH(OTG_HCINT, channel);
@@ -474,7 +476,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_NAK;
           ToUART("INFO : poll_run() - NAK\r\n");
 
-          free_channel(dev, (uint8_t)channel);
+          free_channel(dev, channel);
 
           usbh_packet_callback_data_t cb_data;
           cb_data.status = USBH_PACKET_CALLBACK_STATUS_EAGAIN;
@@ -483,7 +485,6 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           channels[channel].packet.callback(
               channels[channel].packet.callback_arg,
               cb_data);
-
         }
 
         if (hcint & OTG_HCINT_ACK) {
@@ -500,7 +501,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_XFRC;
           ToUART("INFO : poll_run() - XFRC\r\n");
 
-          free_channel(dev, (uint8_t)channel);
+          free_channel(dev, channel);
 
           usbh_packet_callback_data_t cb_data;
           cb_data.status = USBH_PACKET_CALLBACK_STATUS_OK;
@@ -516,7 +517,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_FRMOR;
           ToUART("INFO : poll_run() - FRMOR\r\n");
 
-          free_channel(dev, (uint8_t)channel);
+          free_channel(dev, channel);
 
           usbh_packet_callback_data_t cb_data;
           cb_data.status = USBH_PACKET_CALLBACK_STATUS_EFATAL;
@@ -531,7 +532,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_TXERR;
           ToUART("INFO : poll_run() - TXERR\r\n");
 
-          free_channel(dev, (uint8_t)channel);
+          free_channel(dev, channel);
 
           usbh_packet_callback_data_t cb_data;
           cb_data.status = USBH_PACKET_CALLBACK_STATUS_EAGAIN;
@@ -547,7 +548,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_STALL;
           ToUART("INFO : poll_run() - STALL\r\n");
 
-          free_channel(dev, (uint8_t)channel);
+          free_channel(dev, channel);
 
           usbh_packet_callback_data_t cb_data;
           cb_data.status = USBH_PACKET_CALLBACK_STATUS_EFATAL;
@@ -562,7 +563,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_CHH;
           ToUART("INFO : poll_run() - CHH\r\n");
 
-          free_channel(dev, (uint8_t)channel);
+          free_channel(dev, channel);
         }
       } else { // Read
 
@@ -572,13 +573,14 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
             ToUART("INFO : poll_run() - NAK\r\n");
           }
 
-          REBASE_CH(OTG_HCCHAR, channel) |= (unsigned)OTG_HCCHAR_CHENA;
-
+          REBASE_CH(OTG_HCCHAR, channel) |= OTG_HCCHAR_CHENA;
         }
 
         if (hcint & OTG_HCINT_DTERR) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_DTERR;
           ToUART("INFO : poll_run() - DTERR\r\n");
+
+          free_channel(dev, channel);
         }
 
         if (hcint & OTG_HCINT_ACK) {
@@ -593,9 +595,9 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_XFRC;
           ToUART("INFO : poll_run() - XFRC\r\n");
 
-          free_channel(dev, (uint8_t)channel);
+          free_channel(dev, channel);
           usbh_packet_callback_data_t cb_data;
-          if (channels[channel].data_index == channels[channel].packet.datalen) {
+          if (channels[channel].data_index == channels[channel].packet.datalen || channels[channel].packet.datalen == (uint16_t) -1) {
             cb_data.status = USBH_PACKET_CALLBACK_STATUS_OK;
           } else {
             cb_data.status = USBH_PACKET_CALLBACK_STATUS_ERRSIZ;
@@ -612,7 +614,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
         if (hcint & OTG_HCINT_BBERR) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_BBERR;
           ToUART("INFO : poll_run() - BBERR\r\n");
-          free_channel(dev, (uint8_t)channel);
+          free_channel(dev, channel);
 
           usbh_packet_callback_data_t cb_data;
           cb_data.status = USBH_PACKET_CALLBACK_STATUS_EFATAL;
@@ -633,7 +635,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_TXERR;
           ToUART("INFO : poll_run() - TXERR\r\n");
 
-          free_channel(dev, (uint8_t)channel);
+          free_channel(dev, channel);
 
           usbh_packet_callback_data_t cb_data;
           cb_data.status = USBH_PACKET_CALLBACK_STATUS_EFATAL;
@@ -649,7 +651,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_STALL;
           ToUART("INFO : poll_run() - STALL\r\n");
 
-          free_channel(dev, (uint8_t)channel);
+          free_channel(dev, channel);
 
           usbh_packet_callback_data_t cb_data;
           cb_data.status = USBH_PACKET_CALLBACK_STATUS_EFATAL;
@@ -663,9 +665,13 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
         if (hcint & OTG_HCINT_CHH) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_CHH;
           ToUART("INFO : poll_run() - CHH\r\n");
-          free_channel(dev, (uint8_t) channel);
+          free_channel(dev, channel);
         }
 
+        // TODO(Derppening): Hopefully this works?
+//        if (!(REBASE(OTG_GINTSTS) & OTG_GINTSTS_RXFLVL)) {
+//          free_channel(dev, channel);
+//        }
       }
     }
   }
@@ -696,7 +702,7 @@ static void poll_init(usbh_lld_driver_data_t* dev) {
   /* Wait for AHB idle. */
   switch (dev->poll_sequence) {
     case 0:// wait until AHBIDL is set
-      if (REBASE(OTG_GRSTCTL) & (unsigned)OTG_GRSTCTL_AHBIDL) {
+      if (REBASE(OTG_GRSTCTL) & OTG_GRSTCTL_AHBIDL) {
         done = 1;
       }
       break;
@@ -724,7 +730,7 @@ static void poll_init(usbh_lld_driver_data_t* dev) {
       break;
 
     case 4:// wait until AHBIDL is set and power up the USB
-      if (REBASE(OTG_GRSTCTL) & (unsigned)OTG_GRSTCTL_AHBIDL) {
+      if (REBASE(OTG_GRSTCTL) & OTG_GRSTCTL_AHBIDL) {
         REBASE(OTG_GCCFG) = OTG_GCCFG_VBUSASEN | OTG_GCCFG_VBUSBSEN |
             OTG_GCCFG_NOVBUSSENS | OTG_GCCFG_PWRDWN;
         done = 1;
@@ -746,7 +752,7 @@ static void poll_init(usbh_lld_driver_data_t* dev) {
         /* Restart the PHY clock. */
         REBASE(OTG_PCGCCTL) = 0;
 
-        REBASE(OTG_HCFG) = (REBASE(OTG_HCFG) & ~(unsigned)OTG_HCFG_FSLSPCS_MASK) |
+        REBASE(OTG_HCFG) = (REBASE(OTG_HCFG) & ~OTG_HCFG_FSLSPCS_MASK) |
             OTG_HCFG_FSLSPCS_48MHz;
 
         // Start reset processing
@@ -760,7 +766,7 @@ static void poll_init(usbh_lld_driver_data_t* dev) {
     case 7:// wait for reset processing to be done(12ms), disable PRST
       if (dev->time_curr_us - dev->timestamp_us > 12000) {
 
-        REBASE(OTG_HPRT) &= ~(unsigned)OTG_HPRT_PRST;
+        REBASE(OTG_HPRT) &= ~OTG_HPRT_PRST;
         done = 1;
       }
       break;
@@ -768,7 +774,7 @@ static void poll_init(usbh_lld_driver_data_t* dev) {
     case 8:// wait 12ms after PRST was disabled, configure fifo
       if (dev->time_curr_us - dev->timestamp_us > 12000) {
 
-        REBASE(OTG_HCFG) &= ~(unsigned)OTG_HCFG_FSLSS;
+        REBASE(OTG_HCFG) &= ~OTG_HCFG_FSLSS;
 
         REBASE(OTG_GRXFSIZ) = RX_FIFO_SIZE;
         REBASE(OTG_GNPTXFSIZ) = (TX_NP_FIFO_SIZE << 16) |
@@ -798,7 +804,7 @@ static void poll_init(usbh_lld_driver_data_t* dev) {
 
         REBASE(OTG_GOTGINT) |= 1 << 19;
         REBASE(OTG_GINTMSK) = 0;
-        REBASE(OTG_GINTSTS) = ~(uint32_t)0;
+        REBASE(OTG_GINTSTS) = ~0;
         REBASE(OTG_HPRT) |= OTG_HPRT_PPWR;
 
         done = 1;
@@ -833,7 +839,7 @@ static void poll_init(usbh_lld_driver_data_t* dev) {
 
 static void poll_reset(usbh_lld_driver_data_t* dev) {
   if (dev->time_curr_us - dev->timestamp_us > 10000) {
-    REBASE(OTG_HPRT) &= ~(unsigned) OTG_HPRT_PRST;
+    REBASE(OTG_HPRT) &= ~OTG_HPRT_PRST;
     dev->state = dev->state_prev;
     dev->state_prev = DEVICE_STATE_RESET;
 
@@ -882,17 +888,21 @@ static int8_t get_free_channel(void* drvdata) {
   channel_t* channels = dev->channels;
   uint32_t i = 0;
   for (i = 0; i < dev->num_channels; i++) {
+//    ToUART("INFO : get_free_channel() - Testing channel[%ld] state = %d\r\n", i, dev->channels[i].state);
+
     if (dev->channels[i].state == CHANNEL_STATE_FREE &&
-        !(REBASE_CH(OTG_HCCHAR, i) & (unsigned) OTG_HCCHAR_CHENA)) {
+        !(REBASE_CH(OTG_HCCHAR, i) & OTG_HCCHAR_CHENA)) {
       channels[i].state = CHANNEL_STATE_WORK;
-      REBASE_CH(OTG_HCINT, i) = ~(uint32_t) 0;
+      REBASE_CH(OTG_HCINT, i) = ~0;
       REBASE_CH(OTG_HCINTMSK, i) |= OTG_HCINTMSK_ACKM | OTG_HCINTMSK_NAKM |
           OTG_HCINTMSK_TXERRM | OTG_HCINTMSK_XFRCM |
           OTG_HCINTMSK_DTERRM | OTG_HCINTMSK_BBERRM |
           OTG_HCINTMSK_CHHM | OTG_HCINTMSK_STALLM |
           OTG_HCINTMSK_FRMORM;
-      REBASE(OTG_HAINTMSK) |= (unsigned) (1 << i);
-      return (int8_t) i;
+      REBASE(OTG_HAINTMSK) |= (1 << i);
+
+      ToUART("INFO : get_free_channel() - Using channel %ld\r\n", i);
+      return i;
     }
   }
   return -1;
@@ -906,9 +916,9 @@ static void free_channel(void* drvdata, uint8_t channel) {
   usbh_lld_driver_data_t* dev = drvdata;
   channel_t* channels = dev->channels;
 
-  if (REBASE_CH(OTG_HCCHAR, channel) & (unsigned) OTG_HCCHAR_CHENA) {
+  if (REBASE_CH(OTG_HCCHAR, channel) & OTG_HCCHAR_CHENA) {
     REBASE_CH(OTG_HCCHAR, channel) |= OTG_HCCHAR_CHDIS;
-    REBASE_CH(OTG_HCINT, channel) = ~(uint32_t) 0;
+    REBASE_CH(OTG_HCINT, channel) = ~0;
 
     ToUART("INFO : free_channel() - Disabling channel %d\r\n", channel);
   } else {
@@ -923,13 +933,13 @@ static void channels_init(void* drvdata) {
 
   uint32_t i = 0;
   for (i = 0; i < dev->num_channels; i++) {
-    REBASE_CH(OTG_HCINT, i) = ~(uint32_t) 0;
+    REBASE_CH(OTG_HCINT, i) = ~0;
     REBASE_CH(OTG_HCINTMSK, i) = 0x7ff;
-    free_channel(dev, (uint8_t) i);
+    free_channel(dev, i);
   }
 
   // Enable interrupt mask bits for all channels
-  REBASE(OTG_HAINTMSK) = (uint32_t) (1 << dev->num_channels) - 1;
+  REBASE(OTG_HAINTMSK) = (1 << dev->num_channels) - 1;
 }
 
 /**

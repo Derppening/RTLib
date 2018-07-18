@@ -22,7 +22,10 @@
 
 #include <stdarg.h>
 
+#include "usbh_core.h"
 #include "config/config.h"
+
+BEGIN_DECLS
 
 /**
  * @brief Directly pipes a message to an UART interface.
@@ -35,5 +38,7 @@
  * @param ... Arguments for the format string.
  */
 void ToUART(const char* fmt, ...) __attribute__((format(printf, 1, 2)));
+
+END_DECLS
 
 #endif  // RTLIB_CORE_STM32F1_LIBUSBHOST_USART_HELPER_H_

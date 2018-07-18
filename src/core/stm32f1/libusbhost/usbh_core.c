@@ -359,7 +359,7 @@ usbh_device_t* usbh_get_free_device(const usbh_device_t* dev) {
   for (i = 0; i < USBH_MAX_DEVICES; i++) {
     if (usbh_device[i].address < 0) {
       ToUART("INFO : usbh_get_free_device() - \t\tFOUND: %d\r\n", i);
-      usbh_device[i].address = (int8_t) (i + 1);
+      usbh_device[i].address = (i + 1);
       return &usbh_device[i];
     } else {
       ToUART("INFO : usbh_get_free_device() - address: %d\r\n", usbh_device[i].address);
@@ -622,7 +622,7 @@ void device_enumeration_start(usbh_device_t* dev) {
   set_enumeration();
 
   // save address
-  uint8_t address = (uint8_t) dev->address;
+  uint8_t address = dev->address;
   dev->address = 0;
 
   if (dev->speed == USBH_SPEED_LOW) {
@@ -631,7 +631,7 @@ void device_enumeration_start(usbh_device_t* dev) {
     dev->packet_size_max0 = 64;
   }
 
-  usbh_data.address_temporary = (int8_t) address;
+  usbh_data.address_temporary = address;
 
   ToUART("INFO : device_enumeration_start() - ENUMERATION OF DEVICE@%d STARTED\r\n", address);
 

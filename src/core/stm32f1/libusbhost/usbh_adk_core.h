@@ -111,16 +111,15 @@ enum ADK_STATE {
   ADK_STATE_ERROR,
 };
 
-typedef struct _usbh_dev_driver usbh_dev_driver_t;
-extern const usbh_dev_driver_t usbh_cdc_driver;
-
 void adk_driver_init(uint8_t* manufacture, uint8_t* model, uint8_t* description, uint8_t* version, uint8_t* uri, uint8_t* serial);
-void adk_write(uint8_t* buff, uint16_t len);
+void adk_write(const uint8_t* buff, uint16_t len);
 uint16_t adk_read(uint8_t* buff, uint16_t len);
 enum ADK_STATE adk_get_state(void);
 
+typedef struct _usbh_dev_driver usbh_dev_driver_t;
 extern const usbh_dev_driver_t usbh_adk_driver;
 extern const usbh_dev_driver_t usbh_adb_adk_driver;
+extern const usbh_dev_driver_t usbh_adk_generic_driver;
 
 END_DECLS
 
