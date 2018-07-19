@@ -87,12 +87,12 @@ static struct _adk_process adk_machine[1];
 
 static void send_string(adk_machine_t* adk, uint16_t index, uint8_t* buff);
 
-void adk_driver_init(uint8_t* manufacture,
-                     uint8_t* model,
-                     uint8_t* description,
-                     uint8_t* version,
-                     uint8_t* uri,
-                     uint8_t* serial) {
+void adk_driver_init(const uint8_t* manufacture,
+                     const uint8_t* model,
+                     const uint8_t* description,
+                     const uint8_t* version,
+                     const uint8_t* uri,
+                     const uint8_t* serial) {
   initialized = true;
 
   int i;

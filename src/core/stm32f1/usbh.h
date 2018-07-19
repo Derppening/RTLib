@@ -52,7 +52,7 @@ class USBH {
      *
      * The list of available low-level drivers are listed in usbh_lld.h.
      *
-     * This array must be terminated by a `nullptr`.
+     * This array must be terminated by a `nullptr`. The lack of a terminating `nullptr` is undefined behavior.
      */
     const usbh_low_level_driver_t* const* lld_drivers;
     /**
@@ -60,13 +60,13 @@ class USBH {
      *
      * The list of available device drivers are listed in usbh_driver_*.h.
      *
-     * This array must be terminated by a `nullptr`.
+     * This array must be terminated by a `nullptr`. The lack of a terminating `nullptr` is undefined behavior.
      */
     const usbh_dev_driver_t** device_drivers;
     /**
      * @brief Function which initializes all device drivers in Config#device_drivers.
      *
-     * If this field is `nullptr`, the constructing this object is undefined behavior.
+     * If this field is `nullptr`, constructing this object is undefined behavior.
      */
     DriverInitFn driver_init;
     /**
@@ -83,6 +83,8 @@ class USBH {
    * @param[in] config Configuration for the USB Host. See USBH#Config.
    */
   explicit USBH(const Config& config);
+
+  // TODO(Derppening): Destructor, Copy/Move Assignment-Operator/Constructors
 
   /**
    * @brief Performs a poll as the USB Host.

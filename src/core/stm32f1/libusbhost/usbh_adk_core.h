@@ -111,7 +111,12 @@ enum ADK_STATE {
   ADK_STATE_ERROR,
 };
 
-void adk_driver_init(uint8_t* manufacture, uint8_t* model, uint8_t* description, uint8_t* version, uint8_t* uri, uint8_t* serial);
+void adk_driver_init(const uint8_t* manufacture,
+                     const uint8_t* model,
+                     const uint8_t* description,
+                     const uint8_t* version,
+                     const uint8_t* uri,
+                     const uint8_t* serial);
 void adk_write(const uint8_t* buff, uint16_t len);
 uint16_t adk_read(uint8_t* buff, uint16_t len);
 enum ADK_STATE adk_get_state(void);
