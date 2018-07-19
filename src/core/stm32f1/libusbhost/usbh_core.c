@@ -437,7 +437,7 @@ static void device_enumerate(usbh_device_t* dev, usbh_packet_callback_data_t cb_
         }
           break;
 
-        case USBH_PACKET_CALLBACK_STATUS_ERRSIZ:
+        case USBH_PACKET_CALLBACK_STATUS_ESIZE:
           if (cb_data.transferred_length >= 8) {
             struct usb_device_descriptor* ddt =
                 (struct usb_device_descriptor*) &usbh_buffer[0];
@@ -494,7 +494,7 @@ static void device_enumerate(usbh_device_t* dev, usbh_packet_callback_data_t cb_
         CONTINUE_WITH(USBH_ENUM_STATE_CONFIGURATION_DT_READ_SETUP);
           break;
 
-        case USBH_PACKET_CALLBACK_STATUS_ERRSIZ:
+        case USBH_PACKET_CALLBACK_STATUS_ESIZE:
           if (cb_data.transferred_length >= USB_DT_CONFIGURATION_SIZE) {
             struct usb_config_descriptor* cdt =
                 (struct usb_config_descriptor*) &usbh_buffer[USB_DT_DEVICE_SIZE];

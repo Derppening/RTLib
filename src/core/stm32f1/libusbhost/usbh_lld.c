@@ -606,7 +606,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
           if (channels[channel].data_index == channels[channel].packet.datalen || channels[channel].data_index < channels[channel].packet.endpoint_size_max) {
             cb_data.status = USBH_PACKET_CALLBACK_STATUS_OK;
           } else {
-            cb_data.status = USBH_PACKET_CALLBACK_STATUS_ERRSIZ;
+            cb_data.status = USBH_PACKET_CALLBACK_STATUS_ESIZE;
           }
           cb_data.transferred_length = channels[channel].data_index;
 

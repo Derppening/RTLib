@@ -212,7 +212,7 @@ static void event(usbh_device_t* dev, usbh_packet_callback_data_t cb_data) {
     case STATE_READING_COMPLETE_AND_CHECK_REPORT: {
       switch (cb_data.status) {
         case USBH_PACKET_CALLBACK_STATUS_OK:
-        case USBH_PACKET_CALLBACK_STATUS_ERRSIZ:
+        case USBH_PACKET_CALLBACK_STATUS_ESIZE:
           if (hid_config.hid_in_message_handler) {
             hid_config.hid_in_message_handler(hid->device_id, hid->buffer, cb_data.transferred_length);
           }
