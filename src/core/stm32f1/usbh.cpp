@@ -19,10 +19,16 @@
  * along with RTLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "usbh.h"
+#include "core/stm32f1/usbh.h"
+
+#if defined(STM32F1)
+
+namespace rtlib::core::stm32f1 {
 
 USBH::USBH(const Config& config)
     : timer_(*config.timer_config) {
+  // TODO(Derppening): Initialize the timer's prescaler and period here.
+
   rcc_periph_clock_enable(RCC_OTGFS);
 
   libdev::GPIO::Config gpio_config;
@@ -39,3 +45,7 @@ USBH::USBH(const Config& config)
 
   usbh_init(config.lld_drivers, config.device_drivers);
 }
+
+}  // namespace rtlib::core::stm32f1
+
+#endif  // defined(STM32F1)
