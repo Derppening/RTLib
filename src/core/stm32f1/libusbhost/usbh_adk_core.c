@@ -403,7 +403,6 @@ static void write_adk_in_endpoint(adk_machine_t* adk) {
 
   usbh_write(adk->usbh_device, &packet);
 
-  adk->state = ADK_STATE_GET_DATA;
   adk->outSize = 0;
 }
 
@@ -440,6 +439,7 @@ static void poll(void* drvdata, uint32_t time_curr_us) {
     case ADK_STATE_SEND_DATA:
       if (adk->outSize > 0) {
         write_adk_in_endpoint(adk);
+        adk->state = ADK_STATE_GET_DATA;
       }
       break;
     case ADK_STATE_GET_DATA:
