@@ -343,10 +343,10 @@ static void rxflvl_handle(void* drvdata) {
     ToUART("\r\n");
 #endif  // CORE_LIBUSBHOST_USART_DEBUG
   } else if ((rxstsp & OTG_GRXSTSP_PKTSTS_MASK) == OTG_GRXSTSP_PKTSTS_CHH) {
-
-  } else {
-
-  }
+    ToUART("WARN : rxflvl_handle() - Channel halted\r\n");
+  } else if ((rxstsp & OTG_GRXSTSP_PKTSTS_MASK) == OTG_GRXSTSP_PKTSTS_DTERR) {
+    ToUART("WARN : rxflvl_handle() - Data toggle error\r\n");
+  } else {}
 }
 
 static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
@@ -474,7 +474,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
         if (hcint & OTG_HCINT_NAK) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_NAK;
-          ToUART("INFO : poll_run() - NAK\r\n");
+          ToUART("INFO : poll_run() - WRITE NAK\r\n");
 
           free_channel(dev, channel);
 
@@ -495,7 +495,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
         if (hcint & OTG_HCINT_ACK) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_ACK;
-          ToUART("INFO : poll_run() - ACK\r\n");
+          ToUART("INFO : poll_run() - WRITE ACK\r\n");
           if (eptyp == USBH_ENDPOINT_TYPE_CONTROL) {
             channels[channel].packet.toggle[0] = 1;
           } else {
@@ -505,7 +505,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
         if (hcint & OTG_HCINT_XFRC) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_XFRC;
-          ToUART("INFO : poll_run() - XFRC\r\n");
+          ToUART("INFO : poll_run() - WRITE XFRC\r\n");
 
           free_channel(dev, channel);
 
@@ -521,7 +521,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
         if (hcint & OTG_HCINT_FRMOR) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_FRMOR;
-          ToUART("INFO : poll_run() - FRMOR\r\n");
+          ToUART("INFO : poll_run() - WRITE FRMOR\r\n");
 
           free_channel(dev, channel);
 
@@ -536,7 +536,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
         if (hcint & OTG_HCINT_TXERR) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_TXERR;
-          ToUART("INFO : poll_run() - TXERR\r\n");
+          ToUART("INFO : poll_run() - WRITE TXERR\r\n");
 
           free_channel(dev, channel);
 
@@ -552,7 +552,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
         if (hcint & OTG_HCINT_STALL) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_STALL;
-          ToUART("INFO : poll_run() - STALL\r\n");
+          ToUART("INFO : poll_run() - WRITE STALL\r\n");
 
           free_channel(dev, channel);
 
@@ -567,7 +567,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
         if (hcint & OTG_HCINT_CHH) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_CHH;
-          ToUART("INFO : poll_run() - CHH\r\n");
+          ToUART("INFO : poll_run() - WRITE CHH\r\n");
 
           free_channel(dev, channel);
         }
@@ -576,7 +576,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
         if (hcint & OTG_HCINT_NAK) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_NAK;
           if (eptyp == USBH_ENDPOINT_TYPE_CONTROL) {
-            ToUART("INFO : poll_run() - NAK\r\n");
+            ToUART("INFO : poll_run() - READ NAK\r\n");
           }
 
           REBASE_CH(OTG_HCCHAR, channel) |= OTG_HCCHAR_CHENA;
@@ -584,14 +584,14 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
         if (hcint & OTG_HCINT_DTERR) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_DTERR;
-          ToUART("INFO : poll_run() - DTERR\r\n");
+          ToUART("INFO : poll_run() - READ DTERR\r\n");
 
           free_channel(dev, channel);
         }
 
         if (hcint & OTG_HCINT_ACK) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_ACK;
-          ToUART("INFO : poll_run() - ACK\r\n");
+          ToUART("INFO : poll_run() - READ ACK\r\n");
 
           channels[channel].packet.toggle[0] ^= 1;
 
@@ -599,7 +599,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
         if (hcint & OTG_HCINT_XFRC) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_XFRC;
-          ToUART("INFO : poll_run() - XFRC\r\n");
+          ToUART("INFO : poll_run() - READ XFRC\r\n");
 
           free_channel(dev, channel);
           usbh_packet_callback_data_t cb_data;
@@ -619,7 +619,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
         if (hcint & OTG_HCINT_BBERR) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_BBERR;
-          ToUART("INFO : poll_run() - BBERR\r\n");
+          ToUART("INFO : poll_run() - READ BBERR\r\n");
           free_channel(dev, channel);
 
           usbh_packet_callback_data_t cb_data;
@@ -633,13 +633,13 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
         if (hcint & OTG_HCINT_FRMOR) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_FRMOR;
-          ToUART("INFO : poll_run() - FRMOR\r\n");
+          ToUART("INFO : poll_run() - READ FRMOR\r\n");
 
         }
 
         if (hcint & OTG_HCINT_TXERR) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_TXERR;
-          ToUART("INFO : poll_run() - TXERR\r\n");
+          ToUART("INFO : poll_run() - READ TXERR\r\n");
 
           free_channel(dev, channel);
 
@@ -655,7 +655,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
 
         if (hcint & OTG_HCINT_STALL) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_STALL;
-          ToUART("INFO : poll_run() - STALL\r\n");
+          ToUART("INFO : poll_run() - READ STALL\r\n");
 
           free_channel(dev, channel);
 
@@ -670,7 +670,7 @@ static enum USBH_POLL_STATUS poll_run(usbh_lld_driver_data_t* dev) {
         }
         if (hcint & OTG_HCINT_CHH) {
           REBASE_CH(OTG_HCINT, channel) = OTG_HCINT_CHH;
-          ToUART("INFO : poll_run() - CHH\r\n");
+          ToUART("INFO : poll_run() - READ CHH\r\n");
           free_channel(dev, channel);
         }
       }
