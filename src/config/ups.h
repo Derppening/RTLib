@@ -1,16 +1,16 @@
 /**
- * @file src/config/asc.h
+ * @file src/config/ups.h
  *
- * @brief Pin configurations for Android Server Control board v1.2.
+ * @brief Pin configurations for BM v1.0.
  *
  * This board is a proprietary design; there are currently no means of obtaining such boards.
  *
  * Led Configuration:
  * |        Macro       | MCU Pinout | Mainboard Designation | Polarity |
  * | :----------------: | :--------: | :-------------------: | :------: |
- * | @c LIB_LED0_PINOUT |    PB12    |           D4          | @c false |
- * | @c LIB_LED1_PINOUT |    PB13    |           D5          | @c false |
- * | @c LIB_LED2_PINOUT |    PB14    |           D6          | @c false |
+ * | @c LIB_LED0_PINOUT |    PC13    |           D1          | @c false |
+ * | @c LIB_LED1_PINOUT |    PC14    |           D2          | @c false |
+ * | @c LIB_LED2_PINOUT |    PC15    |           D3          | @c false |
  */
 
 /*
@@ -32,8 +32,8 @@
  * along with RTLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RTLIB_CONFIG_ASC_H_
-#define RTLIB_CONFIG_ASC_H_
+#ifndef RTLIB_CONFIG_UPS_H_
+#define RTLIB_CONFIG_UPS_H_
 
 #define DEVICE_SERIES "STM32F1"
 #define DEVICE_STRING "STM32F105xx"
@@ -45,8 +45,8 @@
 #define LIB_USE_BUTTON 0
 
 #define LIB_USE_LED 3
-#define LIB_LED0_PINOUT {GPIOB, GPIO12}
-#define LIB_LED1_PINOUT {GPIOB, GPIO13}
-#define LIB_LED2_PINOUT {GPIOB, GPIO14}
+#define LIB_LED0_PINOUT {GPIOC, GPIO13}
+#define LIB_LED1_PINOUT {GPIOC, GPIO14}
+#define LIB_LED2_PINOUT {GPIOC, GPIO15}
 
-#endif  // RTLIB_CONFIG_ASC_H_
+#endif  // RTLIB_CONFIG_UPS_H_
