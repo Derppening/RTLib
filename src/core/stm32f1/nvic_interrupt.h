@@ -362,14 +362,24 @@ class NVICInterrupt final {
    *
    * @param[in] other NVICInterrupt object to move from.
    */
-  NVICInterrupt(NVICInterrupt&& other) noexcept = default;
+  NVICInterrupt(NVICInterrupt&& other) noexcept :
+      nvic_(other.nvic_) {
+    other.nvic_ = kUnbindedState;
+  }
   /**
    * @brief Move assignment operator.
    *
    * @param[in] other NVICInterrupt object to move from.
    * @return Reference to the moved NVICInterrupt.
    */
-  NVICInterrupt& operator=(NVICInterrupt&& other) noexcept = default;
+  constexpr NVICInterrupt& operator=(NVICInterrupt&& other) noexcept {
+    if (this != &other) {
+      nvic_ = other.nvic_;
+      other.nvic_ = kUnbindedState;
+    }
+
+    return *this;
+  }
 
   /**
    * @brief Copy constructor.
