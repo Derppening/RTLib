@@ -158,7 +158,7 @@ void UART::Reset() const {
       rcc_periph_reset_pulse(RST_USART1);
       break;
     default:
-      rcc_periph_reset_pulse(rcc_periph_rst(_REG_BIT(0x10, 17 + (usart_ - USART2_BASE) / 0x0400)));
+      rcc_periph_reset_pulse(rcc_periph_rst(GetRCCRegister(0x10, std::uint8_t(17 + (usart_ - USART2_BASE) / 0x0400))));
       break;
   }
 }
@@ -189,7 +189,7 @@ constexpr void UART::InitRcc() const {
       rcc_periph_clock_enable(RCC_USART1);
       break;
     default:
-      rcc_periph_clock_enable(rcc_periph_clken(_REG_BIT(0x1C, 17 + (usart_ - USART2_BASE) / 0x0400)));
+      rcc_periph_clock_enable(rcc_periph_clken(GetRCCRegister(0x1C, std::uint8_t(17 + (usart_ - USART2_BASE) / 0x0400))));
       break;
   }
 }

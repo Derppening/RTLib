@@ -138,7 +138,7 @@ Timer::~Timer() {
     case TIM5:
     case TIM6:
     case TIM7:
-      rcc_periph_reset_pulse(rcc_periph_rst(_REG_BIT(0x10, (timer_ - TIM2_BASE) / 0x0400)));
+      rcc_periph_reset_pulse(rcc_periph_rst(GetRCCRegister(0x10, std::uint8_t((timer_ - TIM2_BASE) / 0x0400))));
       break;
     case TIM8:
       rcc_periph_reset_pulse(RST_TIM8);
@@ -146,17 +146,17 @@ Timer::~Timer() {
     case TIM9:
     case TIM10:
     case TIM11:
-      rcc_periph_reset_pulse(rcc_periph_rst(_REG_BIT(0x0c, 19 + (timer_ - TIM9_BASE) / 0x0400)));
+      rcc_periph_reset_pulse(rcc_periph_rst(GetRCCRegister(0x0c, std::uint8_t(19 + (timer_ - TIM9_BASE) / 0x0400))));
       break;
     case TIM12:
     case TIM13:
     case TIM14:
-      rcc_periph_reset_pulse(rcc_periph_rst(_REG_BIT(0x10, 6 + (timer_ - TIM12_BASE) / 0x0400)));
+      rcc_periph_reset_pulse(rcc_periph_rst(GetRCCRegister(0x10, std::uint8_t(6 + (timer_ - TIM12_BASE) / 0x0400))));
       break;
     case TIM15:
     case TIM16:
     case TIM17:
-      rcc_periph_reset_pulse(rcc_periph_rst(_REG_BIT(0x0c, 16 + (timer_ - TIM15_BASE) / 0x0400)));
+      rcc_periph_reset_pulse(rcc_periph_rst(GetRCCRegister(0x0c, std::uint8_t(16 + (timer_ - TIM15_BASE) / 0x0400))));
       break;
     default:
       Assert(false, __FILE__, __LINE__, __func__, "Invalid or unsupported Timer");
