@@ -29,6 +29,7 @@
 
 #include "core/util.h"
 #include "core/stm32f4/gpio.h"
+#include "core/stm32f4/nvic_interrupt.h"
 
 namespace rtlib::core::stm32f4 {
 
@@ -43,37 +44,41 @@ class UART final {
    */
   enum Interface {
     /**
+     * @brief Representation of an invalid UART interface.
+     */
+        kNullUART = 0xFF'FF'FF'FF,
+    /**
      * @brief Corresponds to hardware USART1.
      */
-    kUART1 = USART1,
+        kUART1 = USART1,
     /**
      * @brief Corresponds to hardware USART2.
      */
-    kUART2 = USART2,
+        kUART2 = USART2,
     /**
      * @brief Corresponds to hardware USART3.
      */
-    kUART3 = USART3,
+        kUART3 = USART3,
     /**
      * @brief Corresponds to hardware UART4.
      */
-    kUART4 = UART4,
+        kUART4 = UART4,
     /**
      * @brief Corresponds to hardware UART5.
      */
-    kUART5 = UART5,
+        kUART5 = UART5,
     /**
      * @brief Corresponds to hardware USART6.
      */
-    kUART6 = USART6,
+        kUART6 = USART6,
     /**
      * @brief Corresponds to hardware UART7.
      */
-    kUART7 = UART7,
+        kUART7 = UART7,
     /**
      * @brief Corresponds to hardware UART8.
      */
-    kUART8 = UART8
+        kUART8 = UART8
   };
 
   /**
@@ -83,51 +88,51 @@ class UART final {
     /**
      * @brief Transmit at 2400Hz.
      */
-    k2400 = 2400,
+        k2400 = 2400,
     /**
      * @brief Transmit at 4800Hz.
      */
-    k4800 = 4800,
+        k4800 = 4800,
     /**
      * @brief Transmit at 9600Hz.
      */
-    k9600 = 9600,
+        k9600 = 9600,
     /**
      * @brief Transmit at 14400Hz.
      */
-    k14400 = 14400,
+        k14400 = 14400,
     /**
      * @brief Transmit at 19200Hz.
      */
-    k19200 = 19200,
+        k19200 = 19200,
     /**
      * @brief Transmit at 28800Hz.
      */
-    k28800 = 28800,
+        k28800 = 28800,
     /**
      * @brief Transmit at 38400Hz.
      */
-    k38400 = 38400,
+        k38400 = 38400,
     /**
      * @brief Transmit at 57600Hz.
      */
-    k57600 = 57600,
+        k57600 = 57600,
     /**
      * @brief Transmit at 76800Hz.
      */
-    k76800 = 76800,
+        k76800 = 76800,
     /**
      * @brief Transmit at 115200Hz.
      */
-    k115200 = 115200,
+        k115200 = 115200,
     /**
      * @brief Transmit at 230400Hz.
      */
-    k230400 = 230400,
+        k230400 = 230400,
     /**
      * @brief Transmit at 468000Hz.
      */
-    k460800 = 460800,
+        k460800 = 460800,
   };
 
   /**
@@ -143,19 +148,19 @@ class UART final {
      *
      * Equivalent to libopencm3 macro @c USART_MODE_RX.
      */
-    kRx = USART_MODE_RX,
+        kRx = USART_MODE_RX,
     /**
      * @brief Use this UART only for TX.
      *
      * Equivalent to libopencm3 macro @c USART_MODE_TX.
      */
-    kTx = USART_MODE_TX,
+        kTx = USART_MODE_TX,
     /**
      * @brief Use this UART for both TX and RX.
      *
      * Equivalent to libopencm3 macro @c USART_MODE_TX_RX.
      */
-    kBoth = USART_MODE_TX_RX
+        kBoth = USART_MODE_TX_RX
   };
 
   /**
@@ -171,7 +176,7 @@ class UART final {
      *
      * Equivalent to libopencm3 macro @c USART_PARITY_NONE.
      */
-    kNone = USART_PARITY_NONE,
+        kNone = USART_PARITY_NONE,
     /**
      * @brief Use even parity.
      *
@@ -179,7 +184,7 @@ class UART final {
      *
      * Equivalent to libopencm3 macro @c USART_PARITY_EVEN.
      */
-    kEven = USART_PARITY_EVEN,
+        kEven = USART_PARITY_EVEN,
     /**
      * @brief Use odd parity.
      *
@@ -187,7 +192,7 @@ class UART final {
      *
      * Equivalent to libopencm3 macro @c USART_PARITY_ODD.
      */
-    kOdd = USART_PARITY_ODD
+        kOdd = USART_PARITY_ODD
   };
 
   /**
@@ -203,7 +208,7 @@ class UART final {
      *
      * Equivalent to libopencm3 macro @c USART_CR2_STOPBITS_1.
      */
-    kOne = USART_CR2_STOPBITS_1,
+        kOne = USART_CR2_STOPBITS_1,
     /**
      * @brief Use 0.5 stop bit.
      *
@@ -211,13 +216,13 @@ class UART final {
      *
      * Equivalent to libopencm3 macro @c USART_CR2_STOPBITS_0.5.
      */
-    kHalf = USART_CR2_STOPBITS_0_5,
+        kHalf = USART_CR2_STOPBITS_0_5,
     /**
      * @brief Use 2 stop bits.
      *
      * Equivalent to libopencm3 macro @c USART_CR2_STOPBITS_2.
      */
-    kDouble = USART_CR2_STOPBITS_2,
+        kDouble = USART_CR2_STOPBITS_2,
     /**
      * @brief Use 1.5 stop bits.
      *
@@ -225,7 +230,7 @@ class UART final {
      *
      * Equivalent to libopencm3 macro @c USART_CR2_STOPBITS_1_5.
      */
-    kOneHalf = USART_CR2_STOPBITS_1_5,
+        kOneHalf = USART_CR2_STOPBITS_1_5,
   };
 
   /**
@@ -241,7 +246,7 @@ class UART final {
      *
      * Equivalent to libopencm3 macro @c USART_FLOWCONTROL_NONE.
      */
-    kNone = USART_FLOWCONTROL_NONE,
+        kNone = USART_FLOWCONTROL_NONE,
     /**
      * @brief Use RTS flow control.
      *
@@ -249,7 +254,7 @@ class UART final {
      *
      * Equivalent to libopencm3 macro @c USART_FLOWCONTROL_RTS.
      */
-    kRTS = USART_FLOWCONTROL_RTS,
+        kRTS = USART_FLOWCONTROL_RTS,
     /**
      * @brief Use CTS flow control.
      *
@@ -257,7 +262,7 @@ class UART final {
      *
      * Equivalent to libopencm3 macro @c USART_FLOWCONTROL_CTS.
      */
-    kCTS = USART_FLOWCONTROL_CTS,
+        kCTS = USART_FLOWCONTROL_CTS,
     /**
      * @brief Enables both RTS and CTS flow control.
      *
@@ -265,13 +270,13 @@ class UART final {
      *
      * Equivalent to libopencm3 macro @c USART_FLOWCONTROL_RTS_CTS.
      */
-    kBoth = USART_FLOWCONTROL_RTS_CTS
+        kBoth = USART_FLOWCONTROL_RTS_CTS
   };
 
   /**
    * @brief Type definition for RX interrupt handler function.
    */
-  using HandlerFn = void(*)(const Interface, const uint16_t);
+  using HandlerFn = void (*)(const Interface, const uint16_t);
 
   /**
    * @brief Configuration for UART.
@@ -282,7 +287,7 @@ class UART final {
      *
      * Defaults to an indeterminate state.
      */
-    Interface uart;
+    Interface uart = kNullUART;
     /**
      * @brief UART Baud Rate.
      *
@@ -333,6 +338,13 @@ class UART final {
   };
 
   /**
+   * @brief Default constructor.
+   *
+   * Initializes this object to an "unbinded" state, i.e. this object does not manage any UART.
+   */
+  constexpr UART() : usart_(kNullUART) {}
+
+  /**
    * @brief Conversion constructor.
    * 
    * @param[in] config Configuration for the UART. See UART#Config.
@@ -340,40 +352,19 @@ class UART final {
   explicit UART(const Config& config);
 
   /**
-   * @brief Constructor for internal API use.
-   * 
-   * This constructor is equivalent to @code UART::UART(const Config&) @endcode. However, it is suggested to use that
-   * constructor instead for code readability.
-   * 
-   * @param[in] uart UART Interface
-   * @param[in] baud_rate UART Baud Rate
-   * @param[in] mode UART Mode
-   * @param[in] data_bits Data bits to use
-   * @param[in] stop_bits Stop bits to use
-   * @param[in] parity Parity Mode
-   * @param[in] flow_control Flow Control
-   * @param[in] handler RX Handler function
-   */
-  UART(Interface uart,
-       BaudRate baud_rate,
-       Mode mode,
-       uint32_t data_bits = 8,
-       StopBits stop_bits = StopBits::kOne,
-       Parity parity = Parity::kNone,
-       FlowControl flow_control = FlowControl::kNone,
-       HandlerFn handler = nullptr);
-  
-  /**
    * @brief Default trivial constructor.
    */
-   ~UART() = default;
+  ~UART();
 
   /**
    * @brief Move constructor.
    *
    * @param[in] other UART object to move from
    */
-  UART(UART&& other) noexcept = default;
+  constexpr UART(UART&& other) noexcept :
+      usart_(other.usart_), tx_(std::move(other.tx_)), rx_(std::move(other.rx_)) {
+    other.usart_ = kNullUART;
+  }
   /**
    * @brief Move assignment operator.
    *
@@ -381,7 +372,17 @@ class UART final {
    *
    * @return Reference to the moved UART.
    */
-  UART& operator=(UART&& other) noexcept = default;
+  constexpr UART& operator=(UART&& other) noexcept {
+    if (this != &other) {
+      usart_ = other.usart_;
+      tx_ = std::move(other.tx_);
+      rx_ = std::move(other.rx_);
+
+      other.usart_ = kNullUART;
+    }
+
+    return *this;
+  }
 
   /**
    * @brief Copy constructor.
@@ -397,6 +398,21 @@ class UART final {
    * std::unique_ptr.
    */
   UART& operator=(const UART&) = delete;
+
+  /**
+   * @return Whether this object is managing a UART interface.
+   */
+  constexpr bool IsBinded() const { return usart_ != kNullUART; }
+
+  /**
+   * @brief Releases the ownership of the UART from this object.
+   *
+   * This function implicitly invokes GPIO#Reset, and releases the ownership of the currently managed UART interface and
+   * GPIO pinouts.
+   *
+   * This function is null-safe, i.e. if this object is not bound to any UART, there are no effects.
+   */
+  void Release();
 
   /**
    * @brief Sends one byte.
@@ -429,7 +445,16 @@ class UART final {
   /**
    * @brief Enables interrupt for this UART interface (if supported).
    */
-  constexpr void EnableIrq() const;
+  constexpr void EnableIrq();
+
+  /**
+   * @brief Resets the UART to its original configuration, i.e. when the RESET button is first pushed.
+   *
+   * No changes will be made to the GPIO pins which are bound to this object.
+   *
+   * This function is null-safe, i.e. if this object is not bound to any pinout, there are no effects.
+   */
+  void Reset() const;
 
   /**
    * @brief Retrieves the TX pinout from the configuration file.
@@ -458,6 +483,7 @@ class UART final {
   uint32_t usart_;
   GPIO tx_;
   GPIO rx_;
+  NVICInterrupt nvic_;
 };
 
 }  // namespace rtlib::core::stm32f4

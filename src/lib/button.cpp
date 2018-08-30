@@ -57,18 +57,18 @@ namespace rtlib::lib {
 
 Button::Button(const Config& config) :
     polarity_(config.pullup == 0x1) {
-#if defined(STM32F1)
   GPIO::Config gpio_config;
+#if defined(STM32F1)
   gpio_config.pin = GetConfigPinout(config.id);
   gpio_config.cnf = GPIO::Configuration::kInputPullUpDown;
   gpio_config.mode = GPIO::Mode::kInput;
-  gpio_ = GPIO(gpio_config);
 #elif defined(STM32F4)
-  gpio_ = GPIO(GetConfigPinout(config.id),
-          GPIO::Mode::kInput,
-          GPIO::Pullup(config.pullup),
-          GPIO::Speed::k50MHz),
+  gpio_config.pin = GetConfigPinout(config.id);
+  gpio_config.mode = GPIO::Mode::kInput;
+  gpio_config.pullup = GPIO::Pullup(config.pullup);
+  gpio_config.speed = GPIO::Speed::k50MHz;
 #endif
+  gpio_ = GPIO(gpio_config);
 }
 
 bool Button::Read() {

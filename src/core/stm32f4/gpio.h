@@ -169,7 +169,7 @@ class GPIO final {
      *
      * Defaults to an indeterminate state.
      */
-    Pinout pin = {};
+    Pinout pin = kNullPinout;
 
     /**
      * @brief GPIO Mode.
@@ -208,6 +208,13 @@ class GPIO final {
   };
 
   /**
+   * @brief Default constructor.
+   *
+   * Initializes this object to an "unbinded" state, i.e. this object does not manage any GPIO.
+   */
+  constexpr GPIO() : pin_(kNullPinout) {}
+
+  /**
    * @brief Conversion constructor.
    *
    * @param[in] config Configuration for the GPIO. See GPIO#Config.
@@ -215,36 +222,19 @@ class GPIO final {
   explicit GPIO(const Config& config);
 
   /**
-   * @brief Constructor for internal API use.
-   *
-   * This constructor is equivalent to @code GPIO::GPIO(const Config&) @endcode. However, it is suggested to use that
-   * constructor instead for code readability.
-   *
-   * @param[in] pin MCU pinout
-   * @param[in] mode GPIO mode
-   * @param[in] pullup Internal pull-up mode
-   * @param[in] speed GPIO Output Speed
-   * @param[in] driver GPIO Output Driver Type
-   * @param[in] altfn GPIO Alternate Function Select
+   * Default destructor.
    */
-  GPIO(Pinout pin,
-       Mode mode,
-       Pullup pullup,
-       Speed speed = Speed::k2MHz,
-       DriverType driver = DriverType::kPushPull,
-       AltFn altfn = 0x0);
-
-  /**
-   * Default trivial destructor.
-   */
-  ~GPIO() = default;
+  ~GPIO();
 
   /**
    * @brief Move constructor.
    *
    * @param[in] other GPIO object to move from
    */
-  GPIO(GPIO&& other) noexcept = default;
+  constexpr GPIO(GPIO&& other) noexcept :
+      pin_(std::move(other.pin_)) {
+    other.pin_ = kNullPinout;
+  }
   /**
    * @brief Move assignment operator.
    *
@@ -252,7 +242,14 @@ class GPIO final {
    *
    * @return Reference to the moved GPIO.
    */
-  GPIO& operator=(GPIO&& other) noexcept = default;
+  constexpr GPIO& operator=(GPIO&& other) noexcept {
+    if (this != &other) {
+      pin_ = std::move(other.pin_);
+      other.pin_ = kNullPinout;
+    }
+
+    return *this;
+  }
 
   /**
    * @brief Copy constructor.
@@ -270,26 +267,41 @@ class GPIO final {
   GPIO& operator=(const GPIO&) = delete;
 
   /**
+ * @return Whether this object is managing a GPIO pinout.
+ */
+  constexpr bool IsBinded() const { return pin_ != kNullPinout; }
+
+  /**
    * @brief Reads the current logic state of the managed GPIO.
    *
    * @return @c true if high value, otherwise @c false
+   *
+   * If validation is enabled, this function will assert if invoked on a non-owning object.
    */
   bool Read() const;
   /**
    * @brief Sets new GPIO state.
    *
    * @param[in] state New state of GPIO, where @c true represents a high value, and @c false represents a low value.
+   *
+   * If validation is enabled, this function will assert if invoked on a non-owning object.
    */
   void Set(bool state) const;
   /**
    * @brief Toggles GPIO state. Logic High -> Logic Low and vice versa.
+   *
+   * If validation is enabled, this function will assert if invoked on a non-owning object.
    */
   void Toggle() const;
 
   /**
-   * @brief Resets the GPIO to its original configuration, i.e. when the RESET button is first pushed.
+   * @brief Releases the ownership of the GPIO from this object.
+   *
+   * This function implicitly invokes GPIO#Reset, and releases the ownership of the currently managed GPIO.
+   *
+   * This function is null-safe, i.e. if this object is not bound to any pinout, there are no effects.
    */
-  void Reset() const;
+  void Release();
 
  private:
   /**
@@ -308,7 +320,14 @@ class GPIO final {
    *
    * @param[in] port The GPIO port which should be initialized
    */
-  constexpr void InitRcc(Port port) const;
+  constexpr void InitRcc() const;
+
+  /**
+   * @brief Resets the GPIO to its original configuration, i.e. when the RESET button is first pushed.
+   *
+   * This function is null-safe, i.e. if this object is not bound to any pinout, there are no effects.
+   */
+  void Reset() const;
 
   /**
    * @brief Sets this GPIO to be used as an alternate function.

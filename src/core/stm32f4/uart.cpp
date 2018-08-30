@@ -26,6 +26,7 @@
 
 #include "config/config.h"
 #include "core/assert.h"
+#include "core/nvic_interrupt.h"
 #include "core/util.h"
 
 namespace {
@@ -131,53 +132,74 @@ extern "C" void uart8_isr() {
 namespace rtlib::core::stm32f4 {
 
 UART::UART(const Config& config) :
-    UART(config.uart,
-         config.baud_rate,
-         config.mode,
-         config.data_bits,
-         config.stop_bits,
-         config.parity,
-         config.flow_control,
-         config.rx_handler_fn) {}
+    usart_(uint32_t(config.uart)) {
+  if (usart_ == kNullUART) {
+    return;
+  }
 
-UART::UART(Interface interface,
-           BaudRate baud_rate,
-           Mode mode,
-           uint32_t data_bits,
-           StopBits stop_bits,
-           Parity parity,
-           FlowControl flow_control,
-           HandlerFn handler) :
-    usart_(uint32_t(interface)),
-    tx_(GetTxPinout(),
-        GPIO::Mode::kAF,
-        GPIO::Pullup::kNone,
-        GPIO::Speed::k50MHz,
-        GPIO::DriverType::kPushPull,
-        GetAltFn()),
-    rx_(GetRxPinout(),
-        GPIO::Mode::kAF,
-        GPIO::Pullup::kNone,
-        GPIO::Speed::k50MHz,
-        GPIO::DriverType::kOpenDrain,
-        GetAltFn()) {
+  GPIO::Config gpio_config;
+  gpio_config.pin = GetTxPinout();
+  gpio_config.mode = GPIO::Mode::kAF;
+  gpio_config.speed = GPIO::Speed::k50MHz;
+  gpio_config.driver = GPIO::DriverType::kPushPull;
+  gpio_config.altfn = GetAltFn();
+  tx_ = GPIO(gpio_config);
+  gpio_config.pin = GetRxPinout();
+  gpio_config.driver = GPIO::DriverType::kOpenDrain;
+  rx_ = GPIO(gpio_config);
+
   InitRcc();
   EnableIrq();
 
-  usart_set_baudrate(usart_, uint32_t(baud_rate));
-  usart_set_databits(usart_, data_bits);
-  usart_set_stopbits(usart_, uint32_t(stop_bits));
-  usart_set_mode(usart_, uint32_t(mode));
-  usart_set_parity(usart_, uint32_t(parity));
-  usart_set_flow_control(usart_, uint32_t(flow_control));
+  usart_set_baudrate(usart_, uint32_t(config.baud_rate));
+  usart_set_databits(usart_, config.data_bits);
+  usart_set_stopbits(usart_, uint32_t(config.stop_bits));
+  usart_set_mode(usart_, uint32_t(config.mode));
+  usart_set_parity(usart_, uint32_t(config.parity));
+  usart_set_flow_control(usart_, uint32_t(config.flow_control));
 
-  if (mode != Mode::kTx) {
+  if (config.mode != Mode::kTx) {
     usart_enable_rx_interrupt(usart_);
   }
 
   usart_enable(usart_);
 
-  rx_handler = handler;
+  rx_handler = config.rx_handler_fn;
+}
+
+UART::~UART() {
+  Release();
+}
+
+void UART::Release() {
+  if (!IsBinded()) {
+    return;
+  }
+
+  Reset();
+
+  tx_.Release();
+  rx_.Release();
+
+  usart_ = kNullUART;
+}
+
+void UART::Reset() const {
+  if (!IsBinded()) {
+    return;
+  }
+
+  switch (usart_) {
+    case USART1:
+      rcc_periph_reset_pulse(RST_USART1);
+      break;
+    case USART6:
+      rcc_periph_reset_pulse(RST_USART6);
+      break;
+    default:
+      rcc_periph_reset_pulse(rcc_periph_rst(GetRCCRegister(0x20, std::uint8_t(17 + (usart_ - USART2_BASE) / 0x0400))));
+      break;
+  }
 }
 
 void UART::Tx(char c) const {
@@ -195,29 +217,11 @@ constexpr void UART::InitRcc() const {
     case USART1:
       rcc_periph_clock_enable(RCC_USART1);
       break;
-    case USART2:
-      rcc_periph_clock_enable(RCC_USART2);
-      break;
-    case USART3:
-      rcc_periph_clock_enable(RCC_USART3);
-      break;
-    case UART4:
-      rcc_periph_clock_enable(RCC_UART4);
-      break;
-    case UART5:
-      rcc_periph_clock_enable(RCC_UART5);
-      break;
     case USART6:
       rcc_periph_clock_enable(RCC_USART6);
       break;
-    case UART7:
-      rcc_periph_clock_enable(RCC_UART7);
-      break;
-    case UART8:
-      rcc_periph_clock_enable(RCC_UART8);
-      break;
     default:
-      Assert(false, __FILE__, __LINE__, __func__, "Invalid or unsupported UART Interface");
+      rcc_periph_clock_enable(rcc_periph_clken(GetRCCRegister(0x40, std::uint8_t(17 + (usart_ - USART2_BASE) / 0x0400))));
       break;
   }
 }
@@ -238,7 +242,8 @@ constexpr Pinout UART::GetTxPinout() const {
       return CORE_UART6_TX_PINOUT;
     case UART7:
     case UART8:
-      // TODO(Derppening): Fill in UART7/8 Pins
+      TODO(__FILE__, __LINE__, __func__);
+      [[fallthrough]];
     default:
       Assert(false, __FILE__, __LINE__, __func__, "Invalid or unsupported UART Interface");
       return {};
@@ -261,7 +266,8 @@ constexpr Pinout UART::GetRxPinout() const {
       return CORE_UART6_RX_PINOUT;
     case UART7:
     case UART8:
-      // TODO(Derppening): Fill in UART7/8 Pins
+      TODO(__FILE__, __LINE__, __func__);
+      [[fallthrough]];
     default:
       Assert(false, __FILE__, __LINE__, __func__, "Invalid or unsupported UART Interface");
       return {};
@@ -280,30 +286,44 @@ constexpr GPIO::AltFn UART::GetAltFn() const {
       return GPIO_AF8;
     case UART7:
     case UART8:
-      // TODO(Derppening): Fill in UART7/8 AltFn
+      TODO(__FILE__, __LINE__, __func__);
+      [[fallthrough]];
     default:
       Assert(false, __FILE__, __LINE__, __func__, "Invalid or unsupported UART Interface");
       return GPIO_AF0;
   }
 }
 
-constexpr void UART::EnableIrq() const {
+constexpr void UART::EnableIrq() {
   switch (usart_) {
     case USART1:
-      nvic_enable_irq(NVIC_USART1_IRQ);
+      nvic_ = NVICInterrupt(NVICInterrupt::kUSART1);
       break;
     case USART2:
-      nvic_enable_irq(NVIC_USART2_IRQ);
-      break;
     case USART3:
-      nvic_enable_irq(NVIC_USART3_IRQ);
+      nvic_ = NVICInterrupt(NVICInterrupt::Source(NVIC_USART2_IRQ + (usart_ - USART2) / 0x0400));
+      break;
+    case UART4:
+    case UART5:
+      nvic_ = NVICInterrupt(NVICInterrupt::Source(NVIC_UART4_IRQ + (usart_ - UART4) / 0x0400));
       break;
     case USART6:
-      nvic_enable_irq(NVIC_USART6_IRQ);
+      nvic_ = NVICInterrupt(NVICInterrupt::kUSART6);
+      break;
+    case UART7:
+    case UART8:
+      nvic_ = NVICInterrupt(NVICInterrupt::Source(NVIC_UART7_IRQ + (usart_ - UART7) / 0x0400));
       break;
     default:
-      // Target UART cannot be used synchronously. Ignore enable IRQ request.
+      // Target UART cannot be used synchronously; Assert/ignore this request.
+#if defined(RTLIB_ENABLE_VALIDATION)
+      Assert(usart_ != kNullUART, __FILE__, __LINE__, __func__);
+#endif  // defined(RTLIB_ENABLE_VALIDATION)
       break;
+  }
+
+  if (nvic_.IsBinded()) {
+    nvic_.Enable();
   }
 }
 

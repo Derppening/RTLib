@@ -56,15 +56,18 @@ namespace rtlib::lib {
 
 Led::Led(const Config& config) :
     polarity_(config.polarity) {
-#if defined(STM32F1)
   GPIO::Config gpio_config;
+#if defined(STM32F1)
   gpio_config.pin = GetConfigPinout(config.id);
   gpio_config.cnf = GPIO::Configuration::kOutputPushPull;
   gpio_config.mode = GPIO::Mode::kOutput50MHz;
-  gpio_ = GPIO(gpio_config);
 #elif defined(STM32F4)
-      gpio_ = GPIO(GetConfigPinout(config.id), GPIO::Mode::kOutput, GPIO::Pullup::kNone, GPIO::Speed::k50MHz),
+  gpio_config.pin = GetConfigPinout(config.id);
+  gpio_config.mode = GPIO::Mode::kOutput;
+  gpio_config.pullup = GPIO::Pullup::kNone;
+  gpio_config.speed = GPIO::Speed::k50MHz;
 #endif
+  gpio_ = GPIO(gpio_config);
 
   SetEnable(false);
 }

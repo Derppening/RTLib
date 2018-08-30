@@ -62,6 +62,17 @@ constexpr bool StringCompare(const char* a, const char* b) {
   return *a == *b && (*a == '\0' || StringCompare(a + 1, b + 1));
 }
 
+/**
+ * @brief Returns the address of a given RCC register.
+ *
+ * @param base Base address.
+ * @param bit Bit offset.
+ * @return Address of RCC register.
+ */
+constexpr std::uint32_t GetRCCRegister(std::uint8_t base, std::uint8_t bit) {
+  return std::uint32_t((base << 5) + bit);
+}
+
 namespace stm32f1 {}
 namespace stm32f4 {}
 
