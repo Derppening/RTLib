@@ -44,6 +44,10 @@
 // this to (potentially) reclaim some space for the user space application.
 #define DTOR_RESET_PERIPH
 
+// If this define is specified, the experimental version of GPIO will be enabled. Note that this may increase the binary
+// size of the application.
+#define USE_GPIO_V2
+
 // You must define all LIB_USE_*. If your board does not have the feature, or you do not intend to expose the API to
 // other users, set the macro to 0. A compilation error will occur if a user tries to include a library which is
 // disabled in this file.

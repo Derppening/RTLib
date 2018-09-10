@@ -44,6 +44,10 @@
 // this to (potentially) reclaim some space for the user space application.
 #define DTOR_RESET_PERIPH
 
+// If this define is specified, the experimental version of GPIO will be enabled. Note that this may increase the binary
+// size of the application.
+#define USE_GPIO_V2
+
 // If a pin is unused or not designated, leave the curly braces empty ("{}").
 
 // For UART, you must define all following constants.
