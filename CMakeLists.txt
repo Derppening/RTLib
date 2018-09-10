@@ -1,7 +1,7 @@
 #[[
 
 One day, I'll have to rewrite `CMakeLists-template.txt`. Until then...
-# TODO(Derppening): Rewrite CMakeLists-template.txt.
+# TODO(Derppening): Add a repo as an example on how to use RTLib.
 
 ]]
 
