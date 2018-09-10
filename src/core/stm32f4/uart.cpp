@@ -168,7 +168,9 @@ UART::UART(const Config& config) :
 }
 
 UART::~UART() {
+#if defined(DTOR_RESET_PERIPH)
   Release();
+#endif  // defined(DTOR_RESET_PERIPH)
 }
 
 void UART::Release() {

@@ -26,6 +26,7 @@
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/rcc.h>
 
+#include "config/config.h"
 #include "core/assert.h"
 #include "util/ranges.h"
 
@@ -117,6 +118,7 @@ Timer::Timer(Source timer,
 }
 
 Timer::~Timer() {
+#if defined(DTOR_RESET_PERIPH)
   SetState(false);
 
   // TODO(Derppening): Move to Reset() function
@@ -149,6 +151,7 @@ Timer::~Timer() {
       Assert(false, __FILE__, __LINE__, __func__, "Invalid or unsupported Timer");
       break;
   }
+#endif  // defined(DTOR_RESET_PERIPH)
 }
 
 void Timer::SetCounterValue(uint32_t count) const {

@@ -40,6 +40,10 @@
 #define DEVICE_SERIES "STM32F1"
 #define DEVICE_STRING "STM32F103xx"
 
+// If this define is specified, the destructor of objects will also reset the peripheral to the default state. Enable
+// this to (potentially) reclaim some space for the user space application.
+#define DTOR_RESET_PERIPH
+
 // You must define all LIB_USE_*. If your board does not have the feature, or you do not intend to expose the API to
 // other users, set the macro to 0. A compilation error will occur if a user tries to include a library which is
 // disabled in this file.

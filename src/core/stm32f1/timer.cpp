@@ -125,6 +125,7 @@ Timer::Timer(Source timer,
 }
 
 Timer::~Timer() {
+#if defined(DTOR_RESET_PERIPH)
   SetState(false);
 
   // TODO(Derppening): Move to Reset() function
@@ -162,6 +163,7 @@ Timer::~Timer() {
       Assert(false, __FILE__, __LINE__, __func__, "Invalid or unsupported Timer");
       break;
   }
+#endif  // defined(DTOR_RESET_PERIPH)
 }
 
 void Timer::SetCounterValue(uint32_t count) const {

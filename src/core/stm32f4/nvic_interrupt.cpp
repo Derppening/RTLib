@@ -21,14 +21,17 @@
 
 #if defined(STM32F4)
 
+#include "config/config.h"
 #include "core/assert.h"
 
 namespace rtlib::core::stm32f4 {
 NVICInterrupt::~NVICInterrupt() {
+#if defined(DTOR_RESET_PERIPH)
   if (IsBinded()) {
     nvic_clear_pending_irq(nvic_);
     Disable();
   }
+#endif  // defined(DTOR_RESET_PERIPH)
 }
 
 void NVICInterrupt::Enable() const {

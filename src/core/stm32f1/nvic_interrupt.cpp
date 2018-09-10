@@ -25,10 +25,12 @@
 
 namespace rtlib::core::stm32f1 {
 NVICInterrupt::~NVICInterrupt() {
+#if defined(DTOR_RESET_PERIPH)
   if (IsBinded()) {
     nvic_clear_pending_irq(nvic_);
     Disable();
   }
+#endif  // defined(DTOR_RESET_PERIPH)
 }
 
 void NVICInterrupt::Enable() const {

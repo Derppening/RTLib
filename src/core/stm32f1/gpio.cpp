@@ -40,7 +40,9 @@ GPIO::GPIO(const Config& config) :
 }
 
 GPIO::~GPIO() {
+#if defined(DTOR_RESET_PERIPH)
   Release();
+#endif  // defined(DTOR_RESET_PERIPH)
 }
 
 void GPIO::Init(const Configuration cnf, const Mode mode) const {

@@ -26,6 +26,7 @@
 
 #include <libopencm3/stm32/rcc.h>
 
+#include "config/config.h"
 #include "core/assert.h"
 #include "util/ranges.h"
 
@@ -45,7 +46,9 @@ GPIO::GPIO(const Config& config) :
 }
 
 GPIO::~GPIO() {
+#if defined(DTOR_RESET_PERIPH)
   Release();
+#endif  // defined(DTOR_RESET_PERIPH)
 }
 
 void GPIO::Init(const Mode mode, const Pullup pullup, const Speed speed, const DriverType driver) const {

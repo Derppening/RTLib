@@ -40,6 +40,10 @@
 #define DEVICE_SERIES "STM32F4"
 #define DEVICE_STRING "STM32F407xx"
 
+// If this define is specified, the destructor of objects will also reset the peripheral to the default state. Enable
+// this to (potentially) reclaim some space for the user space application.
+#define DTOR_RESET_PERIPH
+
 // If a pin is unused or not designated, leave the curly braces empty ("{}").
 
 // For UART, you must define all following constants.
