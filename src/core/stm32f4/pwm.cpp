@@ -41,6 +41,7 @@ PWM::PWM(const Config& config) :
   gpio_config.mode = GPIO::Mode::kAF;
   gpio_config.pullup = GPIO::Pullup::kNone;
   gpio_config.speed = GPIO::Speed::k50MHz;
+  gpio_config.altfn = GetAltFn();
   gpio_ = GPIO(gpio_config);
 
   timer_disable_oc_output(timer_, channel_);
