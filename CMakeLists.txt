@@ -49,16 +49,17 @@ endif()
 # Set the C/C++ standards
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
 
 # Verbose logging
 set(LOG_VERBOSE false)
 
 # Choose target device here
-set(DEVICE STM32F105RBT6)
+#set(DEVICE STM32F407VET6)
+set(DEVICE STM32F103VCT6)
 
 # Choose target mainboard pin configuration here
-add_definitions(-DASC)
+#add_definitions(-DSTM32F407_DEV)
+add_definitions(-DSTM32F103_DEV)
 
 # Include libopencm3
 include(cmake/libopencm3.cmake)
@@ -69,27 +70,19 @@ include(cmake/rtlib.cmake)
 # Include doxygen for dank docs
 include(cmake/doxygen.cmake)
 
-# Include additional compilation flags
-include(cmake/compile_flags.cmake)
-
-# Collect sources into SOURCE_FILES variable and include your headers' directory
-file(GLOB_RECURSE SOURCE_FILES "src/*.c" "src/*.cpp")
-include_directories(src)
-
-# Specify output executable
-add_executable(${PROJECT_NAME}.elf main.cpp ${RTLIB_SOURCE_FILES})
-
-# Output elf file size
-add_custom_command(
-        TARGET ${PROJECT_NAME}.elf
-        POST_BUILD
-        COMMAND ${ARM_SIZE} ${PROJECT_NAME}_${CMAKE_BUILD_TYPE}.elf
-        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-)
-
 # Include version logging if specified
 if (LOG_VERBOSE)
     include(cmake/logging.cmake)
 endif()
 
 message("----------------------------------------")
+
+# Determine if fmt is built as a subproject (using add_subdirectory)
+# or if it is the master project.
+#
+# Taken from fmtlib.
+if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    # Export variables to our parent
+    set(LINKER_FLAGS ${LINKER_FLAGS} PARENT_SCOPE)
+    set(LIBOPENCM3_LIB_PATH ${LIBOPENCM3_DIR}/lib PARENT_SCOPE)
+endif ()

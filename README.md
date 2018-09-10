@@ -19,7 +19,7 @@ You will be needing the following to compile:
 case provide your own toolchain file)
 - [CMake](https://cmake.org/)
 - [GNU Make](https://www.gnu.org/software/make/)
-- [GNU awk](https://www.gnu.org/software/gawk/)
+- [Python](https://www.python.org/)
 
 Optional software that will make your life easier:
 - [Git](https://git-scm.com/)

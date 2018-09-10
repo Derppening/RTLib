@@ -83,3 +83,30 @@ endif()
 
 # Generate header for RTLib version
 configure_file(cmake/template/version.h.in ${RTLIB_SRC}/version.h)
+
+# Include additional compilation flags
+include(cmake/compile_flags.cmake)
+
+# Collect sources into SOURCE_FILES variable and include your headers' directory
+file(GLOB_RECURSE SOURCE_FILES "src/*.c" "src/*.cpp")
+include_directories(src)
+
+# Specify the output directory
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
+
+# Specify output executable
+add_library(${PROJECT_NAME} ${RTLIB_SOURCE_FILES})
+add_dependencies(${PROJECT_NAME} libopencm3)
+set_target_properties(${PROJECT_NAME}
+        PROPERTIES
+        LINK_FLAGS ${LINKER_FLAGS}
+        OUTPUT_NAME "${PROJECT_NAME}_${CMAKE_BUILD_TYPE}")
+target_link_libraries(${PROJECT_NAME} "opencm3_${GENLINK_FAMILY}")
+
+# Output elf file size
+add_custom_command(
+        TARGET ${PROJECT_NAME}
+        POST_BUILD
+        COMMAND ${ARM_SIZE} lib${PROJECT_NAME}_${CMAKE_BUILD_TYPE}.a
+        WORKING_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
+)
