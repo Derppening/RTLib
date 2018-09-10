@@ -46,13 +46,13 @@ constexpr bool in_range(const T& v, const T& lo, const T& hi, Compare comp) {
 }
 
 /**
- * @brief Returns whether a value has been clamped.
+ * @brief Returns whether a value is between two values (inclusive).
  *
  * @tparam T
  * @param[in] v Value to check.
  * @param[in] lo Lower bound of clamp.
  * @param[in] hi Upper bound of clamp.
- * @return Whether v is between lo and hi (i.e. lo <= v <= hi).
+ * @return Whether v is inclusively between lo and hi (i.e. lo <= v <= hi).
  */
 template<class T>
 constexpr bool in_range(const T& v, const T& lo, const T& hi) {
