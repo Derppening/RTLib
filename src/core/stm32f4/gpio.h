@@ -47,6 +47,19 @@ class GPIO final {
   using AltFn = uint8_t;
 
   /**
+   * @brief Type definition for MCU Port.
+   */
+  using Port = unsigned;
+  /**
+   * @brief Type definition for MCU Pin.
+   */
+  using Pin = uint16_t;
+  /**
+   * @brief Type definition for MCU Pinout.
+   */
+  using Pinout = std::pair<Port, Pin>;
+
+  /**
    * @brief Enumeration for different GPIO modes.
    *
    * This enum is intended to replace equivalent macros used in libopencm3.
@@ -59,25 +72,25 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c GPIO_MODE_INPUT.
      */
-    kInput = 0x0,
+        kInput = 0x0,
     /**
      * @brief Use this GPIO as digital output.
      *
      * Equivalent to libopencm3 macro @c GPIO_MODE_OUTPUT.
      */
-    kOutput,
+        kOutput,
     /**
      * @brief Use this GPIO as an alternate function.
      *
      * Equivalent to libopencm3 macro @c GPIO_MODE_AF.
      */
-    kAF,
+        kAF,
     /**
      * @brief Use this GPIO as analog I/O.
      *
      * Equivalent to libopencm3 macro @c GPIO_MODE_ANALOG.
      */
-    kAnalog
+        kAnalog
   };
 
   /**
@@ -93,25 +106,25 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c GPIO_OSPEED_2MHZ.
      */
-    k2MHz = 0x0,
+        k2MHz = 0x0,
     /**
      * @brief Output GPIO at 25MHz.
      *
      * Equivalent to libopencm3 macro @c GPIO_OSPEED_25MHZ.
      */
-    k25MHz,
+        k25MHz,
     /**
      * @brief Output GPIO at 50MHz.
      *
      * Equivalent to libopencm3 macro @c GPIO_OSPEED_50MHZ.
      */
-    k50MHz,
+        k50MHz,
     /**
      * @brief Output GPIO at 100MHz.
      *
      * Equivalent to libopencm3 macro @c GPIO_OSPEED_100MHZ.
      */
-    k100MHz
+        k100MHz
   };
 
   /**
@@ -127,19 +140,19 @@ class GPIO final {
      *
      * Equivalent to libopencm3 macro @c GPIO_PUPD_NONE.
      */
-    kNone = 0x0,
+        kNone = 0x0,
     /**
      * @brief Use the internal pull-up resistor.
      *
      * Equivalent to libopencm3 macro @c GPIO_PUPD_PULLUP.
      */
-    kPullup,
+        kPullup,
     /**
      * @brief Use the internal pull-down resistor.
      *
      * Equivalent to libopencm3 macro @c GPIO_PUPD_PULLDOWN.
      */
-    kPulldown
+        kPulldown
   };
 
   /**
@@ -153,11 +166,11 @@ class GPIO final {
     /**
      * @brief Drive GPIO output using push-pull (i.e. actively pushed to VCC/pulled to GND).
      */
-    kPushPull = 0x0,
+        kPushPull = 0x0,
     /**
      * @brief Drive GPIO output using open-drain (i.e. only pull to GND).
      */
-    kOpenDrain
+        kOpenDrain
   };
 
   /**
@@ -302,6 +315,11 @@ class GPIO final {
    * This function is null-safe, i.e. if this object is not bound to any pinout, there are no effects.
    */
   void Release();
+
+  /**
+   * @brief Constant representing an invalid pinout.
+   */
+  static constexpr const Pinout kNullPinout = {Port(-1), Pin(-1)};
 
  private:
   /**

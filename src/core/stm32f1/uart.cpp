@@ -194,7 +194,7 @@ constexpr void UART::InitRcc() const {
   }
 }
 
-constexpr Pinout UART::GetTxPinout() const {
+constexpr GPIO::Pinout UART::GetTxPinout() const {
   switch (usart_) {
     case USART1:
       return {GPIOA, GPIO_USART1_TX};
@@ -212,7 +212,7 @@ constexpr Pinout UART::GetTxPinout() const {
   }
 }
 
-constexpr Pinout UART::GetRxPinout() const {
+constexpr GPIO::Pinout UART::GetRxPinout() const {
   switch (usart_) {
     case USART1:
       return {GPIOA, GPIO_USART1_RX};

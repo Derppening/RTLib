@@ -33,24 +33,6 @@ namespace rtlib {
 namespace core {
 
 /**
- * @brief Type definition for MCU Port.
- */
-using Port = unsigned;
-/**
- * @brief Type definition for MCU Pin.
- */
-using Pin = uint16_t;
-/**
- * @brief Type definition for MCU Pinout.
- */
-using Pinout = std::pair<Port, Pin>;
-
-/**
-   * @brief Constant representing an invalid pinout.
-   */
-constexpr const Pinout kNullPinout = {Port(-1), Pin(-1)};
-
-/**
  * @brief Compares two c-strings in compile time.
  *
  * @param[in] a A string

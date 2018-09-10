@@ -25,12 +25,11 @@
 
 #include "core/assert.h"
 
-using libcore::Pinout;
 using libdev::GPIO;
 
 namespace {
 
-constexpr libcore::Pinout GetConfigPinout(const uint8_t id) {
+constexpr GPIO::Pinout GetConfigPinout(const uint8_t id) {
   Assert(id < LIB_USE_BUTTON, __FILE__, __LINE__, __func__, "Invalid Button ID");
   switch (id) {
     default:

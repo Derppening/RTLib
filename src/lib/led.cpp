@@ -24,12 +24,11 @@
 #include "lib/led.h"
 #include "core/assert.h"
 
-using libcore::Pinout;
 using libdev::GPIO;
 
 namespace {
 
-constexpr Pinout GetConfigPinout(const uint8_t id) {
+constexpr GPIO::Pinout GetConfigPinout(const uint8_t id) {
   Assert(id < LIB_USE_LED, __FILE__, __LINE__, __func__, "Invalid LED ID");
   switch (id) {
     default:

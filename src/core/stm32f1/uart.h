@@ -455,13 +455,13 @@ class UART {
    *
    * @return TX pinout
    */
-  constexpr Pinout GetTxPinout() const;
+  constexpr GPIO::Pinout GetTxPinout() const;
   /**
    * @brief Retrieves the RX pinout from the configuration file.
    *
    * @return RX pinout
    */
-  constexpr Pinout GetRxPinout() const;
+  constexpr GPIO::Pinout GetRxPinout() const;
 
   /**
    * @brief C-String buffer size for transmission.

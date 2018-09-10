@@ -28,6 +28,8 @@
 
 #include "util.h"
 
+#include "core/gpio.h"
+
 /**
  * @brief Generic assertion function.
  *
@@ -61,11 +63,11 @@ constexpr void Assert(const bool bool_constexpr,
  *
  * @return @p pinout if assertion succeeds.
  */
-constexpr const rtlib::core::Pinout& AssertPin(const rtlib::core::Pinout& pinout,
+constexpr const libdev::GPIO::Pinout& AssertPin(const libdev::GPIO::Pinout& pinout,
                                                const char* file,
                                                const unsigned line,
                                                const char* fn) noexcept {
-  Assert(pinout != rtlib::core::Pinout() && pinout != rtlib::core::kNullPinout, file, line, fn, "Invalid Pin");
+  Assert(pinout != libdev::GPIO::Pinout() && pinout != libdev::GPIO::kNullPinout, file, line, fn, "Invalid Pin");
 
   return pinout;
 }

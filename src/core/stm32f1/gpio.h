@@ -45,6 +45,19 @@ class GPIO final {
   using AltFnMaps = uint32_t;
 
   /**
+   * @brief Type definition for MCU Port.
+   */
+  using Port = unsigned;
+  /**
+   * @brief Type definition for MCU Pin.
+   */
+  using Pin = uint16_t;
+  /**
+   * @brief Type definition for MCU Pinout.
+   */
+  using Pinout = std::pair<Port, Pin>;
+
+  /**
    * @brief Enumeration for different GPIO configurations.
    *
    * This enum is intended to replace equivalent macros used in libopencm3.
@@ -828,6 +841,11 @@ class GPIO final {
    * functions.
    */
   static void SetSecAltFn(SecRemap map) { SetSecAltFn(static_cast<uint32_t>(map)); }
+
+  /**
+   * @brief Constant representing an invalid pinout.
+   */
+  static constexpr const Pinout kNullPinout = {Port(-1), Pin(-1)};
 
  private:
   /**

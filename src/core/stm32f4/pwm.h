@@ -44,7 +44,7 @@ class PWM final : private Timer {
 
   struct Config {
     Output output;
-    Pinout pinout;
+    GPIO::Pinout pinout;
     uint16_t prescaler;
     uint16_t period;
   };
