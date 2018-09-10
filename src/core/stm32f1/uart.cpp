@@ -134,10 +134,6 @@ UART::~UART() {
 }
 
 void UART::Release() {
-  if (!IsBinded()) {
-    return;
-  }
-
   Reset();
 
   tx_.Release();

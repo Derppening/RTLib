@@ -105,10 +105,6 @@ void GPIO::Toggle() const {
 }
 
 void GPIO::Release() {
-  if (!IsBinded()) {
-    return;
-  }
-
   Reset();
 
   pin_ = kNullPinout;
