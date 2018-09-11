@@ -18,7 +18,15 @@
 # along with RTLib.  If not, see <http://www.gnu.org/licenses/>.
 
 help() {
-    echo "Usage: $0 [device] [script]"
+    echo "Usage: $0 [device] [file.bin]"
+}
+
+FILENAME=tmp.jlink
+
+cleanup() {
+    rm -f $FILENAME
+
+    exit $1
 }
 
 if [[ $# -eq 1 ]] && [[ "$1" == "--help" ]]; then
@@ -32,5 +40,13 @@ if [[ $# -ne 2 ]]; then
     exit
 fi
 
+echo "h" > "$FILENAME"
+echo "loadbin $2, 0x8000000" >> "$FILENAME"
+echo "r" >> "$FILENAME"
+echo "g" >> "$FILENAME"
+echo "q" >> "$FILENAME"
+
 # change these parameters as necessary
-JLinkExe -if JTAG -device $1 -speed auto -jtagconf -1,-1 -autoconnect 1 -CommanderScript $2
+JLinkExe -if JTAG -device $1 -speed auto -jtagconf -1,-1 -autoconnect 1 -CommanderScript $FILENAME || cleanup $?
+
+cleanup
