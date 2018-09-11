@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/Derppening/RTLib.svg?branch=master)](https://travis-ci.org/Derppening/RTLib)
 
 # RTLib
-Experimental hardware abstraction layer for STM32F103 and STM32F407 devices, based on 
+Experimental hardware abstraction layer for STM32F103, STM32F105 and STM32F407 devices, based on 
 [libopencm3](https://github.com/libopencm3/libopencm3).
 
 Initially an in-house R&D project for the [HKUST Robotics Team](https://robotics.ust.hk/), this project is now
@@ -31,47 +31,81 @@ Optional software that will make your life easier:
 
 ## Usage
 
-1. Add the library files to your project by adding it as a submodule to your project:
+1. Add the library files to your project by adding it as a Git submodule to your project:
 
 ```bash
-git submodule add git://github.com/Derppening/RTLib
+git submodule add https://github.com/Derppening/RTLib.git
 ```
 
-2. Initialize all the submodule dependencies
+Alternately, add the files by cloning from this repository (useful if you aren't using Git in your project):
 
 ```bash
+git clone https://github.com/Derppening/RTLib.git
+```
+
+2. Initialize all the submodule dependencies.
+
+```bash
+cd RTLib
 git submodule update --init --recursive
 ```
 
-3. Make LibOpenCM3
+3. Make LibOpenCM3.
+
+This step is required by RTLib to recognize which targets are supported by libopencm3. Subsequent builds can skip this 
+step, as building RTLib will implicitly build libopencm3.
 
 ```bash
-cd RTLib/libopencm3
+cd libopencm3
 make
 ```
 
-4. Modify your `CMakeLists.txt`
+4. Modify `CMakeLists.txt`
 
-You need to let your compiler know about `libopencm3` and `RTLib`, checkout the `CMakeLists.txt` for an example on how 
-to your write yours!
+RTLib needs to know what MCU and board configuration your application is targeting, so modify that as necessary. 
+Normally, editing the following lines should be enough:
+```cmake
+# Choose target device here
+set(DEVICE STM32F407VET6)
+
+# Choose target mainboard pin configuration here
+set(MAINBOARD_CONFIG STM32F407_DEV)
+```
+
+If the pin configuration of your board is not identified by RTLib, you may need to provide your own configuration 
+header. See the [examples](https://github.com/Derppening/RTLib/tree/master/src/config) to learn how to write your own.
+
+5. Create your `CMakeLists.txt`.
+
+An example `CMakeLists.txt` is provided in the 
+[RTLib-Template repository](https://github.com/Derppening/RTLib-Examples/blob/master/CMakeLists.txt).
+
+5. Create your `main.cpp`.
+
+Remember to define a `main` function!
+
+```cpp
+int main() {}
+```
 
 5. Building your program
 
 ```bash
-cd RTLib                        # Switch to the RTLib root directory first if you aren't already
-mkdir build && cd build         # Then create a build directory where all the generate build files will be output
+# Create a new folder to house all CMake-related files.
+mkdir cmake-build && cd cmake-build
 
-# Change the -G option according to your build system, might be different for example if you were using MINGW
-cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../cmake/arm-toolchain.cmake -G "CodeBlocks - Unix Makefiles" ../
+# Change the -G option according to your build system, might be different for example if you were using MinGW.
+cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../RTLib/cmake/arm-toolchain.cmake -G "CodeBlocks - Unix Makefiles" ..
 
-# Finally run the make command to initate the build process
-cmake --build .
+# Finally run the make command to initate the build process. This will build everything into the "cmake-build" folder.
+cmake --build . --target all
 ```
 
-A `.bin` file and `.elf` file will be generated inside the `build` directory.
+The resulting binaries (`RTLib-Template_Debug.bin` and `RTLib-Template_Debug.elf`) will be located in the same 
+directory.
 
-If you are using CLion, then usually the `Build All` configuration is all you need to build the project and you skip all 
-that terminal rubbish.
+If you are using CLion, you can skip all the terminal commands. However, you will have to specify the 
+`CMAKE_TOOLCHAIN_FILE` variable manually in `Settings > Build, Execution, Deployment > CMake > CMake Options`.
 
 ### Testing on a Device
 
@@ -82,15 +116,13 @@ All following code assumes your current working directory is at the root of the 
 #### ST-Link
 
 ```bash
-cd scripts/
-./flash_stlink.sh ../build/[target].bin  # Replace target.bin with the appropriate file
+../RTLib/scripts/flash_stlink.sh ../[target].bin  # Replace target.bin with the appropriate file
 ```
 
 #### JLink
 
 ```bash
-cd scripts/
-./flash.sh <device> ./jlink/[debug|release].jlink  # Replace [debug|release] with the file you want to flash
+../RTLib/scripts/flash_jlink.sh <device> ./[target].bin  # Replace target.bin with the appropriate file
 ```
 
 #### USB-TTL
