@@ -100,10 +100,10 @@ endif ()
 # Linker stuff
 set(LINKER_SCRIPT "generated.${DEVICE}.ld")
 
-if (EXISTS "${LIBOPENCM3_DIR}/lib/libopencm3_${GENLINK_FAMILY}.ld")
+if (EXISTS "${LIBOPENCM3_DIR}/lib/libopencm3_${GENLINK_FAMILY}.a")
     set(LDLIBS "${LDLIBS} -lopencm3_${GENLINK_FAMILY}")
 else ()
-    if (EXISTS "${LIBOPENCM3_DIR}/lib/libopencm3_${GENLINK_SUBFAMILY}.ld")
+    if (EXISTS "${LIBOPENCM3_DIR}/lib/libopencm3_${GENLINK_SUBFAMILY}.a")
         set(LDLIBS "${LDLIBS} -lopencm3_${GENLINK_SUBFAMILY}")
     else ()
         message(FATAL_ERROR "${LIBOPENCM3_DIR}/lib/libopencm3_${GENLINK_FAMILY}: A library variant for the selected device does not exist.")
