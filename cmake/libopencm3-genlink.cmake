@@ -62,6 +62,7 @@ message("----------------------------------------")
 message(STATUS "Fun Fact: This CMake file was painfully written by waicool20 and Derppening")
 message("----------------------------------------")
 message(STATUS "Device                  : ${DEVICE}")
+message(STATUS "Mainboard Config        : ${MAINBOARD_CONFIG}")
 message("-----------Device Linker Info-----------")
 message(STATUS "Family                  : ${GENLINK_FAMILY}")
 message(STATUS "Sub-family              : ${GENLINK_SUBFAMILY}")
@@ -110,8 +111,6 @@ else ()
 endif ()
 
 message(STATUS "Linker File Destination : .../${LINKER_SCRIPT}")
-
-message("-----------Target Specific Info---------")
 
 # ARCH_FLAGS and GENLINK_DEFS has to be passed as a list here
 string(REPLACE " " ";" GENLINK_DEFS ${GENLINK_DEFS})

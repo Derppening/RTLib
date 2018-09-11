@@ -54,12 +54,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(LOG_VERBOSE false)
 
 # Choose target device here
-#set(DEVICE STM32F407VET6)
-set(DEVICE STM32F103VCT6)
+set(DEVICE STM32F407VET6)
 
 # Choose target mainboard pin configuration here
-#add_definitions(-DSTM32F407_DEV)
-add_definitions(-DSTM32F103_DEV)
+set(MAINBOARD_CONFIG STM32F407_DEV)
 
 # Include libopencm3
 include(cmake/libopencm3.cmake)
@@ -83,6 +81,8 @@ message("----------------------------------------")
 # Taken from fmtlib.
 if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     # Export variables to our parent
-    set(LINKER_FLAGS ${LINKER_FLAGS} PARENT_SCOPE)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TARGET_SPECIFIC_FLAGS}" PARENT_SCOPE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TARGET_SPECIFIC_FLAGS}" PARENT_SCOPE)
+    set(RTLIB_LINKER_FLAGS "${LINKER_FLAGS} -Wl,--gc-sections" PARENT_SCOPE)
     set(LIBOPENCM3_LIB_PATH ${LIBOPENCM3_DIR}/lib PARENT_SCOPE)
 endif ()

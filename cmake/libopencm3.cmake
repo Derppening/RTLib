@@ -41,6 +41,8 @@ endif ()
 # include the genlink target
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/libopencm3-genlink.cmake)
 
+message("-----------Target Specific Info---------")
+
 # ARCH_FLAGS has to be passed as a string here
 JOIN("${ARCH_FLAGS}" " " ARCH_FLAGS)
 # Set linker flags
