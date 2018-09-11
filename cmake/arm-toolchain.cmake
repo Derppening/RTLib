@@ -23,10 +23,17 @@ along with RTLib.  If not, see <http://www.gnu.org/licenses/>.
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR arm)
 
-find_program(ARM_CC arm-none-eabi-gcc)
-find_program(ARM_CXX arm-none-eabi-g++)
-find_program(ARM_OBJCOPY arm-none-eabi-objcopy)
-find_program(ARM_SIZE arm-none-eabi-size)
+set(ARM_PREFIX arm-none-eabi)
+
+find_program(ARM_CC ${ARM_PREFIX}-gcc)
+find_program(ARM_CXX ${ARM_PREFIX}-g++)
+find_program(ARM_LD ${ARM_PREFIX}-gcc)
+find_program(ARM_AR ${ARM_PREFIX}-ar)
+find_program(ARM_AS ${ARM_PREFIX}-as)
+find_program(ARM_OBJCOPY ${ARM_PREFIX}-objcopy)
+find_program(ARM_OBJDUMP ${ARM_PREFIX}-objdump)
+find_program(ARM_GDB ${ARM_PREFIX}-gdb)
+find_program(ARM_SIZE ${ARM_PREFIX}-size)
 
 
 SET(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
