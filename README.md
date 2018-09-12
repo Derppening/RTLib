@@ -107,6 +107,10 @@ directory.
 If you are using CLion, you can skip all the terminal commands. However, you will have to specify the 
 `CMAKE_TOOLCHAIN_FILE` variable manually in `Settings > Build, Execution, Deployment > CMake > CMake Options`.
 
+Note that if you are using the command line and at any point the CMake configuration is modified, the CMake cache must 
+be regenerated for changes to apply. CLion users can skip this procedure, since CLion is automatically refresh the 
+CMake cache if it detects a configuration change.
+
 ### Testing on a Device
 
 You should have either an ST-Link, USB-TTL, or JLink for your device. Check your mainboard if you are unsure.
