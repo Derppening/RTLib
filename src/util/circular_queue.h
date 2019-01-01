@@ -37,10 +37,8 @@ namespace rtlib::util {
  *
  * @tparam T Type of the stored elements.
  * @tparam N Maximum elements that can be stored.
- * @tparam NOEXCEPT Whether to disable exceptions. Useful in environments where exceptions incur a relatively large
- * penalty.
  */
-template<typename T, std::size_t N, bool NOEXCEPT = true>
+template<typename T, std::size_t N>
 class circular_queue {
  public:
   static_assert(N > 0, "circuar_queue must have at least one element");
@@ -69,7 +67,7 @@ class circular_queue {
   /**
    * Default constructor. Value-initializes the container.
    */
-  circular_queue() noexcept : data_() {}
+  circular_queue() noexcept : _data() {}
 
   /**
    * @brief Conversion constructor from @c std::array.
@@ -86,11 +84,11 @@ class circular_queue {
   template<std::size_t SIZE>
   explicit circular_queue(const std::array<T, SIZE>& cont)
   noexcept(std::is_nothrow_copy_assignable<T>::value && std::is_nothrow_default_constructible<T>::value) :
-      begin_(data_.begin()),
-      end_(data_.begin() + std::min(SIZE, N)),
-      size_(std::min(SIZE, N)) {
-    std::copy(cont.begin(), cont.begin() + size_, begin_);
-    std::fill(end_, data_.end(), T());
+      _begin(_data.begin()),
+      _end(_data.begin() + std::min(SIZE, N)),
+      _size(std::min(SIZE, N)) {
+    std::copy(cont.begin(), cont.begin() + _size, _begin);
+    std::fill(_end, _data.end(), T());
   }
 
   /**
@@ -103,7 +101,7 @@ class circular_queue {
    * @param[in] cont Container to initialize from.
    */
   explicit circular_queue(container_type&& cont) noexcept(std::is_nothrow_move_assignable<container_type>::value)
-      : data_(std::move(cont)), begin_(data_.begin()), end_(data_.end()), size_(N) {}
+      : _data(std::move(cont)), _begin(_data.begin()), _end(_data.end()), _size(N) {}
 
   /**
    * @brief Copy constructor.
@@ -113,10 +111,10 @@ class circular_queue {
    * @param[in] other The source circular queue to copy from.
    */
   circular_queue(const circular_queue& other) noexcept(std::is_nothrow_copy_constructible<container_type>::value) :
-      data_(other.data_),
-      begin_(data_.begin() + (other.begin_ - other.data_.begin())),
-      end_(other.end_ == nullptr ? nullptr : data_.begin() + (other.end_ - other.data_.begin())),
-      size_(other.size_) {}
+      _data(other._data),
+      _begin(_data.begin() + (other._begin - other._data.begin())),
+      _end(other._end == nullptr ? nullptr : _data.begin() + (other._end - other._data.begin())),
+      _size(other._size) {}
 
   /**
    * @brief Move constructor.
@@ -126,10 +124,10 @@ class circular_queue {
    * @param[in] other The source circular queue to move from.
    */
   circular_queue(circular_queue&& other) noexcept(std::is_nothrow_move_constructible<container_type>::value) :
-      data_(std::move(other.data_)),
-      begin_(data_.begin() + (other.begin_ - other.data_.begin())),
-      end_(other.end_ == nullptr ? nullptr : data_.begin() + (other.end_ - other.data_.begin())),
-      size_(other.size_) {}
+      _data(std::move(other._data)),
+      _begin(_data.begin() + (other._begin - other._data.begin())),
+      _end(other._end == nullptr ? nullptr : _data.begin() + (other._end - other._data.begin())),
+      _size(other._size) {}
 
   /**
    * @brief Default destructor.
@@ -149,10 +147,10 @@ class circular_queue {
       return *this;
     }
 
-    data_ = other.data_;
-    begin_ = data_.begin() + (other.begin_ - other.data_.begin());
-    end_ = other.end_ == nullptr ? nullptr : data_.begin() + (other.end_ - other.data_.begin());
-    size_ = other.size_;
+    _data = other._data;
+    _begin = _data.begin() + (other._begin - other._data.begin());
+    _end = other._end == nullptr ? nullptr : _data.begin() + (other._end - other._data.begin());
+    _size = other._size;
 
     return *this;
   }
@@ -170,10 +168,10 @@ class circular_queue {
       return *this;
     }
 
-    data_ = std::move(other.data_);
-    begin_ = data_.begin() + (other.begin_ - other.data_.begin());
-    end_ = other.end_ == nullptr ? nullptr : data_.begin() + (other.end_ - other.data_.begin());
-    size_ = other.size_;
+    _data = std::move(other._data);
+    _begin = _data.begin() + (other._begin - other._data.begin());
+    _end = other._end == nullptr ? nullptr : _data.begin() + (other._end - other._data.begin());
+    _size = other._size;
 
     return *this;
   }
@@ -181,77 +179,53 @@ class circular_queue {
   /**
    * @brief Returns a reference to the first element.
    *
-   * The behavior is undefined when there is no element in the circular_queue, and `NOEXCEPT` is true.
+   * The behavior is undefined when there is no element in the circular_queue.
    *
    * @return Reference to the first element.
-   * @throw std::runtime_error when there is no element in the circular_queue.
    */
-  reference front() noexcept(NOEXCEPT) {
-    if constexpr (!NOEXCEPT) {
-      if (empty()) {
-        throw std::runtime_error("front(): no element");
-      }
-    }
-
-    return *begin_;
+  reference front() noexcept {
+    return *_begin;
   }
 
   /**
    * @brief Returns a constant reference to the first element.
    *
-   * If there is no element in the circular_queue and `NOEXCEPT` is true, a default-constructed `T` will be returned.
+   * If there is no element in the circular_queue, a default-constructed `T` will be returned.
    *
    * @return Constant reference to the first element.
-   * @throw std::runtime_error when there is no element in the circular_queue.
    */
   const_reference front() const noexcept(std::is_nothrow_default_constructible<T>::value) {
     if (empty()) {
-      if constexpr (!NOEXCEPT) {
-        throw std::runtime_error("front(): no element");
-      }
-
       return T();
     }
 
-    return *begin_;
+    return *_begin;
   }
 
   /**
    * @brief Returns a reference to the last element.
    *
-   * The behavior is undefined if there is no element in the circular_queue and `NOEXCEPT` is true.
+   * The behavior is undefined if there is no element in the circular_queue.
    *
    * @return Reference to the last element.
-   * @throw std::runtime_error when there is no element in the circular queue.
    */
-  reference back() noexcept(NOEXCEPT) {
-    if constexpr (!NOEXCEPT) {
-      if (empty()) {
-        throw std::runtime_error("back(): no element");
-      }
-    }
-
-    return end_[-1];
+  reference back() noexcept {
+    return _end[-1];
   }
 
   /**
    * @brief Returns a constant reference to the last element.
    *
-   * If there is no element in the circular_queue and `NOEXCEPT` is true, a default-constructed `T` will be returned.
+   * If there is no element in the circular_queue, a default-constructed `T` will be returned.
    *
    * @return Constant reference to the last element.
-   * @throw std::runtime_error when there is no element in the circular_queue.
    */
   const_reference back() const noexcept(std::is_nothrow_default_constructible<T>::value) {
     if (empty()) {
-      if constexpr (!NOEXCEPT) {
-        throw std::runtime_error("front(): no element");
-      }
-
       return T();
     }
 
-    return end_[-1];
+    return _end[-1];
   }
 
   /**
@@ -259,91 +233,76 @@ class circular_queue {
    *
    * @return `true` if there are no elements in the queue, `false` otherwise.
    */
-  [[nodiscard]] bool empty() const noexcept { return size_ == 0; }
+  [[nodiscard]] bool empty() const noexcept { return _size == 0; }
 
   /**
    * @brief Returns the number of elements.
    *
    * @return The number of elements in the circular_queue.
    */
-  size_type size() const noexcept { return size_; }
+  size_type size() const noexcept { return _size; }
 
   /**
    * @brief Pushes the given element @p value to the end of the queue.
    *
-   * If `NOEXCEPT` is set to true, pushing an element into a full queue will silently fail.
+   * Pushing an element into a full queue will silently fail.
    *
    * @param[in] value Value of the element to push.
-   * @throw std::length_error when the queue is full.
    */
-  void push(const value_type& value) noexcept(NOEXCEPT && std::is_nothrow_copy_assignable<T>::value) {
+  void push(const value_type& value) noexcept(std::is_nothrow_copy_assignable<T>::value) {
     if (size() == N) {
-      if constexpr (NOEXCEPT) {
-        return;
-      }
-
-      throw std::length_error("push(): max elements alloc'd");
+      return;
     }
 
-    if (empty() || end_ == data_.end()) {
-      end_ = data_.begin();
+    if (empty() || _end == _data.end()) {
+      _end = _data.begin();
     }
 
-    *end_++ = value;
-    ++size_;
+    *_end++ = value;
+    ++_size;
   }
 
   /**
    * @brief Pushes the given element @p value to the end of the queue.
    *
-   * If `NOEXCEPT` is set to true, pushing an element into a full queue will silently fail.
+   * Pushing an element into a full queue will silently fail.
    *
    * @param[in] value Value of the element to push.
-   * @throw std::length_error when the queue is full.
    */
-  void push(value_type&& value) noexcept(NOEXCEPT && std::is_nothrow_move_assignable<T>::value) {
+  void push(value_type&& value) noexcept(std::is_nothrow_move_assignable<T>::value) {
     if (size() == N) {
-      if constexpr (NOEXCEPT) {
         return;
-      }
-
-      throw std::length_error("push(): max elements alloc'd");
     }
 
-    if (empty() || end_ == data_.end()) {
-      end_ = data_.begin();
+    if (empty() || _end == _data.end()) {
+      _end = _data.begin();
     }
 
-    *end_++ = std::move(value);
-    ++size_;
+    *_end++ = std::move(value);
+    ++_size;
   }
 
   /**
    * @brief Pushes a new element to the end of the queue, which will be constructed in-place.
    *
-   * If `NOEXCEPT` is set to true, pushing an element into a full queue will silently fail.
+   * Pushing an element into a full queue will silently fail.
    *
    * @tparam Args Types as supplied to the element's constructor.
    * @param args Arguments to forward to the constructor of the element.
    * @return A reference to the pushed element.
-   * @throw std::length_error when the queue is full.
    */
   template<typename... Args>
-  decltype(auto) emplace(Args&& ... args) noexcept(NOEXCEPT && std::is_nothrow_constructible<T>::value) {
+  decltype(auto) emplace(Args&& ... args) noexcept(std::is_nothrow_constructible<T>::value) {
     if (size() == N) {
-      if constexpr (NOEXCEPT) {
         return;
-      }
-
-      throw std::length_error("push(): max elements alloc'd");
     }
 
-    if (empty() || end_ == data_.end()) {
-      end_ = data_.begin();
+    if (empty() || _end == _data.end()) {
+      _end = _data.begin();
     }
 
-    *end_++ = T(std::forward<Args>(args)...);
-    ++size_;
+    *_end++ = T(std::forward<Args>(args)...);
+    ++_size;
 
     return back();
   }
@@ -356,12 +315,12 @@ class circular_queue {
       return;
     }
 
-    *begin_++ = T();
-    --size_;
+    *_begin++ = T();
+    --_size;
 
-    if (size_ == 0) {
-      begin_ = data_.begin();
-      end_ = nullptr;
+    if (_size == 0) {
+      _begin = _data.begin();
+      _end = nullptr;
     }
   }
 
@@ -370,10 +329,10 @@ class circular_queue {
    * @param other
    */
   void swap(circular_queue& other) noexcept(std::is_nothrow_swappable<container_type>::value) {
-    std::swap(this->data_, other.data_);
-    std::swap(this->begin_, other.begin_);
-    std::swap(this->end_, other.end_);
-    std::swap(this->size_, other.size_);
+    std::swap(this->_data, other._data);
+    std::swap(this->_begin, other._begin);
+    std::swap(this->_end, other._end);
+    std::swap(this->_size, other._size);
   }
 
   /**
@@ -382,7 +341,8 @@ class circular_queue {
    * @param lhs Containers to swap.
    * @param rhs Containers to swap.
    */
-  friend void swap(circular_queue& lhs, circular_queue& rhs) noexcept(std::is_nothrow_swappable<container_type>::value) {
+  friend void swap(circular_queue& lhs,
+                   circular_queue& rhs) noexcept(std::is_nothrow_swappable<container_type>::value) {
     lhs.swap(rhs);
   }
 
@@ -395,21 +355,21 @@ class circular_queue {
   /**
    * @brief Underlying container for circular_queue.
    */
-  std::array<T, N> data_;
+  std::array<T, N> _data;
   /**
    * @brief Pointer pointing to the first element of the circular_queue.
    */
-  pointer begin_ = data_.begin();
+  pointer _begin = _data.begin();
   /**
    * @brief Pointer pointing to the past-the-last element of the circular_queue.
    *
    * If there are no elements in the queue, this should point to `nullptr`.
    */
-  pointer end_ = nullptr;
+  pointer _end = nullptr;
   /**
    * @brief Number of elements in the circular queue.
    */
-  size_type size_ = 0;
+  size_type _size = 0;
 };
 
 }  // namespace rtlib::libutil
