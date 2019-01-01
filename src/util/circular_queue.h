@@ -7,7 +7,7 @@
 /*
  * This file is part of RTLib.
  *
- * Copyright (C) 2018 Derppening <david.18.19.21@gmail.com>
+ * Copyright (C) 2018-2019 Derppening <david.18.19.21@gmail.com>
  *
  * RTLib is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by

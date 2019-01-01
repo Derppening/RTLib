@@ -30,6 +30,8 @@
 
 #include "core/gpio.h"
 
+namespace rtlib::core {
+
 /**
  * @brief Generic assertion function.
  *
@@ -41,11 +43,11 @@
  * @param[in] fn Function which invoked this function. Always @c __func__.
  * @param[in] message Message if assertion fails.
  */
-constexpr void Assert(const bool bool_constexpr,
-                      [[maybe_unused]] const char* file,
-                      [[maybe_unused]] const unsigned line,
-                      [[maybe_unused]] const char* fn,
-                      [[maybe_unused]] const char* message = "") noexcept {
+constexpr void assert_that(const bool bool_constexpr,
+                           [[maybe_unused]] const char* file,
+                           [[maybe_unused]] const unsigned line,
+                           [[maybe_unused]] const char* fn,
+                           [[maybe_unused]] const char* message = "") noexcept {
   if (bool_constexpr) { return; }
 
   __builtin_trap();
@@ -63,11 +65,11 @@ constexpr void Assert(const bool bool_constexpr,
  *
  * @return @p pinout if assertion succeeds.
  */
-constexpr const libdev::GPIO::Pinout& AssertPin(const libdev::GPIO::Pinout& pinout,
-                                               const char* file,
-                                               const unsigned line,
-                                               const char* fn) noexcept {
-  Assert(pinout != libdev::GPIO::Pinout() && pinout != libdev::GPIO::kNullPinout, file, line, fn, "Invalid Pin");
+constexpr const libdev::GPIO::Pinout& assert_pin(const libdev::GPIO::Pinout& pinout,
+                                                 const char* file,
+                                                 const unsigned line,
+                                                 const char* fn) noexcept {
+  assert_that(pinout != libdev::GPIO::Pinout() && pinout != libdev::GPIO::kNullPinout, file, line, fn, "Invalid Pin");
 
   return pinout;
 }
@@ -82,13 +84,41 @@ constexpr const libdev::GPIO::Pinout& AssertPin(const libdev::GPIO::Pinout& pino
  * @param[in] message Message explaining the failure.
  */
 template<bool FAIL_COMPILE = false>
-constexpr void TODO([[maybe_unused]] const char* file,
+constexpr void todo([[maybe_unused]] const char* file,
                     [[maybe_unused]] const unsigned line,
                     [[maybe_unused]] const char* fn,
                     [[maybe_unused]] const char* message = "Stub") noexcept {
   static_assert(!FAIL_COMPILE, "Incomplete compile-time TODO");
 
   __builtin_trap();
+}
+}  // namespace rtlib::core
+
+[[deprecated("Replaced by rtlib::core::assert_that.")]]
+constexpr void Assert(const bool bool_constexpr,
+                           [[maybe_unused]] const char* file,
+                           [[maybe_unused]] const unsigned line,
+                           [[maybe_unused]] const char* fn,
+                           [[maybe_unused]] const char* message = "") noexcept {
+  rtlib::core::assert_that(bool_constexpr, file, line, fn, message);
+}
+
+[[deprecated("Replaced by rtlib::core::assert_pin.")]]
+constexpr const libdev::GPIO::Pinout& AssertPin(const libdev::GPIO::Pinout& pinout,
+                                                 const char* file,
+                                                 const unsigned line,
+                                                 const char* fn) noexcept {
+  return rtlib::core::assert_pin(pinout, file, line, fn);
+}
+
+
+template<bool FAIL_COMPILE = false>
+[[deprecated("Replaced by rtlib::core::todo.")]]
+constexpr void TODO([[maybe_unused]] const char* file,
+                    [[maybe_unused]] const unsigned line,
+                    [[maybe_unused]] const char* fn,
+                    [[maybe_unused]] const char* message = "Stub") noexcept {
+  rtlib::core::todo<FAIL_COMPILE>(file, line, fn, message);
 }
 
 #endif  // RTLIB_CORE_ASSERT_H_

@@ -7,7 +7,7 @@
 /*
  * This file is part of RTLib.
  *
- * Copyright (C) 2017-2018 Derppening <david.18.19.21@gmail.com>
+ * Copyright (C) 2017-2019 Derppening <david.18.19.21@gmail.com>
  *
  * RTLib is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,6 +29,8 @@
 #include <cstdint>
 #include <utility>
 
+#include "stm32/utils/rcc.h"
+
 namespace rtlib {
 namespace core {
 
@@ -44,15 +46,9 @@ constexpr bool StringCompare(const char* a, const char* b) {
   return *a == *b && (*a == '\0' || StringCompare(a + 1, b + 1));
 }
 
-/**
- * @brief Returns the address of a given RCC register.
- *
- * @param base Base address.
- * @param bit Bit offset.
- * @return Address of RCC register.
- */
+[[deprecated("Replaced by rtlib::core::stm32::utils::rcc_get_reg.")]]
 constexpr std::uint32_t GetRCCRegister(std::uint8_t base, std::uint8_t bit) {
-  return std::uint32_t((base << 5) + bit);
+  return rtlib::core::stm32::utils::rcc_get_reg(base, bit);
 }
 
 namespace stm32f1 {}
