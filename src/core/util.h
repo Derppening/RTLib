@@ -23,17 +23,16 @@
  * along with RTLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RTLIB_CORE_UTIL_H_
-#define RTLIB_CORE_UTIL_H_
+#pragma once
 
 #include <cstdint>
-#include <utility>
 
-#include "stm32/utils/rcc.h"
+#if defined(STM32F1)
+#include "core/stm32/f1/util.h"
+#endif
 
 namespace rtlib {
 namespace core {
-
 /**
  * @brief Compares two c-strings in compile time.
  *
@@ -42,23 +41,9 @@ namespace core {
  *
  * @return Whether the c-strings are the same
  */
-constexpr bool StringCompare(const char* a, const char* b) {
-  return *a == *b && (*a == '\0' || StringCompare(a + 1, b + 1));
+constexpr bool strcmp(const char* a, const char* b) {
+  return *a == *b && (*a == '\0' || strcmp(a + 1, b + 1));
 }
-
-[[deprecated("Replaced by rtlib::core::stm32::utils::rcc_get_reg.")]]
-constexpr std::uint32_t GetRCCRegister(std::uint8_t base, std::uint8_t bit) {
-  return rtlib::core::stm32::utils::rcc_get_reg(base, bit);
-}
-
-namespace stm32f1 {}
-namespace stm32f4 {}
-
-#if defined(STM32F1)
-namespace device = stm32f1;
-#elif defined(STM32F4)
-namespace device = stm32f4;
-#endif
 }  // namespace core
 
 namespace lib {}
@@ -66,12 +51,6 @@ namespace util {}
 }  // namespace rtlib
 
 namespace libcore = rtlib::core;
-#if defined(STM32F1)
-namespace libdev = libcore::stm32f1;
-#elif defined(STM32F4)
-namespace libdev = libcore::stm32f4;
-#endif
+namespace libdev = libcore::device;
 namespace libs = rtlib::lib;
 namespace libutil = rtlib::util;
-
-#endif  // RTLIB_CORE_UTIL_H_
