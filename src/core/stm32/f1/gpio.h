@@ -122,6 +122,8 @@ class gpio {
     v &= ~(std::uint64_t(0b0011) << (PIN * 4));
     v |= std::uint64_t(mode) << (PIN * 4);
     set_mem<std::uint64_t>(addr, v);
+
+    _mode = mode;
   }
 
   /**
@@ -140,12 +142,12 @@ class gpio {
   }
 
   /**
-   * @brief Reads the input of this pinout.
+   * @brief Reads the current state of this pinout.
    *
    * @return Whether this pinout is currently digital high or low.
    */
   bool state() {
-    std::uint32_t addr = idr();
+    std::uint32_t addr = _mode == gpio_mode_t::INPUT ? idr() : odr();
 
     auto v = get_mem(addr);
     return bool(v & (1 << PIN));
@@ -161,6 +163,8 @@ class gpio {
   constexpr std::uint8_t pin() const { return PIN; }
 
  private:
+  gpio_mode_t _mode = gpio_mode_t::INPUT;
+
   /**
    * @return The base memory boundary of this GPIO port.
    */
@@ -197,6 +201,14 @@ class gpio {
    */
   constexpr std::uint32_t idr() const {
     constexpr std::uint32_t offset = 0x08;
+    return addr() + offset;
+  }
+
+  /**
+   * @return The address of the output data register (ODR) of this port.
+   */
+  constexpr std::uint32_t odr() const {
+    constexpr std::uint32_t offset = 0x0C;
     return addr() + offset;
   }
 
