@@ -103,7 +103,7 @@ class gpio {
 
     auto v = get_mem<std::uint64_t>(addr);
     v &= ~(std::uint64_t(0b1100) << (PIN * 4));
-    v |= std::uint64_t(std::uint64_t(configuration) << (PIN * 4 + 2));
+    v |= std::uint64_t(configuration) << (PIN * 4 + 2);
     set_mem<std::uint64_t>(addr, v);
   }
 
@@ -112,7 +112,7 @@ class gpio {
    *
    * @param mode New mode.
    */
-  void mode(gpio_mode_t mode) const {
+  void mode(gpio_mode_t mode) {
     std::uint32_t addr = cr();
     if (addr == 0) {
       return;
