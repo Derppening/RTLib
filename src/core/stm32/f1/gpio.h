@@ -154,6 +154,18 @@ class gpio {
   }
 
   /**
+   * @brief Toggles the output of this pinout.
+   *
+   * @return The new state of this pinout.
+   */
+  bool toggle() {
+    bool state = !this->state();
+    this->state(state);
+
+    return state;
+  }
+
+  /**
    * @return Currently managed GPIO port.
    */
   constexpr gpio_port_t port() const { return PORT; }
