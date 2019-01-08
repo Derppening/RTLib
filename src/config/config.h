@@ -41,8 +41,8 @@
 #include "config/stm32f407_dev.h"
 #elif defined(ASC)
 #include "config/asc.h"
-#elif defined(UPS)
-#include "config/ups.h"
+#elif defined(BATTERY_MEASUREMENT)
+#include "config/battery_measurement.h"
 #else
 #error "No known configuration is specified. Please specify a target mainboard in CMakeLists.txt"
 #endif
