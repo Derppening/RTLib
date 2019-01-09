@@ -10,7 +10,7 @@ One day, I'll have to rewrite `CMakeLists-template.txt`. Until then...
 This file is part of RTLib.
 
 Copyright (C) 2017 waicool20 <waicool20@gmail.com>
-Copyright (C) 2017-2018 Derppening <david.18.19.21@gmail.com>
+Copyright (C) 2017-2019 Derppening <david.18.19.21@gmail.com>
 
 RTLib is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
@@ -81,8 +81,8 @@ message("----------------------------------------")
 # Taken from fmtlib.
 if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     # Export variables to our parent
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TARGET_SPECIFIC_FLAGS} -ffunction-sections -fdata-sections" PARENT_SCOPE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TARGET_SPECIFIC_FLAGS} -ffunction-sections -fdata-sections" PARENT_SCOPE)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TARGET_SPECIFIC_FLAGS} -ffunction-sections -fdata-sections -DRTLIB_ENABLE_VALIDATION=${RTLIB_VALIDATION}" PARENT_SCOPE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TARGET_SPECIFIC_FLAGS} -ffunction-sections -fdata-sections -DRTLIB_ENABLE_VALIDATION=${RTLIB_VALIDATION}" PARENT_SCOPE)
     set(RTLIB_LINKER_FLAGS "${LINKER_FLAGS} -Wl,--gc-sections" PARENT_SCOPE)
     set(LIBOPENCM3_LIB_PATH ${LIBOPENCM3_DIR}/lib PARENT_SCOPE)
 endif ()

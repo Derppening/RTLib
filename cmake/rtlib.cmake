@@ -3,7 +3,7 @@
 This file is part of RTLib.
 
 Copyright (C) 2017 waicool20 <waicool20@gmail.com>
-Copyright (C) 2018 Derppening <david.18.19.21@gmail.com>
+Copyright (C) 2018-2019 Derppening <david.18.19.21@gmail.com>
 
 RTLib is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
@@ -79,8 +79,11 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Og -ggdb")
 
 # Automatically enable validations if building for Debug
 if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-    add_definitions(-DRTLIB_ENABLE_VALIDATION)
+    set(RTLIB_VALIDATION true)
+else()
+    set(RTLIB_VALIDATION false)
 endif()
+add_definitions(-DRTLIB_ENABLE_VALIDATION=${RTLIB_VALIDATION})
 
 # Generate header for RTLib version
 configure_file(cmake/template/version.h.in ${RTLIB_SRC}/version.h)
