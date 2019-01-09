@@ -25,10 +25,10 @@
 
 #pragma once
 
-#include <cstdint>
-
 #if defined(STM32F1)
 #include "core/stm32/f1/util.h"
+#elif defined(STM32F4)
+#include "core/stm32/f4/util.h"
 #endif
 
 namespace rtlib {
