@@ -35,14 +35,14 @@ namespace rtlib::core::stm32::f1 {
 /**
  * @brief GPIO Ports enumeration.
  */
-enum struct gpio_port_t : std::uint32_t {
-  GPIOA,
-  GPIOB,
-  GPIOC,
-  GPIOD,
-  GPIOE,
-  GPIOF,
-  GPIOG
+enum struct gpio_port : std::uint32_t {
+  gpioa,
+  gpiob,
+  gpioc,
+  gpiod,
+  gpioe,
+  gpiof,
+  gpiog
 };
 
 /**
@@ -50,15 +50,15 @@ enum struct gpio_port_t : std::uint32_t {
  *
  * Refer to STM32 RM0008 section 9.2.1 for more information.
  */
-enum struct gpio_cnf_t : std::uint8_t {
-  INPUT_ANALOG = 0x0,
-  INPUT_FLOAT,
-  INPUT_PULLUP_PULLDOWN,
+enum struct gpio_cnf : std::uint8_t {
+  input_analog = 0x0,
+  input_float,
+  input_pullup_pulldown,
 
-  OUTPUT_PUSHPULL = 0x0,
-  OUTPUT_OPENDRAIN,
-  OUTPUT_ALTFN_PUSHPULL,
-  OUTPUT_ALTFN_OPENDRAIN
+  output_pushpull = 0x0,
+  output_opendrain,
+  output_altfn_pushpull,
+  output_altfn_opendrain
 };
 
 /**
@@ -66,11 +66,11 @@ enum struct gpio_cnf_t : std::uint8_t {
  *
  * Refer to STM32 RM0008 section 9.2.1 for more information.
  */
-enum struct gpio_mode_t : std::uint8_t {
-  INPUT,
-  OUTPUT_2MHZ,
-  OUTPUT_10MHZ,
-  OUTPUT_50MHZ
+enum struct gpio_mode : std::uint8_t {
+  input,
+  output_2mhz,
+  output_10mhz,
+  output_50mhz
 };
 
 /**
@@ -79,7 +79,7 @@ enum struct gpio_mode_t : std::uint8_t {
  * @tparam PORT GPIO Port.
  * @tparam PIN GPIO Pin. Must be between 0 and 15.
  */
-template<gpio_port_t PORT, std::uint8_t PIN>
+template<gpio_port PORT, std::uint8_t PIN>
 class gpio {
  public:
   static_assert(PIN >= 0x0 && PIN <= 0xF);
@@ -95,7 +95,7 @@ class gpio {
    *
    * @param configuration New configuration.
    */
-  void cnf(gpio_cnf_t configuration) const {
+  void cnf(gpio_cnf configuration) const {
     std::uint32_t addr = cr();
     if (addr == 0) {
       return;
@@ -112,7 +112,7 @@ class gpio {
    *
    * @param mode New mode.
    */
-  void mode(gpio_mode_t mode) {
+  void mode(gpio_mode mode) {
     std::uint32_t addr = cr();
     if (addr == 0) {
       return;
@@ -147,7 +147,7 @@ class gpio {
    * @return Whether this pinout is currently digital high or low.
    */
   bool state() {
-    std::uint32_t addr = _mode == gpio_mode_t::INPUT ? idr() : odr();
+    std::uint32_t addr = _mode == gpio_mode::input ? idr() : odr();
 
     auto v = get_mem(addr);
     return bool(v & (1 << PIN));
@@ -168,32 +168,32 @@ class gpio {
   /**
    * @return Currently managed GPIO port.
    */
-  constexpr gpio_port_t port() const { return PORT; }
+  constexpr gpio_port port() const { return PORT; }
   /**
    * @return Currently managed GPIO pin.
    */
   constexpr std::uint8_t pin() const { return PIN; }
 
  private:
-  gpio_mode_t _mode = gpio_mode_t::INPUT;
+  gpio_mode _mode = gpio_mode::input;
 
   /**
    * @return The base memory boundary of this GPIO port.
    */
   constexpr std::uint32_t addr() const {
-    if constexpr (PORT == gpio_port_t::GPIOA) {
+    if constexpr (PORT == gpio_port::gpioa) {
       return memory_map<reg::PERIPH_GPIOA>::begin;
-    } else if (PORT == gpio_port_t::GPIOB) {
+    } else if (PORT == gpio_port::gpiob) {
       return memory_map<reg::PERIPH_GPIOB>::begin;
-    } else if (PORT == gpio_port_t::GPIOC) {
+    } else if (PORT == gpio_port::gpioc) {
       return memory_map<reg::PERIPH_GPIOC>::begin;
-    } else if (PORT == gpio_port_t::GPIOD) {
+    } else if (PORT == gpio_port::gpiod) {
       return memory_map<reg::PERIPH_GPIOD>::begin;
-    } else if (PORT == gpio_port_t::GPIOE) {
+    } else if (PORT == gpio_port::gpioe) {
       return memory_map<reg::PERIPH_GPIOE>::begin;
-    } else if (PORT == gpio_port_t::GPIOF) {
+    } else if (PORT == gpio_port::gpiof) {
       return memory_map<reg::PERIPH_GPIOF>::begin;
-    } else if (PORT == gpio_port_t::GPIOG) {
+    } else if (PORT == gpio_port::gpiog) {
       return memory_map<reg::PERIPH_GPIOG>::begin;
     } else {
       return 0;
