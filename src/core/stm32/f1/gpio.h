@@ -25,6 +25,8 @@
 
 #pragma once
 
+#if defined(STM32F1)
+
 #include <cstdint>
 
 #include "core/assert.h"
@@ -36,19 +38,19 @@ namespace rtlib::core::stm32::f1 {
  * @brief GPIO Ports enumeration.
  */
 enum struct gpio_port : std::uint32_t {
-  gpioa,
-  gpiob,
-  gpioc,
-  gpiod,
-  gpioe,
-  gpiof,
-  gpiog
+  gpioa = memory_map<reg::periph_gpioa>::begin,
+  gpiob = memory_map<reg::periph_gpiob>::begin,
+  gpioc = memory_map<reg::periph_gpioc>::begin,
+  gpiod = memory_map<reg::periph_gpiod>::begin,
+  gpioe = memory_map<reg::periph_gpioe>::begin,
+  gpiof = memory_map<reg::periph_gpiof>::begin,
+  gpiog = memory_map<reg::periph_gpiog>::begin
 };
 
 /**
  * @brief GPIO Configuration enumeration.
  *
- * Refer to STM32 RM0008 section 9.2.1 for more information.
+ * Refer to STM32 RM0008 section 9.2.1 and 9.2.2 for more information.
  */
 enum struct gpio_cnf : std::uint8_t {
   input_analog = 0x0,
@@ -64,7 +66,7 @@ enum struct gpio_cnf : std::uint8_t {
 /**
  * @brief GPIO Mode enumeration.
  *
- * Refer to STM32 RM0008 section 9.2.1 for more information.
+ * Refer to STM32 RM0008 section 9.2.1 and 9.2.2 for more information.
  */
 enum struct gpio_mode : std::uint8_t {
   input,
@@ -75,6 +77,147 @@ enum struct gpio_mode : std::uint8_t {
 
 /**
  * @brief GPIO abstraction layer.
+ */
+class gpio {
+ public:
+  constexpr gpio(const gpio_port port, const std::uint8_t pin)
+      : _addr(std::uint32_t(port)), _pin(pin) {}
+  gpio(const gpio& other) = delete;
+  gpio& operator=(const gpio& other) = delete;
+  gpio(gpio&& other) noexcept = default;
+  gpio& operator=(gpio&& other) noexcept = default;
+
+  //<editor-fold desc="Configuration">
+
+  /**
+   * @brief Configures the CNF bits of this GPIO pinout.
+   *
+   * It is undefined behavior to pass an invalid configuration into this function.
+   *
+   * @param configuration New configuration.
+   */
+  constexpr void cnf(gpio_cnf configuration) {
+    const std::uint32_t addr = cr();
+
+    auto v = get_mem<std::uint64_t>(addr);
+    v = reset_and_set(v, _pin * 4 + 2, 2, std::uint64_t(configuration));
+    set_mem<std::uint64_t>(addr, v);
+  }
+
+  /**
+   * @return Current GPIO configuration.
+   */
+  constexpr gpio_cnf cnf() const {
+    const std::uint32_t addr = cr();
+
+    auto v = get_mem<std::uint64_t>(addr);
+    return gpio_cnf(get_bitmask(v, _pin * 4 + 2, 2));
+  }
+
+  /**
+   * @brief Configures the MODE bits of this GPIO pinout.
+   *
+   * It is undefined behavior to pass an invalid mode into this function.
+   *
+   * @param mode New mode.
+   */
+  constexpr void mode(gpio_mode mode) {
+    const std::uint32_t addr = cr();
+
+    auto v = get_mem<std::uint64_t>(addr);
+    v = reset_and_set(v, _pin * 4, 2, std::uint64_t(mode));
+    set_mem<std::uint64_t>(addr, v);
+  }
+
+  /**
+   * @return Current GPIO mode.
+   */
+  constexpr gpio_mode mode() const {
+    const std::uint32_t addr = cr();
+
+    auto v = get_mem<std::uint64_t>(addr);
+    return gpio_mode(get_bitmask(v, _pin * 4, 2));
+  }
+
+  //</editor-fold>
+
+  //<editor-fold desc="I/O">
+
+  /**
+   * @brief Sets/Resets the output of this pinout.
+   *
+   * @param new_state Whether to set or reset this pinout.
+   */
+  constexpr void state(bool new_state) {
+    const std::uint32_t addr = bsrr();
+
+    auto v = std::uint32_t(1) << (_pin + (16 * std::uint8_t(!new_state)));
+    set_mem(addr, v);
+  }
+
+  /**
+   * @brief Reads the current state of this pinout.
+   *
+   * @return Whether this pinout is currently digital high or low.
+   */
+  constexpr bool state() const {
+    const std::uint32_t addr = mode() == gpio_mode::input ? idr() : odr();
+
+    auto v = get_mem(addr);
+    return bool(get_bitmask(v, _pin, 1));
+  }
+
+  /**
+   * @brief Toggles the output of this pinout.
+   *
+   * @return The new state of this pinout.
+   */
+  constexpr bool toggle() {
+    bool state = !this->state();
+    this->state(state);
+
+    return state;
+  }
+
+  //</editor-fold>
+
+  /**
+ * @return Currently managed GPIO port.
+ */
+  constexpr gpio_port port() const { return gpio_port(_addr); }
+  /**
+   * @return Currently managed GPIO pin.
+   */
+  constexpr std::uint8_t pin() const { return _pin; }
+
+ private:
+  std::uint32_t _addr;
+  std::uint8_t _pin;
+
+  /**
+ * @return The address of the control register (CR) of this GPIO port.
+ */
+  constexpr std::uint32_t cr() const { return _addr + 0x00; }
+
+  /**
+   * @return The address of the input data register (IDR) of this port.
+   */
+  constexpr std::uint32_t idr() const { return _addr + 0x08; }
+
+  /**
+   * @return The address of the output data register (ODR) of this port.
+   */
+  constexpr std::uint32_t odr() const { return _addr + 0x0C; }
+
+  /**
+   * @return The address of the bit set reset register (BSRR) of this GPIO port.
+   */
+  constexpr std::uint32_t bsrr() const { return _addr + 0x10; }
+};
+
+namespace experimental {
+/**
+ * @brief Experimental GPIO abstraction layer.
  *
  * @tparam PORT GPIO Port.
  * @tparam PIN GPIO Pin. Must be between 0 and 15.
@@ -93,34 +236,30 @@ class gpio {
   /**
    * @brief Configures the CNF bits of this GPIO pinout.
    *
+   * It is undefined behavior to pass an invalid configuration into this function.
+   *
    * @param configuration New configuration.
    */
-  void cnf(gpio_cnf configuration) const {
-    std::uint32_t addr = cr();
-    if (addr == 0) {
-      return;
-    }
+  void cnf(gpio_cnf configuration) {
+    const std::uint32_t addr = cr();
 
     auto v = get_mem<std::uint64_t>(addr);
-    v &= ~(std::uint64_t(0b1100) << (PIN * 4));
-    v |= std::uint64_t(configuration) << (PIN * 4 + 2);
+    v = reset_and_set(v, PIN * 4 + 2, 2, std::uint64_t(configuration));
     set_mem<std::uint64_t>(addr, v);
   }
 
   /**
    * @brief Configures the MODE bits of this GPIO pinout.
    *
+   * It is undefined behavior to pass an invalid mode into this function.
+   *
    * @param mode New mode.
    */
   void mode(gpio_mode mode) {
-    std::uint32_t addr = cr();
-    if (addr == 0) {
-      return;
-    }
+    const std::uint32_t addr = cr();
 
     auto v = get_mem<std::uint64_t>(addr);
-    v &= ~(std::uint64_t(0b0011) << (PIN * 4));
-    v |= std::uint64_t(mode) << (PIN * 4);
+    v = reset_and_set(v, PIN * 4, 2, std::uint64_t(mode));
     set_mem<std::uint64_t>(addr, v);
 
     _mode = mode;
@@ -132,10 +271,7 @@ class gpio {
    * @param new_state Whether to set or reset this pinout.
    */
   void state(const bool new_state) {
-    std::uint32_t addr = bsrr();
-    if (addr == 0) {
-      return;
-    }
+    const std::uint32_t addr = bsrr();
 
     auto v = std::uint32_t(1 << (PIN + (16 * int(!new_state))));
     set_mem(addr, v);
@@ -146,11 +282,11 @@ class gpio {
    *
    * @return Whether this pinout is currently digital high or low.
    */
-  bool state() {
-    std::uint32_t addr = _mode == gpio_mode::input ? idr() : odr();
+  bool state() const {
+    const std::uint32_t addr = _mode == gpio_mode::input ? idr() : odr();
 
     auto v = get_mem(addr);
-    return bool(v & (1 << PIN));
+    return bool(get_bitmask(v, PIN, 1));
   }
 
   /**
@@ -182,19 +318,19 @@ class gpio {
    */
   constexpr std::uint32_t addr() const {
     if constexpr (PORT == gpio_port::gpioa) {
-      return memory_map<reg::PERIPH_GPIOA>::begin;
+      return memory_map<reg::periph_gpioa>::begin;
     } else if (PORT == gpio_port::gpiob) {
-      return memory_map<reg::PERIPH_GPIOB>::begin;
+      return memory_map<reg::periph_gpiob>::begin;
     } else if (PORT == gpio_port::gpioc) {
-      return memory_map<reg::PERIPH_GPIOC>::begin;
+      return memory_map<reg::periph_gpioc>::begin;
     } else if (PORT == gpio_port::gpiod) {
-      return memory_map<reg::PERIPH_GPIOD>::begin;
+      return memory_map<reg::periph_gpiod>::begin;
     } else if (PORT == gpio_port::gpioe) {
-      return memory_map<reg::PERIPH_GPIOE>::begin;
+      return memory_map<reg::periph_gpioe>::begin;
     } else if (PORT == gpio_port::gpiof) {
-      return memory_map<reg::PERIPH_GPIOF>::begin;
+      return memory_map<reg::periph_gpiof>::begin;
     } else if (PORT == gpio_port::gpiog) {
-      return memory_map<reg::PERIPH_GPIOG>::begin;
+      return memory_map<reg::periph_gpiog>::begin;
     } else {
       return 0;
     }
@@ -203,34 +339,25 @@ class gpio {
   /**
    * @return The address of the control register (CR) of this GPIO port.
    */
-  constexpr std::uint32_t cr() const {
-    constexpr std::uint32_t offset = 0x00;
-    return addr() + offset;
-  }
+  constexpr std::uint32_t cr() const { return addr() + 0x00; }
 
   /**
    * @return The address of the input data register (IDR) of this port.
    */
-  constexpr std::uint32_t idr() const {
-    constexpr std::uint32_t offset = 0x08;
-    return addr() + offset;
-  }
+  constexpr std::uint32_t idr() const { return addr() + 0x08; }
 
   /**
    * @return The address of the output data register (ODR) of this port.
    */
-  constexpr std::uint32_t odr() const {
-    constexpr std::uint32_t offset = 0x0C;
-    return addr() + offset;
-  }
+  constexpr std::uint32_t odr() const { return addr() + 0x0C; }
 
   /**
    * @return The address of the bit set reset register (BSRR) of this GPIO port.
    */
-  constexpr std::uint32_t bsrr() const {
-    constexpr std::uint32_t offset = 0x10;
-    return addr() + offset;
-  }
+  constexpr std::uint32_t bsrr() const { return addr() + 0x10; }
 };
+}  // namespace experimental
 
 }  // namespace rtlib::core::stm32::f1
+
+#endif  // defined(STM32F1)
