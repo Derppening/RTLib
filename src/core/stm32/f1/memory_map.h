@@ -170,6 +170,11 @@ struct memory_map<reg::periph_gpiog> {
   static constexpr std::size_t size = 0x0400;
 };
 
+template<>
+struct memory_map<reg::periph_rcc> {
+  static constexpr std::uint32_t begin = memory_map<reg::bus_ahb>::begin + 0x9000;
+};
+
 }  // namespace rtlib::core::stm32::f1
 
 #endif  // defined(STM32F1)

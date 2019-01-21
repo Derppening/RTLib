@@ -201,6 +201,12 @@ struct memory_map<reg::periph_gpiof> {
 };
 
 template<>
+struct memory_map<reg::periph_rcc> {
+  static constexpr std::uint32_t begin = memory_map<reg::bus_ahb1>::begin + 0x3800;
+  static constexpr std::size_t size = 0x0400;
+};
+
+template<>
 struct memory_map<reg::periph_gpiog> {
   static constexpr std::uint32_t begin = memory_map<reg::bus_apb2>::begin + 0x1800;
   static constexpr std::size_t size = 0x0400;
