@@ -12,7 +12,7 @@ namespace rtlib::core {
  * @return Data from the specified address, represented as T.
  */
 template<typename T = std::uint32_t, typename = std::enable_if_t<std::is_integral_v<T>>>
-inline constexpr volatile T const get_mem(const std::uint32_t base_addr) {
+inline constexpr const volatile T get_mem(const std::uint32_t base_addr) {
   return *reinterpret_cast<volatile T* const>(base_addr);
 }
 
