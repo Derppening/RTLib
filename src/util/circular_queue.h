@@ -40,7 +40,7 @@ namespace rtlib::util {
  * @tparam NOEXCEPT Whether to disable exceptions. Useful in environments where exceptions incur a relatively large
  * penalty.
  */
-template<typename T, std::size_t N, bool NOEXCEPT = true>
+template<typename T, std::size_t N>
 class circular_queue {
  public:
   static_assert(N > 0, "circuar_queue must have at least one element");
@@ -181,35 +181,23 @@ class circular_queue {
   /**
    * @brief Returns a reference to the first element.
    *
-   * The behavior is undefined when there is no element in the circular_queue, and `NOEXCEPT` is true.
+   * The behavior is undefined when there is no element in the circular_queue.
    *
    * @return Reference to the first element.
-   * @throw std::runtime_error when there is no element in the circular_queue.
    */
-  reference front() noexcept(NOEXCEPT) {
-    if constexpr (!NOEXCEPT) {
-      if (empty()) {
-        throw std::runtime_error("front(): no element");
-      }
-    }
-
+  reference front() noexcept(true) {
     return *begin_;
   }
 
   /**
    * @brief Returns a constant reference to the first element.
    *
-   * If there is no element in the circular_queue and `NOEXCEPT` is true, a default-constructed `T` will be returned.
+   * If there is no element in the circular_queue, a default-constructed `T` will be returned.
    *
    * @return Constant reference to the first element.
-   * @throw std::runtime_error when there is no element in the circular_queue.
    */
   const_reference front() const noexcept(std::is_nothrow_default_constructible<T>::value) {
     if (empty()) {
-      if constexpr (!NOEXCEPT) {
-        throw std::runtime_error("front(): no element");
-      }
-
       return T();
     }
 
@@ -219,35 +207,23 @@ class circular_queue {
   /**
    * @brief Returns a reference to the last element.
    *
-   * The behavior is undefined if there is no element in the circular_queue and `NOEXCEPT` is true.
+   * The behavior is undefined if there is no element in the circular_queue.
    *
    * @return Reference to the last element.
-   * @throw std::runtime_error when there is no element in the circular queue.
    */
-  reference back() noexcept(NOEXCEPT) {
-    if constexpr (!NOEXCEPT) {
-      if (empty()) {
-        throw std::runtime_error("back(): no element");
-      }
-    }
-
+  reference back() noexcept(true) {
     return end_[-1];
   }
 
   /**
    * @brief Returns a constant reference to the last element.
    *
-   * If there is no element in the circular_queue and `NOEXCEPT` is true, a default-constructed `T` will be returned.
+   * If there is no element in the circular_queue, a default-constructed `T` will be returned.
    *
    * @return Constant reference to the last element.
-   * @throw std::runtime_error when there is no element in the circular_queue.
    */
   const_reference back() const noexcept(std::is_nothrow_default_constructible<T>::value) {
     if (empty()) {
-      if constexpr (!NOEXCEPT) {
-        throw std::runtime_error("front(): no element");
-      }
-
       return T();
     }
 
@@ -274,15 +250,10 @@ class circular_queue {
    * If `NOEXCEPT` is set to true, pushing an element into a full queue will silently fail.
    *
    * @param[in] value Value of the element to push.
-   * @throw std::length_error when the queue is full.
    */
-  void push(const value_type& value) noexcept(NOEXCEPT && std::is_nothrow_copy_assignable<T>::value) {
+  void push(const value_type& value) noexcept(std::is_nothrow_copy_assignable<T>::value) {
     if (size() == N) {
-      if constexpr (NOEXCEPT) {
-        return;
-      }
-
-      throw std::length_error("push(): max elements alloc'd");
+      return;
     }
 
     if (empty() || end_ == data_.end()) {
@@ -299,15 +270,10 @@ class circular_queue {
    * If `NOEXCEPT` is set to true, pushing an element into a full queue will silently fail.
    *
    * @param[in] value Value of the element to push.
-   * @throw std::length_error when the queue is full.
    */
-  void push(value_type&& value) noexcept(NOEXCEPT && std::is_nothrow_move_assignable<T>::value) {
+  void push(value_type&& value) noexcept(std::is_nothrow_move_assignable<T>::value) {
     if (size() == N) {
-      if constexpr (NOEXCEPT) {
-        return;
-      }
-
-      throw std::length_error("push(): max elements alloc'd");
+      return;
     }
 
     if (empty() || end_ == data_.end()) {
@@ -326,16 +292,11 @@ class circular_queue {
    * @tparam Args Types as supplied to the element's constructor.
    * @param args Arguments to forward to the constructor of the element.
    * @return A reference to the pushed element.
-   * @throw std::length_error when the queue is full.
    */
   template<typename... Args>
-  decltype(auto) emplace(Args&& ... args) noexcept(NOEXCEPT && std::is_nothrow_constructible<T>::value) {
+  decltype(auto) emplace(Args&& ... args) noexcept(std::is_nothrow_constructible<T>::value) {
     if (size() == N) {
-      if constexpr (NOEXCEPT) {
-        return;
-      }
-
-      throw std::length_error("push(): max elements alloc'd");
+      return;
     }
 
     if (empty() || end_ == data_.end()) {
