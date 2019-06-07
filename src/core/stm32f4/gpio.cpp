@@ -35,7 +35,7 @@ namespace rtlib::core::stm32f4 {
 GPIO::GPIO(const Config& config) :
     pin_(AssertPin(config.pin, __FILE__, __LINE__, __func__)) {
   // Use external oscillator for RCC
-  rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
+  rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
 
   // Initialize the RCC and enable the GPIO
   InitRcc();
