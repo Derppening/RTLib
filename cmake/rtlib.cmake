@@ -104,7 +104,8 @@ set_target_properties(${PROJECT_NAME}
         OUTPUT_NAME "${PROJECT_NAME}_${CMAKE_BUILD_TYPE}")
 target_link_libraries(${PROJECT_NAME} "opencm3_${GENLINK_FAMILY}")
 target_include_directories(${PROJECT_NAME} PUBLIC
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>)
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
         $<BUILD_INTERFACE:${LIBOPENCM3_DIR}/include>)
 
 # Output elf file size

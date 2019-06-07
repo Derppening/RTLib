@@ -15,33 +15,78 @@
       <option name="TEMPLATE_CALL_ARGUMENTS_ALIGN_MULTILINE" value="true" />
       <option name="CLASS_CONSTRUCTOR_INIT_LIST_WRAP" value="5" />
       <option name="ALIGN_INIT_LIST_IN_COLUMNS" value="false" />
+      <option name="SPACE_BEFORE_PROTOCOLS_BRACKETS" value="false" />
       <option name="SPACE_BEFORE_POINTER_IN_DECLARATION" value="false" />
       <option name="SPACE_AFTER_POINTER_IN_DECLARATION" value="true" />
       <option name="SPACE_BEFORE_REFERENCE_IN_DECLARATION" value="false" />
       <option name="SPACE_AFTER_REFERENCE_IN_DECLARATION" value="true" />
-      <option name="INSERT_VIRTUAL_WITH_OVERRIDE" value="true" />
+      <option name="KEEP_BLANK_LINES_BEFORE_END" value="1" />
       <option name="ADD_BRIEF_TAG" value="true" />
-      <option name="FIELDS_SUFFIX" value="_" />
-      <option name="GETTERS_PREFIX" value="Get" />
-      <option name="SETTERS_PREFIX" value="Set" />
+      <option name="TAG_PREFIX_OF_BLOCK_COMMENT" value="BACK_SLASH" />
+      <option name="HEADER_GUARD_STYLE_PATTERN" value="${PROJECT_NAME}_${PROJECT_REL_PATH}_${FILE_NAME}_${EXT}_" />
+      <option name="NAMESPACES_NAMING_CONVENTION">
+        <value prefix="" style="SNAKE_CASE" suffix="" />
+      </option>
+      <option name="CLASSES_AND_STRUCTS_NAMING_CONVENTION">
+        <value prefix="" style="SNAKE_CASE" suffix="" />
+      </option>
+      <option name="ENUMS_NAMING_CONVENTION">
+        <value prefix="" style="SNAKE_CASE" suffix="" />
+      </option>
+      <option name="ENUMERATORS_NAMING_CONVENTION">
+        <value prefix="" style="SNAKE_CASE" suffix="" />
+      </option>
+      <option name="TYPEDEFS_NAMING_CONVENTION">
+        <value prefix="" style="SNAKE_CASE" suffix="" />
+      </option>
+      <option name="UNIONS_NAMING_CONVENTION">
+        <value prefix="" style="SNAKE_CASE" suffix="" />
+      </option>
+      <option name="METHODS_NAMING_CONVENTION">
+        <value prefix="" style="SNAKE_CASE" suffix="" />
+      </option>
+      <option name="FIELDS_NAMING_CONVENTION">
+        <value prefix="_" style="SNAKE_CASE" suffix="" />
+      </option>
+      <option name="GLOBAL_FUNCTIONS_NAMING_CONVENTION">
+        <value prefix="" style="SNAKE_CASE" suffix="" />
+      </option>
+      <option name="GLOBAL_VARIABLES_NAMING_CONVENTION">
+        <value prefix="" style="SNAKE_CASE" suffix="" />
+      </option>
+      <option name="PARAMETERS_NAMING_CONVENTION">
+        <value prefix="" style="SNAKE_CASE" suffix="" />
+      </option>
+      <option name="LOCAL_VARIABLES_NAMING_CONVENTION">
+        <value prefix="" style="SNAKE_CASE" suffix="" />
+      </option>
     </Objective-C>
+    <Objective-C-extensions>
+      <option name="TAG_PREFIX_OF_BLOCK_COMMENT" value="BACK_SLASH" />
+      <extensions>
+        <pair source="cpp" header="h" fileNamingConvention="SNAKE_CASE" />
+        <pair source="c" header="h" fileNamingConvention="NONE" />
+      </extensions>
+    </Objective-C-extensions>
     <codeStyleSettings language="ObjectiveC">
       <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" />
       <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
       <option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="1" />
       <option name="BLANK_LINES_BEFORE_IMPORTS" value="0" />
-      <option name="BLANK_LINES_AFTER_IMPORTS" value="0" />
-      <option name="BLANK_LINES_AROUND_CLASS" value="0" />
       <option name="BLANK_LINES_AROUND_METHOD" value="0" />
       <option name="BLANK_LINES_AROUND_METHOD_IN_INTERFACE" value="0" />
+      <option name="BLANK_LINES_AFTER_CLASS_HEADER" value="1" />
       <option name="ALIGN_MULTILINE_BINARY_OPERATION" value="false" />
       <option name="BINARY_OPERATION_SIGN_ON_NEXT_LINE" value="true" />
       <option name="FOR_STATEMENT_WRAP" value="1" />
       <option name="ASSIGNMENT_WRAP" value="1" />
+      <option name="IF_BRACE_FORCE" value="3" />
+      <option name="DOWHILE_BRACE_FORCE" value="3" />
+      <option name="WHILE_BRACE_FORCE" value="3" />
+      <option name="FOR_BRACE_FORCE" value="3" />
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="2" />
       </indentOptions>
     </codeStyleSettings>
   </code_scheme>
